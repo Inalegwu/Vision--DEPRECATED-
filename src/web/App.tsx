@@ -1,5 +1,14 @@
-import { Layout } from "./components";
+import { HashRouter, Routes, Route } from "react-router-dom";
+import { Home, Library } from "./pages";
 
 export const App = () => {
-  return <Layout>content</Layout>;
+  return (
+    <HashRouter>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/library" element={<Library />} />
+      </Routes>
+    </HashRouter>
+  );
 };
+

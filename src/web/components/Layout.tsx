@@ -1,5 +1,5 @@
 import { Box, Button, Text } from "@kuma-ui/core";
-import { FiX, FiMinus, FiMaximize } from "react-icons/fi";
+import { X, House, Books, Minus, CornersOut } from "@phosphor-icons/react";
 import { trpcReact } from "../../shared/config";
 import { useCallback, useEffect, useState } from "react";
 
@@ -82,7 +82,7 @@ export default function Layout(props: LayoutProps) {
               transition="0.5s"
               _hover={{ color: "gray" }}
             >
-              <FiMinus size={14} />
+              <Minus size={14} />
             </Button>
             <Button
               onClick={() => maximizeWindow()}
@@ -92,7 +92,7 @@ export default function Layout(props: LayoutProps) {
               transition="0.5s"
               _hover={{ color: "gray" }}
             >
-              <FiMaximize size={11} />
+              <CornersOut size={11} />
             </Button>
             <Button
               onClick={() => closeWindow()}
@@ -102,7 +102,7 @@ export default function Layout(props: LayoutProps) {
               transition="0.5s"
               _hover={{ color: "red" }}
             >
-              <FiX size={14} />
+              <X size={14} />
             </Button>
           </Box>
         </Box>
@@ -122,17 +122,36 @@ export default function Layout(props: LayoutProps) {
           {/* dock */}
           {dockVisible && (
             <Box
+              onMouseOver={handleMouseEnter}
               padding={5}
               height="70%"
-              background="gray"
-              width="40%"
+              width="8%"
+              background="rgba(255,255,255,0.3)"
               display="flex"
               alignContent="center"
               alignItems="center"
+              justifyContent="space-around"
               transition="ease-out"
               borderRadius={9999}
             >
-              content
+              <Button
+                cursor="pointer"
+                padding={3}
+                border="none"
+                background="none"
+                color="white"
+              >
+                <House size={15} />
+              </Button>
+              <Button
+                cursor="pointer"
+                padding={3}
+                border="none"
+                background="none"
+                color="white"
+              >
+                <Books size={15} />
+              </Button>
             </Box>
           )}
         </Box>
