@@ -22,20 +22,23 @@ Vision is an open source GitHub project that aims to provide users with a featur
 
 To install Vision, follow these steps:
 
-Clone the Vision repository from GitHub.
-Navigate to the project directory.
-Run pnpm install to install all required dependencies.
-Start the application using pnpm start.
+- Clone the Vision repository from GitHub.
+- Navigate to the project directory.
+- Run pnpm install to install all required dependencies.
+- Start the application using pnpm start.
+
 Make sure you have Node.js and pnpm installed on your machine before proceeding with the installation.
 
 Contribution
-We welcome contributions from the open source community to help improve Vision and make it even better. To contribute, follow these steps:
 
-Fork the Vision repository.
-Create a new branch for your feature or bug fix.
-Make your changes and commit them with descriptive commit messages.
-Push your changes to your forked repository.
-Submit a pull request to the main Vision repository.
+- We welcome contributions from the open source community to help improve Vision and make it even better. To contribute, follow these steps:
+
+* Fork the Vision repository.
+* Create a new branch for your feature or bug fix.
+* Make your changes and commit them with descriptive commit messages.
+* Push your changes to your forked repository.
+* Submit a pull request to the main Vision repository.
+
 Please ensure that your contributions align with our code of conduct and follow the established coding guidelines.
 
 License
