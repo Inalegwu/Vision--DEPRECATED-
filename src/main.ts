@@ -22,6 +22,8 @@ const createWindow = () => {
 };
 
 app.whenReady().then(() => {
+  const date = new Date().toDateString();
+
   createWindow();
 });
 
