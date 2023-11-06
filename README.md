@@ -1,6 +1,6 @@
 # Vision - Comic Book Reader
 
-Vision is an open source GitHub project that aims to provide users with a feature-rich comic book reader. Built using Electron, TRPC, Drizzle, and React, Vision offers a seamless reading experience for comic book enthusiasts like myself.
+Vision is an open source GitHub project that aims to provide users with a feature-rich comic book reader. Built using Electron, TRPC, Drizzle, Jotai,and React, Vision offers a seamless reading experience for comic book enthusiasts like myself.
 
 ## Features
 
@@ -53,7 +53,7 @@ If you encounter any issues or have any questions, feel free to open an issue on
 
 ## Acknowledgements
 
-We would like to express our gratitude to the developers and contributors of Electron, TRPC, Drizzle, and React, whose exceptional work makes Vision possible.
+We would like to express our gratitude to the developers and contributors of Electron, TRPC, Drizzle,Jotai, and React, whose exceptional work makes Vision possible.
 
 Thank you for choosing Vision as your go-to comic book reader. We hope you enjoy the immersive experience it offers and that it brings your favorite comics to life in a whole new way. Happy reading!
 
