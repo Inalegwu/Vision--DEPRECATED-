@@ -8,6 +8,7 @@ import {
 } from "drizzle-orm/sqlite-core";
 import { pages } from "../page/page.schema";
 import { collections } from "../collection/collection.schema";
+import { reading } from "../reading/reading.schema";
 
 export const issues = sqliteTable(
   "issues",
@@ -16,6 +17,8 @@ export const issues = sqliteTable(
     name: text("name").notNull(),
     collectionId: text("collection_id"),
     dateCreated: integer("date_created").default(Date.now()),
+    thumbnailUrl: text("thumbnail_url").notNull(),
+    currentlyReading: integer("currently_reading", { mode: "boolean" }),
   },
   (table) => {
     return {
@@ -37,3 +40,9 @@ export const collectionIssueRelation = relations(issues, ({ one }) => ({
   }),
 }));
 
+export const issueReadingRelation = relations(issues, ({ one }) => ({
+  reading: one(reading, {
+    fields: [issues.id],
+    references: [reading.issueId],
+  }),
+}));
