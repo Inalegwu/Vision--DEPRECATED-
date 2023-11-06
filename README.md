@@ -1,24 +1,32 @@
-write me a readme for an open source github project named Vision which is a Comic book reader that uses electron , trpc , drizzle and react , with appropriate markdown notations
-Vision - Comic Book Reader
-Vision is an open source GitHub project that aims to provide users with a feature-rich comic book reader. Built using Electron, TRPC, Drizzle, and React, Vision offers a seamless reading experience for comic book enthusiasts.
+# Vision - Comic Book Reader
 
-Features
-User-friendly Interface: Vision boasts an intuitive and visually appealing user interface that allows users to navigate, read, and manage their comic book collections effortlessly.
-Multi-format Support: With Vision, you can enjoy comics in various formats, including popular formats like CBR and CBZ, ensuring compatibility with a wide range of comic book files.
-Smooth Reading Experience: Thanks to Electron's powerful rendering capabilities and React's flexibility, Vision provides a smooth, lag-free reading experience, allowing users to immerse themselves in their favorite comic books.
-Advanced Navigation: Vision offers a range of navigation options, such as page thumbnails, bookmarks, and a customizable reading mode, enabling users to find their preferred reading style.
-Comic Library Management: Users can organize their comic book collections efficiently with Vision's comprehensive library management features, including sorting, searching, and tagging options.
-Customization Options: Vision allows users to personalize their reading experience through customizable themes, font sizes, and various display settings, ensuring optimal comfort while reading their favorite comics.
-Offline Mode: Once users have downloaded their comic books, they can enjoy them offline, without the need for an active internet connection.
-Cross-Platform Compatibility: Vision is designed to work seamlessly across multiple platforms, including Windows, macOS, and Linux, providing users with the flexibility to enjoy their comics on their preferred operating system.
-Installation
+Vision is an open source GitHub project that aims to provide users with a feature-rich comic book reader. Built using Electron, TRPC, Drizzle, and React, Vision offers a seamless reading experience for comic book enthusiasts like myself.
+
+## Features
+
+- User-friendly Interface: Vision boasts an intuitive and visually appealing user interface that allows users to navigate, read, and manage their comic book collections effortlessly.
+
+- Multi-format Support: With Vision, you can enjoy comics in various formats, including popular formats like CBR and CBZ, ensuring compatibility with a wide range of comic book files.
+
+- Smooth Reading Experience: Thanks to Electron's powerful rendering capabilities and React's flexibility, Vision provides a smooth, lag-free reading experience, allowing users to immerse themselves in their favorite comic books.
+
+- Advanced Navigation: Vision offers a range of navigation options, such as page thumbnails, bookmarks, and a customizable reading mode, enabling users to find their preferred reading style.
+
+- Comic Library Management[WIP]: Users can organize their comic book collections efficiently with Vision's comprehensive library management features, including sorting, searching, and tagging options.
+
+- Customization Options[WIP]: Vision allows users to personalize their reading experience through customizable themes, font sizes, and various display settings, ensuring optimal comfort while reading their favorite comics.
+
+- Cross-Platform Compatibility: Vision is designed to work seamlessly across multiple platforms, including Windows, macOS, and Linux, providing users with the flexibility to enjoy their comics on their preferred operating system.
+
+## Installation
+
 To install Vision, follow these steps:
 
 Clone the Vision repository from GitHub.
 Navigate to the project directory.
-Run npm install to install all required dependencies.
-Start the application using npm start.
-Make sure you have Node.js and npm installed on your machine before proceeding with the installation.
+Run pnpm install to install all required dependencies.
+Start the application using pnpm start.
+Make sure you have Node.js and pnpm installed on your machine before proceeding with the installation.
 
 Contribution
 We welcome contributions from the open source community to help improve Vision and make it even better. To contribute, follow these steps:
@@ -40,3 +48,4 @@ Acknowledgements
 We would like to express our gratitude to the developers and contributors of Electron, TRPC, Drizzle, and React, whose exceptional work makes Vision possible.
 
 Thank you for choosing Vision as your go-to comic book reader. We hope you enjoy the immersive experience it offers and that it brings your favorite comics to life in a whole new way. Happy reading!
+
