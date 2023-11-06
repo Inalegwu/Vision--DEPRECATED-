@@ -4,6 +4,8 @@ Vision is an open source GitHub project that aims to provide users with a featur
 
 ## Features
 
+![Features]("images/banner.png")
+
 - User-friendly Interface: Vision boasts an intuitive and visually appealing user interface that allows users to navigate, read, and manage their comic book collections effortlessly.
 
 - Multi-format Support: With Vision, you can enjoy comics in various formats, including popular formats like CBR and CBZ, ensuring compatibility with a wide range of comic book files.
