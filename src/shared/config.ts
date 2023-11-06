@@ -4,7 +4,16 @@ import { ipcLink } from "electron-trpc/renderer";
 import { AppRouter } from "./routers/_app";
 
 export const trpcReact = createTRPCReact<AppRouter>();
-export const queryClient = new QueryClient();
+export const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      networkMode: "always",
+    },
+    mutations: {
+      networkMode: "always",
+    },
+  },
+});
 export const trpcClient = trpcReact.createClient({
   links: [ipcLink()],
 });

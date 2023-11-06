@@ -24,7 +24,7 @@ export const pages = sqliteTable(
 );
 
 export const issuePageRelation = relations(pages, ({ one }) => ({
-  issue: one(issues, {
+  issues: one(issues, {
     fields: [pages.issueId],
     references: [issues.id],
     relationName: "issue",

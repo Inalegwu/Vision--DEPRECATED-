@@ -17,7 +17,7 @@ export default function Home() {
           <HStack>
             {continueReading?.issues.map((v) => {
               return (
-                <Image src={v.thumbnailUrl}>
+                <Image src={v.thumbnailUrl} alt={v.name}>
                   <VStack>
                     <Text>{v.name}</Text>
                   </VStack>
@@ -33,7 +33,7 @@ export default function Home() {
           <HStack>
             {doneReading?.issues.map((v) => {
               return (
-                <Image src={v.thumbnail}>
+                <Image src={v.thumbnail} alt={v.name}>
                   <VStack>
                     <Text>{v.name}</Text>
                   </VStack>
