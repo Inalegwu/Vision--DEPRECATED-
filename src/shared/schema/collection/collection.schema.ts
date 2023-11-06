@@ -17,6 +17,6 @@ export const collections = sqliteTable(
 );
 
 export const issueCollectionRelation = relations(collections, ({ many }) => ({
-  issues: many(issues),
+  issues: many(issues, { relationName: "issues" }),
 }));
 

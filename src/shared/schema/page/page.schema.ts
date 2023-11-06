@@ -27,6 +27,7 @@ export const issuePageRelation = relations(pages, ({ one }) => ({
   issue: one(issues, {
     fields: [pages.issueId],
     references: [issues.id],
+    relationName: "issue",
   }),
 }));
 

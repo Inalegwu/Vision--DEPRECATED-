@@ -7,9 +7,10 @@ import {
   Minus,
   CornersOut,
   GearFine,
+  User,
 } from "@phosphor-icons/react";
 import { trpcReact } from "../../shared/config";
-import { NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useAtom } from "jotai";
 import { themeState } from "../state";
 
@@ -50,8 +51,8 @@ export default function Layout(props: LayoutProps) {
       flexDirection="column"
       width="100%"
       height="100vh"
-      color={theme === "dark" ? "white" : "black"}
-      background={theme === "dark" ? "black" : "white"}
+      color={theme === "dark" ? "colors.white" : "colors.background"}
+      background={theme === "dark" ? "colors.background" : "colors.white"}
     >
       {/* blur  */}
       <Box background="purple" height={10} width={10} />
@@ -90,7 +91,7 @@ export default function Layout(props: LayoutProps) {
               onClick={() => minimizeWindow()}
               background="none"
               border="none"
-              color="white"
+              color={theme === "dark" ? "white" : "black"}
               transition="0.5s"
               _hover={{ color: "gray" }}
             >
@@ -101,7 +102,7 @@ export default function Layout(props: LayoutProps) {
               onClick={() => maximizeWindow()}
               background="none"
               border="none"
-              color="white"
+              color={theme === "dark" ? "white" : "black"}
               transition="0.5s"
               _hover={{ color: "gray" }}
             >
@@ -112,7 +113,7 @@ export default function Layout(props: LayoutProps) {
               onClick={() => closeWindow()}
               background="none"
               border="none"
-              color="white"
+              color={theme === "dark" ? "white" : "black"}
               transition="0.5s"
               _hover={{ color: "red" }}
             >
@@ -144,17 +145,17 @@ export default function Layout(props: LayoutProps) {
             justifyContent="space-around"
             transition="ease-out"
             borderRadius={10}
-            background={theme === "dark" ? "gray" : "whitesmoke"}
+            background={theme === "dark" ? "colors.gray" : "colors.white"}
           >
-            <NavLink to="/">
+            <Link to="/">
               <House size={15} />
-            </NavLink>
-            <NavLink to="/library">
+            </Link>
+            <Link to="/library">
               <Books size={15} />
-            </NavLink>
-            <NavLink to="/settings">
-              <GearFine size={15} />
-            </NavLink>
+            </Link>
+            <Link to="/settings">
+              <User size={15} />
+            </Link>
           </Box>
         </Box>
       </Box>

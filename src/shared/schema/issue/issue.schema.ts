@@ -26,13 +26,14 @@ export const issues = sqliteTable(
 );
 
 export const pageIssueRelation = relations(issues, ({ many }) => ({
-  pages: many(pages),
+  pages: many(pages, { relationName: "pages" }),
 }));
 
 export const collectionIssueRelation = relations(issues, ({ one }) => ({
   collection: one(collections, {
     fields: [issues.collectionId],
     references: [collections.id],
+    relationName: "collection",
   }),
 }));
 

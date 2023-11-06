@@ -1,6 +1,5 @@
 import { app, dialog } from "electron";
 import { publicProcedure, router } from "../../trpc";
-import * as fs from "fs";
 
 export const libraryRouter = router({
   addToLibrary: publicProcedure.mutation(async ({ ctx }) => {
@@ -17,12 +16,6 @@ export const libraryRouter = router({
         reason: "CANCELLED",
       };
     }
-
-    console.log(result.filePaths);
-
-    const file = fs.readFileSync(result.filePaths[0]);
-
-    console.log(file);
   }),
 });
 
