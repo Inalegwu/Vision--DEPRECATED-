@@ -35,6 +35,12 @@ dependencies:
   electron-trpc:
     specifier: ^0.5.2
     version: 0.5.2(@trpc/client@10.43.1)(@trpc/server@10.43.1)(electron@27.0.3)
+  jotai:
+    specifier: ^2.5.1
+    version: 2.5.1(@types/react@18.2.35)(react@18.2.0)
+  libarchive-wasm:
+    specifier: ^1.1.0
+    version: 1.1.0
   localforage:
     specifier: ^1.10.0
     version: 1.10.0
@@ -2677,6 +2683,22 @@ packages:
       '@sideway/pinpoint': 2.0.0
     dev: true
 
+  /jotai@2.5.1(@types/react@18.2.35)(react@18.2.0):
+    resolution: {integrity: sha512-vanPCCSuHczUXNbVh/iUunuMfrWRL4FdBtAbTRmrfqezJcKb8ybBTg8iivyYuUHapjcDETyJe1E4inlo26bVHA==}
+    engines: {node: '>=12.20.0'}
+    peerDependencies:
+      '@types/react': '>=17.0.0'
+      react: '>=17.0.0'
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      react:
+        optional: true
+    dependencies:
+      '@types/react': 18.2.35
+      react: 18.2.0
+    dev: false
+
   /js-tokens@4.0.0:
     resolution: {integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==}
 
@@ -2739,6 +2761,10 @@ packages:
     resolution: {integrity: sha512-dcS1ul+9tmeD95T+x28/ehLgd9mENa3LsvDTtzm3vyBEO7RPptvAD+t44WVXaUjTBRcrpFeFlC8WCruUR456hw==}
     engines: {node: '>=0.10.0'}
     dev: true
+
+  /libarchive-wasm@1.1.0:
+    resolution: {integrity: sha512-b1R4KK5Goybf2+kiVoM1NZnZ/3h7BxBvSCPF4scroJmIVqfD00hSFRNFt9oUcJcKjMu1vnWRnizXc2efpVY8yQ==}
+    dev: false
 
   /lie@3.1.1:
     resolution: {integrity: sha512-RiNhHysUjhrDQntfYSfY4MU24coXXdEOgw9WGcKHNeEwffDYbF//u87M1EWaMGzuFoSbqW0C9C6lEEhDOAswfw==}

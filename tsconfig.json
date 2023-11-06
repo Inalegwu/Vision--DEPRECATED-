@@ -9,10 +9,11 @@
     "jsx": "react-jsx",
     "strict": true
   },
-  "include": ["src"],
+  "include": ["src", "./kuma.config.ts"],
   "ts-node": {
     "compilerOptions": {
       "module": "CommonJS"
     }
   }
 }
+

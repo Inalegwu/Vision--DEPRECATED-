@@ -1,7 +1,17 @@
-import { Box, Button, Text } from "@kuma-ui/core";
-import { X, House, Books, Minus, CornersOut } from "@phosphor-icons/react";
-import { trpcReact } from "../../shared/config";
 import { useCallback, useEffect, useState } from "react";
+import { Box, Button, Text } from "@kuma-ui/core";
+import {
+  X,
+  House,
+  Books,
+  Minus,
+  CornersOut,
+  GearFine,
+} from "@phosphor-icons/react";
+import { trpcReact } from "../../shared/config";
+import { NavLink } from "react-router-dom";
+import { useAtom } from "jotai";
+import { themeState } from "../state";
 
 type LayoutProps = {
   children: React.ReactNode;
@@ -13,6 +23,8 @@ export default function Layout(props: LayoutProps) {
     trpcReact.window.maximizeWindow.useMutation();
   const { mutate: minimizeWindow } =
     trpcReact.window.minimizeWindow.useMutation();
+
+  const [theme] = useAtom(themeState);
 
   const [dockVisible, setDockVisible] = useState<boolean>(true);
 
@@ -38,15 +50,14 @@ export default function Layout(props: LayoutProps) {
       flexDirection="column"
       width="100%"
       height="100vh"
-      color="white"
-      background="black"
+      color={theme === "dark" ? "white" : "black"}
+      background={theme === "dark" ? "black" : "white"}
     >
       {/* blur  */}
       <Box background="purple" height={10} width={10} />
       <Box
         width="100%"
         height="100%"
-        background="transparent"
         backdropFilter="blur(400px)"
         position="absolute"
         zIndex={1}
@@ -75,6 +86,7 @@ export default function Layout(props: LayoutProps) {
             width="10%"
           >
             <Button
+              outline="none"
               onClick={() => minimizeWindow()}
               background="none"
               border="none"
@@ -85,6 +97,7 @@ export default function Layout(props: LayoutProps) {
               <Minus size={14} />
             </Button>
             <Button
+              outline="none"
               onClick={() => maximizeWindow()}
               background="none"
               border="none"
@@ -92,9 +105,10 @@ export default function Layout(props: LayoutProps) {
               transition="0.5s"
               _hover={{ color: "gray" }}
             >
-              <CornersOut size={11} />
+              <CornersOut size={13} />
             </Button>
             <Button
+              outline="none"
               onClick={() => closeWindow()}
               background="none"
               border="none"
@@ -119,41 +133,29 @@ export default function Layout(props: LayoutProps) {
           justifyContent="center"
           height="10%"
         >
-          {/* dock */}
-          {dockVisible && (
-            <Box
-              onMouseOver={handleMouseEnter}
-              padding={5}
-              height="70%"
-              width="8%"
-              background="rgba(255,255,255,0.3)"
-              display="flex"
-              alignContent="center"
-              alignItems="center"
-              justifyContent="space-around"
-              transition="ease-out"
-              borderRadius={9999}
-            >
-              <Button
-                cursor="pointer"
-                padding={3}
-                border="none"
-                background="none"
-                color="white"
-              >
-                <House size={15} />
-              </Button>
-              <Button
-                cursor="pointer"
-                padding={3}
-                border="none"
-                background="none"
-                color="white"
-              >
-                <Books size={15} />
-              </Button>
-            </Box>
-          )}
+          <Box
+            onMouseOver={handleMouseEnter}
+            padding={5}
+            height="70%"
+            width="10%"
+            display="flex"
+            alignContent="center"
+            alignItems="center"
+            justifyContent="space-around"
+            transition="ease-out"
+            borderRadius={10}
+            background={theme === "dark" ? "gray" : "whitesmoke"}
+          >
+            <NavLink to="/">
+              <House size={15} />
+            </NavLink>
+            <NavLink to="/library">
+              <Books size={15} />
+            </NavLink>
+            <NavLink to="/settings">
+              <GearFine size={15} />
+            </NavLink>
+          </Box>
         </Box>
       </Box>
     </Box>
