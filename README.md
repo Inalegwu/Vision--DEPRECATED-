@@ -12,9 +12,9 @@ Vision is an open source GitHub project that aims to provide users with a featur
 
 - Advanced Navigation: Vision offers a range of navigation options, such as page thumbnails, bookmarks, and a customizable reading mode, enabling users to find their preferred reading style.
 
-- Comic Library Management[WIP]: Users can organize their comic book collections efficiently with Vision's comprehensive library management features, including sorting, searching, and tagging options.
+- Comic Library Management [WIP] : Users can organize their comic book collections efficiently with Vision's comprehensive library management features, including sorting, searching, and tagging options.
 
-- Customization Options[WIP]: Vision allows users to personalize their reading experience through customizable themes, font sizes, and various display settings, ensuring optimal comfort while reading their favorite comics.
+- Customization Options [WIP] : Vision allows users to personalize their reading experience through customizable themes, font sizes, and various display settings, ensuring optimal comfort while reading their favorite comics.
 
 - Cross-Platform Compatibility: Vision is designed to work seamlessly across multiple platforms, including Windows, macOS, and Linux, providing users with the flexibility to enjoy their comics on their preferred operating system.
 
@@ -41,13 +41,16 @@ We welcome contributions from the open source community to help improve Vision a
 
 Please ensure that your contributions align with our code of conduct and follow the established coding guidelines.
 
-License
+## License
+
 Vision is released under the MIT License. See the LICENSE file for more details.
 
-Support
+## Support
+
 If you encounter any issues or have any questions, feel free to open an issue on the GitHub repository. Our team will be happy to assist you.
 
-Acknowledgements
+## Acknowledgements
+
 We would like to express our gratitude to the developers and contributors of Electron, TRPC, Drizzle, and React, whose exceptional work makes Vision possible.
 
 Thank you for choosing Vision as your go-to comic book reader. We hope you enjoy the immersive experience it offers and that it brings your favorite comics to life in a whole new way. Happy reading!
