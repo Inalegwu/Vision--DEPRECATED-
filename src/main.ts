@@ -8,9 +8,10 @@ const createWindow = () => {
 
   const mainWindow = new BrowserWindow({
     frame: false,
-    width: windowSize.width - 100,
+    width: windowSize.width - 50,
     height: windowSize.height - 50,
     webPreferences: {
+      sandbox: false,
       preload: path.resolve(__dirname, "preload.js"),
     },
   });
@@ -22,8 +23,6 @@ const createWindow = () => {
 };
 
 app.whenReady().then(() => {
-  const date = new Date().toDateString();
-
   createWindow();
 });
 

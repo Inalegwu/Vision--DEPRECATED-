@@ -8,3 +8,8 @@ export const db = drizzle(sqlite, { schema });
 
 await migrate(db, { migrationsFolder: ".drizzle" });
 
+export const createContext = () => {
+  return {
+    db,
+  };
+};

@@ -1,5 +1,7 @@
 import { initTRPC } from "@trpc/server";
-const t = initTRPC.create();
+import { createContext } from "./shared/storage";
+
+const t = initTRPC.context<typeof createContext>().create();
 
 export const middleware = t.middleware;
 export const router = t.router;
