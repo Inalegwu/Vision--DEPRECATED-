@@ -27,24 +27,6 @@ export default function Layout(props: LayoutProps) {
 
   const [theme] = useAtom(themeState);
 
-  const [dockVisible, setDockVisible] = useState<boolean>(true);
-
-  useEffect(() => {
-    const dockVisibleInterval = setInterval(() => {
-      if (dockVisible) {
-        setDockVisible(false);
-      }
-    }, 5000);
-
-    return () => {
-      clearInterval(dockVisibleInterval);
-    };
-  }, [dockVisible, setDockVisible]);
-
-  const handleMouseEnter = useCallback(() => {
-    setDockVisible(true);
-  }, [setDockVisible]);
-
   return (
     <Box
       display="flex"
@@ -126,7 +108,6 @@ export default function Layout(props: LayoutProps) {
         </Box>
         {/* bottom bar */}
         <Box
-          onMouseEnter={handleMouseEnter}
           width="100%"
           display="flex"
           alignContent="center"
@@ -135,7 +116,6 @@ export default function Layout(props: LayoutProps) {
           height="10%"
         >
           <Box
-            onMouseOver={handleMouseEnter}
             padding={5}
             height="70%"
             width="10%"

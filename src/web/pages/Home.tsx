@@ -1,11 +1,12 @@
-import { Box, HStack, Heading, Image, Text, VStack } from "@kuma-ui/core";
-import { Layout } from "../components";
+import { HStack, Heading, Image, Text, VStack } from "@kuma-ui/core";
+import { Layout, Spinner } from "../components";
 import { trpcReact } from "../../shared/config";
 
 export default function Home() {
-  const { data: continueReading } =
+  const { data: continueReading, isLoading: loadingCurrentlyReading } =
     trpcReact.issue.getCurrentlyReading.useQuery();
-  const { data: doneReading } = trpcReact.issue.getDoneReading.useQuery();
+  const { data: doneReading, isLoading: loadingDone } =
+    trpcReact.issue.getDoneReading.useQuery();
 
   return (
     <Layout>
@@ -14,7 +15,12 @@ export default function Home() {
           <HStack>
             <Heading as="h1">Continue Reading</Heading>
           </HStack>
-          <HStack>
+          <HStack
+            alignContent="center"
+            alignItems="center"
+            justifyContent="center"
+          >
+            {loadingCurrentlyReading && <Spinner size={40} />}
             {continueReading?.issues.map((v) => {
               return (
                 <Image src={v.thumbnailUrl} alt={v.name}>
@@ -31,6 +37,7 @@ export default function Home() {
             <Heading as="h1">Done Reading</Heading>
           </HStack>
           <HStack>
+            {loadingDone && <Spinner size={40} />}
             {doneReading?.issues.map((v) => {
               return (
                 <Image src={v.thumbnail} alt={v.name}>

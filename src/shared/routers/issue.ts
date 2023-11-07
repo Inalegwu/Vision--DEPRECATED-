@@ -7,9 +7,6 @@ export const issueRouter = router({
   getCurrentlyReading: publicProcedure.query(async ({ ctx }) => {
     const issues = await ctx.db.query.issues.findMany({
       where: (issues, { eq }) => eq(issues.currentlyReading, true),
-      with: {
-        pages: true,
-      },
     });
 
     return {
