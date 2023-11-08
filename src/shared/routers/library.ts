@@ -1,6 +1,8 @@
+import z from "zod";
 import { app, dialog } from "electron";
 import { publicProcedure, router } from "../../trpc";
 import * as fs from "fs/promises";
+import { Filter } from "../types";
 import { ArchiveReader, libarchiveWasm } from "libarchive-wasm";
 
 export const libraryRouter = router({
@@ -27,5 +29,34 @@ export const libraryRouter = router({
       console.log(entry.getSize());
     }
   }),
+  getLibrary: publicProcedure
+    .input(
+      z.object({
+        filter: z.enum(["All", "Issue", "Collection"]),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      if (input.filter === "All") {
+        const issues = await ctx.db.query.issues.findMany();
+        const collections = await ctx.db.query.collections.findMany();
+
+        return {
+          issues,
+          collections,
+        };
+      } else if (input.filter === "Collection") {
+        const collections = await ctx.db.query.collections.findMany();
+
+        return {
+          collections,
+        };
+      } else if (input.filter === "Issue") {
+        const issues = await ctx.db.query.issues.findMany();
+
+        return {
+          issues,
+        };
+      }
+    }),
 });
 

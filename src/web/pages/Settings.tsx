@@ -1,7 +1,11 @@
 import { Box, HStack } from "@kuma-ui/core";
 import { Layout } from "../components";
+import { useAtom } from "jotai";
+import { appIdState } from "../state";
 
 export default function Settings() {
+  const [appId] = useAtom(appIdState);
+
   return (
     <Layout>
       <Box
@@ -13,13 +17,13 @@ export default function Settings() {
         justifyContent="center"
       >
         <HStack
-          background="colors.gray"
+          background="gray"
           padding={10}
           borderRadius={10}
           width="80%"
           height="90%"
         >
-          more content
+          {appId}
         </HStack>
       </Box>
     </Layout>

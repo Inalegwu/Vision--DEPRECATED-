@@ -22,7 +22,7 @@ export const issues = sqliteTable(
   },
   (table) => {
     return {
-      nameIdx: index("name_idx").on(table.name),
+      nameIdx: index("issue_name_idx").on(table.name),
       collectionIdx: uniqueIndex("collection_idx").on(table.collectionId),
     };
   }
@@ -46,3 +46,4 @@ export const issueReadingRelation = relations(issues, ({ one }) => ({
     references: [reading.issueId],
   }),
 }));
+

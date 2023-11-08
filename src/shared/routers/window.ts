@@ -1,6 +1,5 @@
 import { BrowserWindow } from "electron";
 import { publicProcedure, router } from "../../trpc";
-import { db } from "../storage";
 
 export const windowRouter = router({
   closeWindow: publicProcedure.mutation(() => {
@@ -30,8 +29,6 @@ export const windowRouter = router({
     }
   }),
   minimizeWindow: publicProcedure.mutation(({ ctx }) => {
-    console.log(db);
-
     const browserWindow = BrowserWindow.getFocusedWindow();
 
     if (!browserWindow) return;

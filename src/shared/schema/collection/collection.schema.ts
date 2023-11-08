@@ -11,7 +11,7 @@ export const collections = sqliteTable(
   },
   (table) => {
     return {
-      nameIdx: index("name_idx").on(table.name),
+      nameIdx: index("collection_name_idx").on(table.name),
     };
   }
 );

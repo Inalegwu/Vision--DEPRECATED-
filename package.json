@@ -23,6 +23,7 @@
     ]
   },
   "dependencies": {
+    "@electron/rebuild": "^3.3.0",
     "@kuma-ui/core": "^1.5.2",
     "@phosphor-icons/react": "^2.0.14",
     "@tanstack/react-query": "^4.18.0",
@@ -67,4 +68,3 @@
     "webpack-cli": "^5.1.4"
   }
 }
-

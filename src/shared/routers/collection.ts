@@ -1,5 +1,8 @@
 import { z } from "zod";
 import { publicProcedure, router } from "../../trpc";
+import { generateUUID } from "../utils";
+import { collections } from "../schema";
+import { eq } from "drizzle-orm";
 
 export const collectionRouter = router({
   getAllCollections: publicProcedure.query(({ ctx }) => {
@@ -36,6 +39,34 @@ export const collectionRouter = router({
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
       //TODO
+    }),
+  createCollection: publicProcedure
+    .input(
+      z.object({
+        name: z.string().refine((v) => v.trim()),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const id = generateUUID();
+
+      const result = await ctx.db
+        .insert(collections)
+        .values({ id, name: input.name });
+
+      console.log(result.lastInsertRowid);
+
+      return true;
+    }),
+  deleteCollection: publicProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const result = await ctx.db
+        .delete(collections)
+        .where(eq(collections.id, input.id));
+
+      console.log(result.lastInsertRowid);
+
+      return true;
     }),
 });
 

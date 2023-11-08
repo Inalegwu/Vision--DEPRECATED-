@@ -33,8 +33,8 @@ export default function Layout(props: LayoutProps) {
       flexDirection="column"
       width="100%"
       height="100vh"
-      color={theme === "dark" ? "colors.white" : "colors.background"}
-      background={theme === "dark" ? "colors.background" : "colors.white"}
+      color={theme === "dark" ? "white" : "black"}
+      background={theme === "dark" ? "black" : "white"}
     >
       {/* blur  */}
       <Box background="purple" height={10} width={10} />
@@ -125,7 +125,7 @@ export default function Layout(props: LayoutProps) {
             justifyContent="space-around"
             transition="ease-out"
             borderRadius={10}
-            background={theme === "dark" ? "colors.gray" : "colors.white"}
+            background={theme === "dark" ? "#333333" : "white"}
           >
             <Link to="/">
               <House size={15} />
