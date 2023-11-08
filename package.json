@@ -17,6 +17,10 @@
     "db:generate": "drizzle-kit generate:sqlite",
     "postinstall": "electron-rebuild"
   },
+  "build": {
+    "appId": "com.vision.app",
+    "productName": "Vision"
+  },
   "electronmon": {
     "patterns": [
       "dist/**/*"
@@ -69,3 +73,4 @@
     "webpack-cli": "^5.1.4"
   }
 }
+
