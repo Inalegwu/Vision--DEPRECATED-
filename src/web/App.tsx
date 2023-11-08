@@ -1,5 +1,6 @@
 import { HashRouter, Routes, Route } from "react-router-dom";
 import { Collection, Home, Issue, Library, Settings } from "./pages";
+import { Toaster } from "react-hot-toast";
 
 export const App = () => {
   return (
@@ -11,6 +12,7 @@ export const App = () => {
         <Route path="/:collectionId" element={<Collection />} />
         <Route path="/:issueId" element={<Issue />} />
       </Routes>
+      <Toaster position="top-right" />
     </HashRouter>
   );
 };

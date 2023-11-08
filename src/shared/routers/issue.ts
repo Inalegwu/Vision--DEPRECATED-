@@ -1,9 +1,7 @@
 import z from "zod";
 import { publicProcedure, router } from "../../trpc";
 import { reading } from "../schema";
-import { v4 } from "uuid";
 import { generateUUID } from "../utils";
-import { db } from "../storage";
 
 export const issueRouter = router({
   getCurrentlyReading: publicProcedure.query(async ({ ctx }) => {

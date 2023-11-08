@@ -64,7 +64,14 @@ export default function Layout(props: LayoutProps) {
             borderBottom: "0.1px solid rgba(255,255,255,0.05)",
           }}
         >
-          <Text css={{ color: "$lightGray" }}>Vision</Text>
+          <Text
+            css={{
+              color: `${theme === "dark" ? "$white" : "$deepBlack"}`,
+              fontWeight: "bold",
+            }}
+          >
+            Vision
+          </Text>
           <Box id="drag-region" css={{ padding: 10, flex: 1 }} />
           <Box
             css={{
@@ -75,13 +82,22 @@ export default function Layout(props: LayoutProps) {
               gap: 5,
             }}
           >
-            <Button css={{ color: "$white" }} onClick={() => minimizeWindow()}>
+            <Button
+              css={{ color: `${theme === "dark" ? "$white" : "$deepBlack"}` }}
+              onClick={() => minimizeWindow()}
+            >
               <Minus size={13} />
             </Button>
-            <Button css={{ color: "$white" }} onClick={() => maximizeWindow()}>
+            <Button
+              css={{ color: `${theme === "dark" ? "$white" : "$deepBlack"}` }}
+              onClick={() => maximizeWindow()}
+            >
               <CornersOut size={13} />
             </Button>
-            <Button css={{ color: "$white" }} onClick={() => closeWindow()}>
+            <Button
+              css={{ color: `${theme === "dark" ? "$white" : "$deepBlack"}` }}
+              onClick={() => closeWindow()}
+            >
               <X size={13} />
             </Button>
           </Box>
@@ -101,7 +117,7 @@ export default function Layout(props: LayoutProps) {
           <Box
             css={{
               padding: "$md",
-              background: "$gray",
+              background: `${theme === "dark" ? "$gray" : "$lightGray"}`,
               borderRadius: "$lg",
               width: "10%",
               height: "100%",
@@ -112,13 +128,22 @@ export default function Layout(props: LayoutProps) {
               gap: 20,
             }}
           >
-            <LinkButton css={{ color: "$white" }} to="/">
+            <LinkButton
+              css={{ color: `${theme === "dark" ? "$white" : "$deepBlack"}` }}
+              to="/"
+            >
               <House size={17} />
             </LinkButton>
-            <LinkButton css={{ color: "$white" }} to="/library">
+            <LinkButton
+              css={{ color: `${theme === "dark" ? "$white" : "$deepBlack"}` }}
+              to="/library"
+            >
               <Books size={17} />
             </LinkButton>
-            <LinkButton css={{ color: "$white" }} to="/settings">
+            <LinkButton
+              css={{ color: `${theme === "dark" ? "$white" : "$deepBlack"}` }}
+              to="/settings"
+            >
               <User size={17} />
             </LinkButton>
           </Box>

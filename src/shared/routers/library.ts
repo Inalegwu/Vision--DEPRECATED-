@@ -2,7 +2,6 @@ import z from "zod";
 import { app, dialog } from "electron";
 import { publicProcedure, router } from "../../trpc";
 import * as fs from "fs/promises";
-import { Filter } from "../types";
 import { ArchiveReader, libarchiveWasm } from "libarchive-wasm";
 
 export const libraryRouter = router({

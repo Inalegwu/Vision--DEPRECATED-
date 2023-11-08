@@ -22,3 +22,8 @@ body {
   cursor: grab;
 }
 
+::-webkit-scrollbar {
+  width: 0;
+  background: transparent;
+}
+
