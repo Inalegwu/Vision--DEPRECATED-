@@ -24,8 +24,8 @@
   },
   "dependencies": {
     "@electron/rebuild": "^3.3.0",
-    "@kuma-ui/core": "^1.5.2",
     "@phosphor-icons/react": "^2.0.14",
+    "@stitches/react": "^1.2.8",
     "@tanstack/react-query": "^4.18.0",
     "@trpc/client": "^10.43.1",
     "@trpc/react-query": "^10.43.1",
@@ -46,7 +46,6 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
-    "@kuma-ui/webpack-plugin": "^1.2.4",
     "@types/node": "^20.8.10",
     "@types/react": "^18.2.35",
     "@types/react-dom": "^18.2.14",

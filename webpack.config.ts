@@ -1,14 +1,12 @@
 import { Configuration } from "webpack";
 import HtmlWebpackPlugin from "html-webpack-plugin";
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
-import KumaUIWebpackPlugin from "@kuma-ui/webpack-plugin";
 
 const isDev = process.env.NODE_ENV === "development";
 
 const common: Configuration = {
   mode: isDev ? "development" : "production",
   externals: ["fsevents"],
-  plugins: [new KumaUIWebpackPlugin()],
   output: {
     publicPath: "./",
     filename: "[name].js",

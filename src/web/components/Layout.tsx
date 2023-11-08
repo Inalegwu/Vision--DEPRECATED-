@@ -1,16 +1,13 @@
-import { useCallback, useEffect, useState } from "react";
-import { Box, Button, Text } from "@kuma-ui/core";
+import { Box, Button, Text, LinkButton } from "./atoms";
 import {
   X,
   House,
   Books,
   Minus,
   CornersOut,
-  GearFine,
   User,
 } from "@phosphor-icons/react";
 import { trpcReact } from "../../shared/config";
-import { Link } from "react-router-dom";
 import { useAtom } from "jotai";
 import { themeState } from "../state";
 
@@ -29,113 +26,100 @@ export default function Layout(props: LayoutProps) {
 
   return (
     <Box
-      display="flex"
-      flexDirection="column"
-      width="100%"
-      height="100vh"
-      color={theme === "dark" ? "white" : "black"}
-      background={theme === "dark" ? "black" : "white"}
+      css={{
+        height: "100vh",
+        width: "100%",
+        color: `${theme === "dark" ? "$white" : "$deepBlack"}`,
+        background: `${theme === "dark" ? "$background" : "$white"}`,
+      }}
     >
-      {/* blur  */}
-      <Box background="purple" height={10} width={10} />
       <Box
-        width="100%"
-        height="100%"
-        backdropFilter="blur(400px)"
-        position="absolute"
-        zIndex={1}
+        css={{
+          background: "$primary",
+          width: "10vh",
+          height: "10vh",
+          position: "absolute",
+          zIndex: 0,
+        }}
+      />
+
+      <Box
+        css={{
+          width: "100%",
+          height: "100%",
+          background: "transparent",
+          backdropFilter: "blur(400px)",
+          position: "absolute",
+          zIndex: 1,
+        }}
       >
-        {/* titlebar */}
         <Box
-          display="flex"
-          flexDirection="row"
-          alignContent="center"
-          alignItems="center"
-          justifyContent="space-between"
-          width="100%"
-          p={3}
-          height="4%"
-          borderBottom="0.17px solid rgba(255,255,255,0.04)"
+          css={{
+            display: "flex",
+            alignContent: "center",
+            alignItems: "center",
+            justifyContent: "space-between",
+            padding: "$sm",
+            height: "4%",
+          }}
         >
-          <Text color="gray">Vision</Text>
-          <Box id="drag-region" display="flex" flex={1} p={10} />
+          <Text css={{ color: "$lightGray" }}>Vision</Text>
+          <Box id="drag-region" css={{ padding: 10, flex: 1 }} />
           <Box
-            display="flex"
-            flexDirection="row"
-            alignContent="center"
-            alignItems="center"
-            justifyContent="flex-end"
-            gap={10}
-            width="10%"
+            css={{
+              display: "flex",
+              alignContent: "center",
+              alignItems: "center",
+              justifyContent: "flex-end",
+              gap: 5,
+            }}
           >
-            <Button
-              outline="none"
-              onClick={() => minimizeWindow()}
-              background="none"
-              border="none"
-              color={theme === "dark" ? "white" : "black"}
-              transition="0.5s"
-              _hover={{ color: "gray" }}
-            >
-              <Minus size={14} />
+            <Button css={{ color: "$white" }} onClick={() => minimizeWindow()}>
+              <Minus />
             </Button>
-            <Button
-              outline="none"
-              onClick={() => maximizeWindow()}
-              background="none"
-              border="none"
-              color={theme === "dark" ? "white" : "black"}
-              transition="0.5s"
-              _hover={{ color: "gray" }}
-            >
-              <CornersOut size={13} />
+            <Button css={{ color: "$white" }} onClick={() => maximizeWindow()}>
+              <CornersOut />
             </Button>
-            <Button
-              outline="none"
-              onClick={() => closeWindow()}
-              background="none"
-              border="none"
-              color={theme === "dark" ? "white" : "black"}
-              transition="0.5s"
-              _hover={{ color: "red" }}
-            >
-              <X size={14} />
+            <Button css={{ color: "$white" }} onClick={() => closeWindow()}>
+              <X />
             </Button>
           </Box>
         </Box>
-        <Box width="100%" height="86%">
-          {props.children}
-        </Box>
-        {/* bottom bar */}
+        <Box css={{ width: "100%", height: "86%" }}>{props.children}</Box>
         <Box
-          width="100%"
-          display="flex"
-          alignContent="center"
-          alignItems="center"
-          justifyContent="center"
-          height="10%"
+          css={{
+            width: "100%",
+            height: "10%",
+            padding: "$lg",
+            display: "flex",
+            alignContent: "center",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
         >
           <Box
-            padding={5}
-            height="70%"
-            width="10%"
-            display="flex"
-            alignContent="center"
-            alignItems="center"
-            justifyContent="space-around"
-            transition="ease-out"
-            borderRadius={10}
-            background={theme === "dark" ? "#333333" : "white"}
+            css={{
+              padding: "$md",
+              background: "$gray",
+              borderRadius: "$lg",
+              width: "9%",
+              height: "100%",
+              display: "flex",
+              alignContent: "center",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "$xxl",
+            }}
           >
-            <Link to="/">
-              <House size={15} />
-            </Link>
-            <Link to="/library">
-              <Books size={15} />
-            </Link>
-            <Link to="/settings">
-              <User size={15} />
-            </Link>
+            <LinkButton css={{ color: "$white" }} to="/">
+              <House />
+            </LinkButton>
+            <LinkButton css={{ color: "$white" }} to="/library">
+              <Books />
+            </LinkButton>
+            <LinkButton css={{ color: "$white" }} to="/settings">
+              <User />
+            </LinkButton>
           </Box>
         </Box>
       </Box>
