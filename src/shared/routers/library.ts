@@ -3,6 +3,7 @@ import { app, dialog } from "electron";
 import { publicProcedure, router } from "../../trpc";
 import * as fs from "fs/promises";
 import { ArchiveReader, libarchiveWasm } from "libarchive-wasm";
+import { Filter } from "../types";
 
 export const libraryRouter = router({
   addToLibrary: publicProcedure.mutation(async ({ ctx }) => {
@@ -31,7 +32,7 @@ export const libraryRouter = router({
   getLibrary: publicProcedure
     .input(
       z.object({
-        filter: z.enum(["All", "Issue", "Collection"]),
+        filter: z.any(),
       })
     )
     .query(async ({ ctx, input }) => {

@@ -36,10 +36,21 @@ export default function Layout(props: LayoutProps) {
       <Box
         css={{
           background: "$primary",
-          width: "10vh",
-          height: "10vh",
+          width: "30vh",
+          height: "30vh",
           position: "absolute",
           zIndex: 0,
+        }}
+      />
+      <Box
+        css={{
+          background: "$secondary",
+          width: "30vh",
+          height: "30vh",
+          position: "absolute",
+          zIndex: 0,
+          left: 100,
+          top: 100,
         }}
       />
 

@@ -19,7 +19,7 @@ const createWindow = () => {
   createIPCHandler({ router: appRouter, windows: [mainWindow] });
 
   mainWindow.loadFile("dist/index.html");
-  // mainWindow.webContents.openDevTools({ mode: "detach" });
+  mainWindow.webContents.openDevTools({ mode: "right" });
 };
 
 app.setName("Vision");

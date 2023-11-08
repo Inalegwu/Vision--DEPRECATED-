@@ -21,7 +21,18 @@ export default function Home() {
     data: doneReading,
     isLoading: loadingDone,
     isError: doneError,
+    error,
   } = trpcReact.issue.getDoneReading.useQuery();
+
+  if (continueError) {
+    toast.error(
+      "Something went wrong while fetching your currently reading issues"
+    );
+  }
+  if (continueError) {
+    console.log(error);
+    toast.error("Something went wrong while fetching your done reading issues");
+  }
 
   useEffect(() => {
     if (isFirstLaunch) {
