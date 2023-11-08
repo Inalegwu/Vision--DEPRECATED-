@@ -1,5 +1,7 @@
+import HStack from "./HStack";
 import Layout from "./Layout";
 import Spinner from "./Spinner";
+import VStack from "./VStack";
 
-export { Layout, Spinner };
+export { HStack, Layout, Spinner, VStack };
 

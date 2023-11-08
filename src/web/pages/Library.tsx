@@ -1,6 +1,6 @@
-import { Box, Button, Text } from "../components/atoms";
+import { Box, Button, LinkButton, Text } from "../components/atoms";
 import { trpcReact } from "../../shared/config";
-import { Layout } from "../components";
+import { Layout, VStack, HStack } from "../components";
 import { useAtom } from "jotai";
 import { themeState } from "../state";
 import { Plus } from "@phosphor-icons/react";
@@ -17,55 +17,35 @@ export default function Library() {
   return (
     <Layout>
       <Box css={{ width: "100%", height: "100%", padding: "$lg" }}>
-        <Box
-          css={{
-            display: "flex",
-            flexDirection: "column",
-            gap: "$lg",
-            alignContent: "flex-start",
-            alignItems: "flex-start",
-          }}
-        >
+        <VStack gap={6}>
           <Text css={{ fontSize: 35, fontWeight: "bold" }}>My Library</Text>
-          <Box
-            css={{
-              width: "100%",
-              display: "flex",
-              alignContent: "center",
-              alignItems: "center",
-              justifyContent: "space-between",
-              gap: "$lg",
-            }}
+          <HStack
+            width="100%"
+            justifyContent="space-between"
+            alignContent="center"
+            alignItems="center"
           >
-            <Box
-              css={{
-                display: "flex",
-                alignContent: "center",
-                alignItems: "center",
-                justifyContent: "flex-start",
-              }}
-            >
-              content
-            </Box>
+            <HStack
+              justifyContent="flex-start"
+              alignContent="center"
+              alignItems="center"
+              gap={6}
+            ></HStack>
             <Button
-              onClick={() => addToLibrary()}
               css={{
-                display: "flex",
-                alignContent: "center",
-                alignItems: "center",
-                gap: 5,
-                justifyContent: "center",
+                color: `${theme === "dark" ? "$white" : "$deepBlack"}`,
                 background: `${theme === "dark" ? "$gray" : "$lightGray"}`,
-                borderRadius: "$full",
                 padding: "$lg",
-                color: `${theme === "dark" ? "$white" : "$black"}`,
+                borderRadius: "$full",
               }}
             >
-              <Text css={{ fontSize: 13 }}>Add To Library</Text>
-              <Plus size={14} />
+              <HStack gap={5} alignContent="center" alignItems="center">
+                <Text>Add To Library</Text>
+                <Plus />
+              </HStack>
             </Button>
-          </Box>
-        </Box>
+          </HStack>
+        </VStack>
       </Box>
     </Layout>
   );
