@@ -4,6 +4,7 @@ import { publicProcedure, router } from "../../trpc";
 import * as fs from "fs/promises";
 import { ArchiveReader, libarchiveWasm } from "libarchive-wasm";
 import { Filter } from "../types";
+import { TRPCError } from "@trpc/server";
 
 export const libraryRouter = router({
   addToLibrary: publicProcedure.mutation(async ({ ctx }) => {
@@ -17,7 +18,6 @@ export const libraryRouter = router({
     if (result.canceled) {
       return {
         status: false,
-        reason: "CANCELLED",
       };
     }
 

@@ -70,6 +70,17 @@ export default function Settings() {
               <Option value="light">Light</Option>
             </Select>
           </Box>
+          <Box
+            css={{
+              display: "flex",
+              width: "100%",
+              alignContent: "center",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Text css={{ color: "$gray", fontSize: 11 }}>{appId}</Text>
+          </Box>
         </Box>
       </Box>
     </Layout>
