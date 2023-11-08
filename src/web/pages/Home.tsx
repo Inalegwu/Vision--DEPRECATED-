@@ -1,48 +1,17 @@
 import { Layout, Spinner } from "../components";
 import { Box, Text } from "../components/atoms";
-import { trpcReact } from "../../shared/config";
-import { useEffect } from "react";
 import { useAtom } from "jotai";
 import { appIdState, firstLaunchState } from "../state";
-import { generateUUID } from "../../shared/utils";
-import { toast } from "react-hot-toast";
+import { trpcReact } from "../../shared/config";
 
 export default function Home() {
   const [isFirstLaunch, setIsFirstLaunch] = useAtom(firstLaunchState);
   const [_, setAppId] = useAtom(appIdState);
 
-  const {
-    data: currentlyReading,
-    isLoading: loadingCurrentlyReading,
-    isError: continueError,
-  } = trpcReact.issue.getCurrentlyReading.useQuery();
-
-  const {
-    data: doneReading,
-    isLoading: loadingDone,
-    isError: doneError,
-    error,
-  } = trpcReact.issue.getDoneReading.useQuery();
-
-  if (continueError) {
-    toast.error(
-      "Something went wrong while fetching your currently reading issues"
-    );
-  }
-  if (continueError) {
-    console.log(error);
-    toast.error("Something went wrong while fetching your done reading issues");
-  }
-
-  useEffect(() => {
-    if (isFirstLaunch) {
-      toast.success("Welcome To Vision", {
-        position: "top-center",
-      });
-      setIsFirstLaunch(true);
-      setAppId(generateUUID());
-    }
-  }, [isFirstLaunch, setIsFirstLaunch, setAppId]);
+  const { data: currentlyReading, isLoading: loadingCurrentlyReading } =
+    trpcReact.issue.getCurrentlyReading.useQuery();
+  const { data: doneReading, isLoading: loadingDoneReading } =
+    trpcReact.issue.getDoneReading.useQuery();
 
   return (
     <Layout>
@@ -68,14 +37,7 @@ export default function Home() {
               flex: 1,
             }}
           >
-            {loadingCurrentlyReading && <Spinner />}
-            {currentlyReading?.issues.map((v) => {
-              return (
-                <Box>
-                  <Text>{v.name}</Text>
-                </Box>
-              );
-            })}
+            {loadingCurrentlyReading && <Spinner size={15} />}
           </Box>
         </Box>
         <Box
@@ -99,7 +61,7 @@ export default function Home() {
               flex: 1,
             }}
           >
-            {loadingDone && <Spinner />}
+            {loadingDoneReading && <Spinner size={15} />}
           </Box>
         </Box>
       </Box>

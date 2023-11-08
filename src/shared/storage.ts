@@ -2,7 +2,6 @@ import { drizzle } from "drizzle-orm/better-sqlite3";
 import Database from "better-sqlite3";
 import { migrate } from "drizzle-orm/better-sqlite3/migrator";
 import * as schema from "./schema/index";
-import { useQueryClient } from "@tanstack/react-query";
 
 const sqlite = new Database("storage.db", {
   /// this line has to exist because for some reason webpack can't find the .node
@@ -19,17 +18,4 @@ const sqlite = new Database("storage.db", {
 export const db = drizzle(sqlite, { schema });
 
 await migrate(db, { migrationsFolder: ".drizzle" });
-
-// Returns the context object to
-// to attach to trpc ctx
-// the database connection , queryClient and
-// eventually session data will live here for use
-// in all procedures , public and private
-export function createContext() {
-  const queryClient = useQueryClient();
-  return {
-    db,
-    qc: queryClient,
-  };
-}
 

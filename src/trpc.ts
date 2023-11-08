@@ -1,7 +1,7 @@
 import { initTRPC } from "@trpc/server";
-import { createContext } from "./shared/storage";
+import { Context } from "./shared/context";
 
-const t = initTRPC.context<typeof createContext>().create({
+const t = initTRPC.context<Context>().create({
   isServer: true,
 });
 
