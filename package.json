@@ -15,11 +15,16 @@
     "dev:webpack": "cross-env NODE_ENV=\"development\" webpack --progress",
     "dev:electron": "wait-on dist/main.js dist/index.html && electronmon .",
     "db:generate": "drizzle-kit generate:sqlite",
-    "postinstall": "electron-rebuild"
+    "postinstall": "electron-rebuild",
+    "package": "run-p build electron-build"
   },
   "build": {
     "appId": "com.vision.app",
-    "productName": "Vision"
+    "productName": "Vision",
+    "win": {
+      "target": "msi",
+      "icon": "assets/icon.png"
+    }
   },
   "electronmon": {
     "patterns": [

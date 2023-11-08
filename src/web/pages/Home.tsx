@@ -14,6 +14,16 @@ export default function Home() {
   const { data: doneReading, isLoading: loadingDoneReading } =
     trpcReact.issue.getDoneReading.useQuery();
 
+  if (loadingCurrentlyReading && loadingDoneReading) {
+    return (
+      <Layout>
+        <Box css={{ width: "100%", height: "100%" }}>
+          <Spinner size={40} />
+        </Box>
+      </Layout>
+    );
+  }
+
   if (
     currentlyReading?.issues.length === 0 &&
     doneReading?.issues.length === 0
@@ -98,9 +108,7 @@ export default function Home() {
               height: "90%",
               flex: 1,
             }}
-          >
-            {loadingCurrentlyReading && <Spinner size={15} />}
-          </Box>
+          ></Box>
         </Box>
         <Box
           css={{
@@ -122,9 +130,7 @@ export default function Home() {
               height: "90%",
               flex: 1,
             }}
-          >
-            {loadingDoneReading && <Spinner size={15} />}
-          </Box>
+          ></Box>
         </Box>
       </Box>
     </Layout>

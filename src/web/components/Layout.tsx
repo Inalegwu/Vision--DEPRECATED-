@@ -1,4 +1,4 @@
-import { Box, Button, Text, LinkButton } from "./atoms";
+import { Box, Button, Text, NavLink, LinkButton } from "./atoms";
 import {
   X,
   House,
@@ -10,6 +10,7 @@ import {
 import { trpcReact } from "../../shared/config";
 import { useAtom } from "jotai";
 import { themeState } from "../state";
+import { css } from "../stitches.config";
 
 type LayoutProps = {
   children: React.ReactNode;
@@ -97,7 +98,7 @@ export default function Layout(props: LayoutProps) {
           css={{
             width: "100%",
             height: "10%",
-            padding: "$lg",
+            padding: "$xxxl",
             display: "flex",
             alignContent: "center",
             alignItems: "center",
@@ -108,7 +109,7 @@ export default function Layout(props: LayoutProps) {
             css={{
               padding: "$md",
               background: `${theme === "dark" ? "$gray" : "$lightGray"}`,
-              borderRadius: "$lg",
+              borderRadius: "$xxl",
               width: "10%",
               height: "100%",
               display: "flex",
