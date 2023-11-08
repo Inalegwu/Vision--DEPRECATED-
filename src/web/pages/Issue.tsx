@@ -1,4 +1,4 @@
-import { Box } from "@kuma-ui/core";
+import { Box } from "../components/atoms";
 import { useParams } from "react-router-dom";
 import { IssueParams } from "../../shared/types";
 

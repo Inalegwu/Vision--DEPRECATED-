@@ -22,6 +22,8 @@ const createWindow = () => {
   // mainWindow.webContents.openDevTools({ mode: "detach" });
 };
 
+app.setName("Vision");
+
 app.whenReady().then(() => {
   createWindow();
 });

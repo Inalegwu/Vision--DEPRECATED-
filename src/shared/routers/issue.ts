@@ -22,8 +22,6 @@ export const issueRouter = router({
       },
     });
 
-    console.log(db);
-
     const issues = done.map((v) => ({
       id: v.id,
       issue_id: v.issueId,

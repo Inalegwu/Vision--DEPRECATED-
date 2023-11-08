@@ -61,6 +61,7 @@ export default function Layout(props: LayoutProps) {
             justifyContent: "space-between",
             padding: "$sm",
             height: "4%",
+            borderBottom: "0.1px solid rgba(255,255,255,0.05)",
           }}
         >
           <Text css={{ color: "$lightGray" }}>Vision</Text>
@@ -75,13 +76,13 @@ export default function Layout(props: LayoutProps) {
             }}
           >
             <Button css={{ color: "$white" }} onClick={() => minimizeWindow()}>
-              <Minus />
+              <Minus size={13} />
             </Button>
             <Button css={{ color: "$white" }} onClick={() => maximizeWindow()}>
-              <CornersOut />
+              <CornersOut size={13} />
             </Button>
             <Button css={{ color: "$white" }} onClick={() => closeWindow()}>
-              <X />
+              <X size={13} />
             </Button>
           </Box>
         </Box>
@@ -102,23 +103,23 @@ export default function Layout(props: LayoutProps) {
               padding: "$md",
               background: "$gray",
               borderRadius: "$lg",
-              width: "9%",
+              width: "10%",
               height: "100%",
               display: "flex",
               alignContent: "center",
               alignItems: "center",
               justifyContent: "center",
-              gap: "$xxl",
+              gap: 20,
             }}
           >
             <LinkButton css={{ color: "$white" }} to="/">
-              <House />
+              <House size={17} />
             </LinkButton>
             <LinkButton css={{ color: "$white" }} to="/library">
-              <Books />
+              <Books size={17} />
             </LinkButton>
             <LinkButton css={{ color: "$white" }} to="/settings">
-              <User />
+              <User size={17} />
             </LinkButton>
           </Box>
         </Box>
