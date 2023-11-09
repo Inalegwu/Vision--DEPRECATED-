@@ -1,39 +1,30 @@
-import { BrowserWindow } from "electron";
 import { publicProcedure, router } from "../../trpc";
 
 export const windowRouter = router({
-  closeWindow: publicProcedure.mutation(() => {
-    const browserWindow = BrowserWindow.getFocusedWindow();
+  closeWindow: publicProcedure.mutation(({ ctx }) => {
+    if (!ctx.window) return;
 
-    if (!browserWindow) return;
-
-    browserWindow.close();
+    ctx.window.close();
   }),
-  maximizeWindow: publicProcedure.mutation(() => {
-    const browserWindow = BrowserWindow.getFocusedWindow();
+  maximizeWindow: publicProcedure.mutation(({ ctx }) => {
+    if (!ctx.window) return;
 
-    if (!browserWindow) return;
-
-    const isMaximized = browserWindow.isMaximized();
+    const isMaximized = ctx.window.isMaximized();
 
     if (isMaximized) {
-      browserWindow.unmaximize();
+      ctx.window.unmaximize();
       return {
         fullscreen_status: false,
       };
     } else {
-      browserWindow.maximize();
+      ctx.window.maximize();
       return {
         fullscreen_status: true,
       };
     }
   }),
   minimizeWindow: publicProcedure.mutation(({ ctx }) => {
-    const browserWindow = BrowserWindow.getFocusedWindow();
-
-    if (!browserWindow) return;
-
-    browserWindow.minimize();
+    ctx.window?.minimize();
   }),
 });
 

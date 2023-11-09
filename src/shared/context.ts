@@ -1,3 +1,4 @@
+import { BrowserWindow } from "electron";
 import { db } from "./storage";
 import { inferAsyncReturnType } from "@trpc/server";
 
@@ -7,8 +8,11 @@ import { inferAsyncReturnType } from "@trpc/server";
 // eventually session data will live here for use
 // in all procedures , public and private
 export async function createContext() {
+  const BrowerWindow = BrowserWindow.getFocusedWindow();
+
   return {
     db,
+    window: BrowerWindow,
   };
 }
 
