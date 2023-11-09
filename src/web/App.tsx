@@ -2,11 +2,8 @@ import { HashRouter, Routes, Route } from "react-router-dom";
 import { Collection, Home, Issue, Library, Settings } from "./pages";
 import { Toaster } from "react-hot-toast";
 import { useAtom } from "jotai";
-import { themeState } from "./state";
 
 export const App = () => {
-  const [theme] = useAtom(themeState);
-
   return (
     <HashRouter>
       <Routes>
@@ -31,8 +28,8 @@ export const App = () => {
             gap: 2,
             fontSize: 13,
             fontWeight: 500,
-            color: `${theme === "dark" ? "#FFFFFF" : "#1C1C1C"}`,
-            background: `${theme === "dark" ? "#1C1C1C" : "#ECECEC"}`,
+            color: "#FFFFFF",
+            background: "#1C1C1C",
           },
         }}
       />

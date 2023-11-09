@@ -1,13 +1,9 @@
-import { Box, Button, LinkButton, Text } from "../components/atoms";
+import { Box, Button, Text } from "../components/atoms";
 import { trpcReact } from "../../shared/config";
 import { Layout, VStack, HStack } from "../components";
-import { useAtom } from "jotai";
-import { themeState } from "../state";
 import { Plus } from "@phosphor-icons/react";
 
 export default function Library() {
-  const [theme] = useAtom(themeState);
-
   const { mutate: addToLibrary, data } =
     trpcReact.library.addToLibrary.useMutation();
 
@@ -33,8 +29,8 @@ export default function Library() {
             ></HStack>
             <Button
               css={{
-                color: `${theme === "dark" ? "$white" : "$deepBlack"}`,
-                background: `${theme === "dark" ? "$gray" : "$lightGray"}`,
+                color: "$white",
+                background: "$gray",
                 padding: "$lg",
                 borderRadius: "$full",
               }}

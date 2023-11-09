@@ -1,12 +1,10 @@
 import { Layout } from "../components";
-import { Box, Option, Select, Text } from "../components/atoms";
+import { Box, Text } from "../components/atoms";
 import { useAtom } from "jotai";
-import { appIdState, themeState } from "../state";
-import { ThemeState } from "../../shared/types";
+import { appIdState } from "../state";
 
 export default function Settings() {
   const [appId] = useAtom(appIdState);
-  const [theme, setColorTheme] = useAtom(themeState);
 
   return (
     <Layout>
@@ -26,7 +24,7 @@ export default function Settings() {
             height: "90%",
             borderRadius: "$lg",
             padding: "$lg",
-            background: `${theme === "dark" ? "$deepBlack" : "$lightGray"}`,
+            background: "$deepBlack",
             display: "flex",
             flexDirection: "column",
             gap: 10,
@@ -36,40 +34,12 @@ export default function Settings() {
             css={{
               fontWeight: "bold",
               fontSize: 30,
-              color: `${theme === "dark" ? "$white" : "$deepBlack"}`,
+              color: "$white",
             }}
           >
             Settings
           </Text>
-          <Box
-            css={{
-              width: "100%",
-              padding: "$md",
-              borderRadius: "$md",
-              background: `${theme === "dark" ? "$gray" : "$white"}`,
-              display: "flex",
-              alignContent: "center",
-              alignItems: "center",
-              justifyContent: "space-between",
-            }}
-          >
-            <Text>Color Mode</Text>
-            <Select
-              css={{
-                padding: "$md",
-                background: `${theme === "dark" ? "$deepBlack" : "$lightGray"}`,
-                borderRadius: "$sm",
-                color: `${theme === "dark" ? "$white" : "$deepBlack"}`,
-              }}
-              value={theme}
-              onChange={(e) => {
-                setColorTheme(e.currentTarget.value as ThemeState);
-              }}
-            >
-              <Option value="dark">Dark</Option>
-              <Option value="light">Light</Option>
-            </Select>
-          </Box>
+
           <Box
             css={{
               display: "flex",

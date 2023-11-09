@@ -8,6 +8,8 @@ export type HStackProps = {
   justifyContent?: Property.JustifyContent;
   children?: React.ReactNode;
   width?: string;
+  padding?: number;
+  height?: string | number;
 };
 
 export default function HStack(props: HStackProps) {
@@ -15,6 +17,8 @@ export default function HStack(props: HStackProps) {
     <Box
       css={{
         display: "flex",
+        padding: props.padding || "",
+        height: props.height || "",
         width: props.width || "",
         justifyContent: props.justifyContent || "flex-start",
         alignContent: props.alignContent || "flex-start",

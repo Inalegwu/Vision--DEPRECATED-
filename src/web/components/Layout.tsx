@@ -1,144 +1,202 @@
-import { Box, Button, Text, NavLink, LinkButton } from "./atoms";
+import {
+  Box,
+  Button,
+  Text,
+  NavLink,
+  LinkButton,
+  AnimatedBox,
+  AnimatedText,
+  AnimatedButton,
+} from "./atoms";
 import {
   X,
   House,
   Books,
   Minus,
+  List,
   CornersOut,
   User,
+  Gear,
 } from "@phosphor-icons/react";
 import { trpcReact } from "../../shared/config";
 import { useAtom } from "jotai";
-import { themeState } from "../state";
-import { css } from "../stitches.config";
+
+import { useCallback, useState } from "react";
+import HStack from "./HStack";
+
+import VStack from "./VStack";
 
 type LayoutProps = {
   children: React.ReactNode;
 };
 
 export default function Layout(props: LayoutProps) {
+  const [sideBarShowing, setSideBarShowing] = useState<boolean>(true);
+
   const { mutate: closeWindow } = trpcReact.window.closeWindow.useMutation();
   const { mutate: maximizeWindow } =
     trpcReact.window.maximizeWindow.useMutation();
   const { mutate: minimizeWindow } =
     trpcReact.window.minimizeWindow.useMutation();
 
-  const [theme] = useAtom(themeState);
+  const handleSideBarClick = useCallback(() => {
+    setSideBarShowing((v) => !v);
+  }, [setSideBarShowing]);
 
   return (
     <Box
       css={{
         height: "100vh",
         width: "100%",
-        color: `${theme === "dark" ? "$white" : "$deepBlack"}`,
-        background: `${theme === "dark" ? "$background" : "$white"}`,
+        color: "$white",
+        background: "$background",
       }}
     >
       <Box
         css={{
           width: "100%",
-          height: "100%",
-          background: "transparent",
-          backdropFilter: "blur(400px)",
-          position: "absolute",
-          zIndex: 1,
+          height: "4%",
+          display: "flex",
+          alignContent: "center",
+          alignItems: "center",
+          justifyContent: "space-between",
+          borderBottom: "0.1px solid rgba(255,255,255,0.1)",
         }}
       >
-        <Box
+        <Text>Vision</Text>
+        <HStack gap={10}>
+          <Button css={{ color: "$white" }} onClick={() => minimizeWindow()}>
+            <Minus />
+          </Button>
+          <Button css={{ color: "$white" }} onClick={() => maximizeWindow()}>
+            <CornersOut />
+          </Button>
+          <Button css={{ color: "$white" }} onClick={() => closeWindow()}>
+            <X />
+          </Button>
+        </HStack>
+      </Box>
+      <Box css={{ width: "100%", height: "96%", display: "flex" }}>
+        <AnimatedBox
+          animate={{
+            width: sideBarShowing ? "20%" : "0%",
+            opacity: sideBarShowing ? 1 : 0,
+          }}
+          layout
+          initial={false}
+          transition={{ layout: { duration: 0.3 } }}
           css={{
-            display: "flex",
-            alignContent: "center",
-            alignItems: "center",
-            justifyContent: "space-between",
-            padding: "$sm",
-            height: "4%",
-            borderBottom: "0.1px solid rgba(255,255,255,0.05)",
+            background: "$deepBlack",
           }}
         >
-          <Text
-            css={{
-              color: `${theme === "dark" ? "$white" : "$deepBlack"}`,
-              fontWeight: "bold",
-            }}
-          >
-            Vision
-          </Text>
-          <Box id="drag-region" css={{ padding: 10, flex: 1 }} />
-          <Box
-            css={{
-              display: "flex",
-              alignContent: "center",
-              alignItems: "center",
-              justifyContent: "flex-end",
-              gap: 5,
-            }}
-          >
-            <Button
-              css={{ color: `${theme === "dark" ? "$white" : "$deepBlack"}` }}
-              onClick={() => minimizeWindow()}
-            >
-              <Minus size={13} />
-            </Button>
-            <Button
-              css={{ color: `${theme === "dark" ? "$white" : "$deepBlack"}` }}
-              onClick={() => maximizeWindow()}
-            >
-              <CornersOut size={13} />
-            </Button>
-            <Button
-              css={{ color: `${theme === "dark" ? "$white" : "$deepBlack"}` }}
-              onClick={() => closeWindow()}
-            >
-              <X size={13} />
-            </Button>
-          </Box>
-        </Box>
-        <Box css={{ width: "100%", height: "86%" }}>{props.children}</Box>
-        <Box
-          css={{
-            width: "100%",
-            height: "10%",
-            padding: "$xxxl",
-            display: "flex",
-            alignContent: "center",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <Box
-            css={{
-              padding: "$md",
-              background: `${theme === "dark" ? "$gray" : "$lightGray"}`,
-              borderRadius: "$xxl",
-              width: "10%",
-              height: "100%",
-              display: "flex",
-              alignContent: "center",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: 20,
-            }}
+          <HStack
+            alignContent="center"
+            alignItems="center"
+            justifyContent="flex-end"
+            padding={5}
+            gap={5}
           >
             <LinkButton
-              css={{ color: `${theme === "dark" ? "$white" : "$deepBlack"}` }}
-              to="/"
+              to="/settings"
+              css={{
+                display: "flex",
+                alignContent: "center",
+                alignItems: "center",
+                justifyContent: "center",
+                color: "$white",
+                padding: "$md",
+                borderRadius: "$md",
+                background: "$gray",
+              }}
             >
-              <House size={17} />
+              <Gear />
+            </LinkButton>
+            <Button
+              onClick={handleSideBarClick}
+              css={{
+                display: "flex",
+                alignContent: "center",
+                alignItems: "center",
+                justifyContent: "center",
+                color: "$white",
+                padding: "$md",
+                borderRadius: "$md",
+                background: "$gray",
+              }}
+            >
+              <List size={15} />
+            </Button>
+          </HStack>
+          <VStack padding={5} gap={3} justifyContent="space-between">
+            <LinkButton
+              to="/"
+              css={{
+                display: "flex",
+                alignContent: "center",
+                alignItems: "center",
+                justifyContent: "flex-start",
+                gap: "$lg",
+                color: "$white",
+                background: "$gray",
+                padding: "$md",
+                width: "100%",
+                borderRadius: "$md",
+              }}
+            >
+              <House />
+              <Text>Home</Text>
             </LinkButton>
             <LinkButton
-              css={{ color: `${theme === "dark" ? "$white" : "$deepBlack"}` }}
+              css={{
+                display: "flex",
+                alignContent: "center",
+                alignItems: "center",
+                justifyContent: "flex-start",
+                gap: "$lg",
+                color: "$white",
+                background: "$gray",
+                padding: "$md",
+                width: "100%",
+                borderRadius: "$md",
+              }}
               to="/library"
             >
-              <Books size={17} />
+              <Books />
+              <Text>Library</Text>
             </LinkButton>
-            <LinkButton
-              css={{ color: `${theme === "dark" ? "$white" : "$deepBlack"}` }}
-              to="/settings"
+          </VStack>
+        </AnimatedBox>
+        <AnimatedBox
+          initial={false}
+          animate={{ width: sideBarShowing ? "80%" : "100%" }}
+        >
+          {!sideBarShowing && (
+            <AnimatedButton
+              initial={false}
+              onClick={handleSideBarClick}
+              css={{
+                position: "absolute",
+                zIndex: 99999,
+                background: "$gray",
+                padding: "$lg",
+                height: 30,
+                width: 30,
+                borderRadius: "$full",
+                color: "$white",
+                left: "97%",
+                top: "5%",
+              }}
+              animate={{
+                opacity: sideBarShowing ? 0 : 1,
+                scale: sideBarShowing ? 0 : 1,
+              }}
             >
-              <User size={17} />
-            </LinkButton>
-          </Box>
-        </Box>
+              <List />
+            </AnimatedButton>
+          )}
+
+          {props.children}
+        </AnimatedBox>
       </Box>
     </Box>
   );
