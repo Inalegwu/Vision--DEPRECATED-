@@ -1,10 +1,6 @@
 import z from "zod";
 import { app, dialog } from "electron";
 import { publicProcedure, router } from "../../trpc";
-import * as fs from "fs/promises";
-import { ArchiveReader, libarchiveWasm } from "libarchive-wasm";
-import { Filter } from "../types";
-import { TRPCError } from "@trpc/server";
 
 export const libraryRouter = router({
   addToLibrary: publicProcedure.mutation(async ({ ctx }) => {
@@ -19,14 +15,6 @@ export const libraryRouter = router({
       return {
         status: false,
       };
-    }
-
-    const file = await fs.readFile(result.filePaths[0]);
-    const mod = await libarchiveWasm();
-    const reader = new ArchiveReader(mod, new Int8Array(file));
-
-    for (const entry of reader.entries()) {
-      console.log(entry.getSize());
     }
   }),
   getLibrary: publicProcedure

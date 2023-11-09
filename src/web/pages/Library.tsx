@@ -34,6 +34,7 @@ export default function Library() {
                 padding: "$lg",
                 borderRadius: "$full",
               }}
+              onClick={() => addToLibrary()}
             >
               <HStack gap={5} alignContent="center" alignItems="center">
                 <Text>Add To Library</Text>

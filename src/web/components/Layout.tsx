@@ -64,6 +64,14 @@ export default function Layout(props: LayoutProps) {
         }}
       >
         <Text>Vision</Text>
+        <Box
+          id="drag-region"
+          css={{
+            display: "flex",
+            flex: 1,
+            padding: "$md",
+          }}
+        />
         <HStack gap={10}>
           <Button css={{ color: "$white" }} onClick={() => minimizeWindow()}>
             <Minus />
