@@ -1,6 +1,8 @@
 import z from "zod";
 import { app, dialog } from "electron";
 import { publicProcedure, router } from "../../trpc";
+import * as zlib from "zlib";
+import * as fs from "fs";
 
 export const libraryRouter = router({
   addToLibrary: publicProcedure.mutation(async ({ ctx }) => {
@@ -16,6 +18,12 @@ export const libraryRouter = router({
         status: false,
       };
     }
+
+    const unzip = zlib.createUnzip();
+
+    fs.createReadStream(result.filePaths[0]).pipe(unzip);
+
+    return true;
   }),
   getLibrary: publicProcedure
     .input(
@@ -24,27 +32,11 @@ export const libraryRouter = router({
       })
     )
     .query(async ({ ctx, input }) => {
-      if (input.filter === "All") {
-        const issues = await ctx.db.query.issues.findMany();
-        const collections = await ctx.db.query.collections.findMany();
+      const issues = ctx.db.query.issues.findMany({});
 
-        return {
-          issues,
-          collections,
-        };
-      } else if (input.filter === "Collection") {
-        const collections = await ctx.db.query.collections.findMany();
-
-        return {
-          collections,
-        };
-      } else if (input.filter === "Issue") {
-        const issues = await ctx.db.query.issues.findMany();
-
-        return {
-          issues,
-        };
-      }
+      return {
+        issues,
+      };
     }),
 });
 

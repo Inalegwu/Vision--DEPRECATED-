@@ -7,8 +7,6 @@ import {
   uniqueIndex,
 } from "drizzle-orm/sqlite-core";
 import { pages } from "../page/page.schema";
-import { collections } from "../collection/collection.schema";
-import { reading } from "../reading/reading.schema";
 
 export const issues = sqliteTable(
   "issues",
@@ -30,20 +28,5 @@ export const issues = sqliteTable(
 
 export const pageIssueRelation = relations(issues, ({ many }) => ({
   pages: many(pages, { relationName: "pages" }),
-}));
-
-export const collectionIssueRelation = relations(issues, ({ one }) => ({
-  collection: one(collections, {
-    fields: [issues.collectionId],
-    references: [collections.id],
-    relationName: "collection",
-  }),
-}));
-
-export const issueReadingRelation = relations(issues, ({ one }) => ({
-  reading: one(reading, {
-    fields: [issues.id],
-    references: [reading.issueId],
-  }),
 }));
 

@@ -1,16 +1,12 @@
 import { HashRouter, Routes, Route } from "react-router-dom";
-import { Collection, Home, Issue, Library, Settings } from "./pages";
+import { Issue, Library } from "./pages";
 import { Toaster } from "react-hot-toast";
-import { useAtom } from "jotai";
 
 export const App = () => {
   return (
     <HashRouter>
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/library" element={<Library />} />
-        <Route path="/settings" element={<Settings />} />
-        <Route path="/:collectionId" element={<Collection />} />
+        <Route path="/" element={<Library />} />
         <Route path="/:issueId" element={<Issue />} />
       </Routes>
       <Toaster
