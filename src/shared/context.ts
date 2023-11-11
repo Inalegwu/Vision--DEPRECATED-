@@ -1,4 +1,4 @@
-import { BrowserWindow } from "electron";
+import { BrowserWindow, app } from "electron";
 import { db } from "./storage";
 import { inferAsyncReturnType } from "@trpc/server";
 
@@ -13,6 +13,7 @@ export async function createContext() {
   return {
     db,
     window: BrowerWindow,
+    app,
   };
 }
 

@@ -1,14 +1,15 @@
 import z from "zod";
-import { app, dialog } from "electron";
+import { dialog } from "electron";
 import { publicProcedure, router } from "../../trpc";
-import * as zlib from "zlib";
 import * as fs from "fs";
+import path from "path";
+import unzipper from "unzipper";
 
 export const libraryRouter = router({
   addToLibrary: publicProcedure.mutation(async ({ ctx }) => {
     const result = await dialog.showOpenDialog({
       title: "Select Issue",
-      defaultPath: app.getPath("downloads"),
+      defaultPath: ctx.app.getPath("downloads"),
       buttonLabel: "Add To Library",
       properties: ["openFile"],
     });
@@ -19,11 +20,13 @@ export const libraryRouter = router({
       };
     }
 
-    const unzip = zlib.createUnzip();
+    const fileContent = fs.createReadStream(result.filePaths[0]);
 
-    fs.createReadStream(result.filePaths[0]).pipe(unzip);
-
-    return true;
+    fileContent.pipe(
+      unzipper.Extract({
+        path: path.join(ctx.app.getPath("appData"), "temp"),
+      })
+    );
   }),
   getLibrary: publicProcedure
     .input(
