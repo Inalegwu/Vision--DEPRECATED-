@@ -13,15 +13,12 @@ export const issues = sqliteTable(
   {
     id: text("id").notNull().unique().primaryKey(),
     name: text("name").notNull(),
-    collectionId: text("collection_id"),
     dateCreated: integer("date_created").default(Date.now()),
     thumbnailUrl: text("thumbnail_url").notNull(),
-    currentlyReading: integer("currently_reading", { mode: "boolean" }),
   },
   (table) => {
     return {
       nameIdx: index("issue_name_idx").on(table.name),
-      collectionIdx: uniqueIndex("collection_idx").on(table.collectionId),
     };
   }
 );

@@ -11,7 +11,7 @@ export default function Library() {
   } = trpcReact.library.addToLibrary.useMutation();
 
   const { data: libraryData, isLoading: fetchingLibraryContent } =
-    trpcReact.library.getLibrary.useQuery({ filter: "All" });
+    trpcReact.library.getLibrary.useQuery();
 
   return (
     <Layout>

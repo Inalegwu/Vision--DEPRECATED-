@@ -1,7 +1,7 @@
 import path from "path";
 import { BrowserWindow, app, screen } from "electron";
-import { createIPCHandler } from "electron-trpc/main";
 import { appRouter } from "./shared/routers/_app";
+import { createIPCHandler } from "electron-trpc/main";
 import { createContext } from "./shared/context";
 
 const createWindow = () => {

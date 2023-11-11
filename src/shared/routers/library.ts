@@ -1,9 +1,6 @@
 import z from "zod";
 import { dialog } from "electron";
 import { publicProcedure, router } from "../../trpc";
-import * as fs from "fs";
-import path from "path";
-import unzipper from "unzipper";
 
 export const libraryRouter = router({
   addToLibrary: publicProcedure.mutation(async ({ ctx }) => {
@@ -20,26 +17,14 @@ export const libraryRouter = router({
       };
     }
 
-    const fileContent = fs.createReadStream(result.filePaths[0]);
-
-    fileContent.pipe(
-      unzipper.Extract({
-        path: path.join(ctx.app.getPath("appData"), "temp"),
-      })
-    );
+    return true;
   }),
-  getLibrary: publicProcedure
-    .input(
-      z.object({
-        filter: z.any(),
-      })
-    )
-    .query(async ({ ctx, input }) => {
-      const issues = ctx.db.query.issues.findMany({});
+  getLibrary: publicProcedure.query(async ({ ctx }) => {
+    const issues = ctx.db.query.issues.findMany({});
 
-      return {
-        issues,
-      };
-    }),
+    return {
+      issues,
+    };
+  }),
 });
 

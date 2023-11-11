@@ -11,6 +11,7 @@ const sqlite = new Database("storage.db", {
   /// to figure this out
   /// StackOverflow and Github Issues weren't much help either, But I was lucky to find this
   /// config option.
+  /// ISSUE_DETAILS HERE
   /// tldr : don't remove this , take my word for it...
   nativeBinding:
     "node_modules/better-sqlite3/build/Release/better_sqlite3.node",
