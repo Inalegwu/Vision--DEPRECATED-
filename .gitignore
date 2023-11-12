@@ -4,4 +4,4 @@ release
 node_modules
 .drizzle
 build
-storage.db
+*.db
