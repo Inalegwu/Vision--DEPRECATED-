@@ -21,6 +21,13 @@
   "build": {
     "appId": "com.vision.app",
     "productName": "Vision",
+    "artifactName": "${productName}-${version}-${platform}-${arch}.${ext}",
+    "files": [
+      "dist/**/*"
+    ],
+    "directories": {
+      "output": "release"
+    },
     "win": {
       "target": "msi",
       "icon": "assets/icon.png"

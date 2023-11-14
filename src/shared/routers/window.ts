@@ -1,4 +1,5 @@
 import { publicProcedure, router } from "../../trpc";
+import { version } from "../../../package.json";
 
 export const windowRouter = router({
   closeWindow: publicProcedure.mutation(({ ctx }) => {
@@ -26,10 +27,4 @@ export const windowRouter = router({
   minimizeWindow: publicProcedure.mutation(({ ctx }) => {
     ctx.window?.minimize();
   }),
-  getAppVersion: publicProcedure.query(() => {
-    // TODO figure out how to get the application
-    // version from package.json to display in
-    // the app
-  }),
 });
-

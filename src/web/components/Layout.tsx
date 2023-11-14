@@ -37,6 +37,8 @@ export default function Layout(props: LayoutProps) {
   const { mutate: minimizeWindow } =
     trpcReact.window.minimizeWindow.useMutation();
 
+  const { data: appVer } = trpcReact.version.useQuery();
+
   return (
     <Box
       css={{
@@ -57,7 +59,17 @@ export default function Layout(props: LayoutProps) {
           borderBottom: "0.1px solid rgba(255,255,255,0.1)",
         }}
       >
-        <Text>Vision</Text>
+        <Box
+          css={{
+            display: "flex",
+            alignContent: "center",
+            alignItems: "center",
+            gap: "$md",
+          }}
+        >
+          <Text>Vision</Text>
+          <Text css={{ fontSize: 10, color: "$gray" }}>{appVer}</Text>
+        </Box>
         <Box
           id="drag-region"
           css={{
@@ -82,4 +94,3 @@ export default function Layout(props: LayoutProps) {
     </Box>
   );
 }
-
