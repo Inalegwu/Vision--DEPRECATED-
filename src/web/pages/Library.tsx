@@ -114,10 +114,25 @@ export default function Library() {
           </HStack>
         </VStack>
         {/* body */}
-        <Image
-          src={data?.url}
-          css={{ width: 200, height: 100, borderRadius: "$md" }}
-        />
+        <Box>
+          {libraryData?.issues.map((v) => {
+            return (
+              <Box>
+                <Image
+                  src={v.thumbnailUrl}
+                  css={{
+                    width: 250,
+                    height: 300,
+                    borderRadius: "$md",
+                    border: "0.2px solid $gray",
+                  }}
+                  alt={v.name}
+                />
+                <Text>{v.name}</Text>
+              </Box>
+            );
+          })}
+        </Box>
       </Box>
     </Layout>
   );

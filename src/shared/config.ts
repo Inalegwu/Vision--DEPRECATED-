@@ -3,6 +3,7 @@ import { TRPCClientError, createTRPCReact } from "@trpc/react-query";
 import { ipcLink } from "electron-trpc/renderer";
 import { AppRouter } from "./routers/_app";
 import toast from "react-hot-toast";
+import { TRPCError } from "@trpc/server";
 
 export const trpcReact = createTRPCReact<AppRouter>();
 
@@ -31,7 +32,7 @@ export const queryClient = new QueryClient({
       networkMode: "always",
       retry: 1,
       onError: (err) => {
-        if (err instanceof TRPCClientError) {
+        if (err instanceof TRPCClientError || err instanceof TRPCError) {
           console.log(err.cause);
           toast.error(err.message);
         } else {
