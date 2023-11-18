@@ -9,8 +9,8 @@ const createWindow = () => {
 
   const mainWindow = new BrowserWindow({
     frame: false,
-    width: windowSize.width,
-    height: windowSize.height,
+    width: windowSize.width - 100,
+    height: windowSize.height - 100,
     webPreferences: {
       sandbox: false,
       preload: path.resolve(__dirname, "preload.js"),
@@ -34,4 +34,3 @@ app.whenReady().then(() => {
 });
 
 app.once("window-all-closed", () => app.quit());
-

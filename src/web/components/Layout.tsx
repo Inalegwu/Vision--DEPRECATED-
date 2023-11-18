@@ -1,30 +1,8 @@
-import {
-  Box,
-  Button,
-  Text,
-  NavLink,
-  LinkButton,
-  AnimatedBox,
-  AnimatedText,
-  AnimatedButton,
-} from "./atoms";
-import {
-  X,
-  House,
-  Books,
-  Minus,
-  List,
-  CornersOut,
-  User,
-  Gear,
-} from "@phosphor-icons/react";
+import { Box, Button, Text } from "./atoms";
+import { X, Minus, CornersOut } from "@phosphor-icons/react";
 import { trpcReact } from "../../shared/config";
-import { useAtom } from "jotai";
 
-import { useCallback, useState } from "react";
 import HStack from "./HStack";
-
-import VStack from "./VStack";
 
 type LayoutProps = {
   children: React.ReactNode;
@@ -53,6 +31,7 @@ export default function Layout(props: LayoutProps) {
           width: "100%",
           height: "4%",
           display: "flex",
+          padding: "$lg",
           alignContent: "center",
           alignItems: "center",
           justifyContent: "space-between",
@@ -62,13 +41,13 @@ export default function Layout(props: LayoutProps) {
         <Box
           css={{
             display: "flex",
-            alignContent: "center",
-            alignItems: "center",
-            gap: "$md",
+            alignContent: "flex-end",
+            alignItems: "flex-end",
+            gap: "$lg",
           }}
         >
           <Text>Vision</Text>
-          <Text css={{ fontSize: 10, color: "$gray" }}>{appVer}</Text>
+          <Text css={{ fontSize: 12, color: "$gray" }}>{appVer}</Text>
         </Box>
         <Box
           id="drag-region"

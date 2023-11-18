@@ -12,9 +12,10 @@ export const queryClient = new QueryClient({
       refetchOnWindowFocus: false,
       // It's not a network request is it
       // so it's safe to say that things in the database won't be changing that often
+      // if i need the cache to change , I can always useQueryClient.invalidateQueries()
       cacheTime: Infinity,
       networkMode: "always",
-      retry: 4,
+      retry: 0,
       onError: (err) => {
         if (err instanceof TRPCClientError) {
           console.log(err.cause);
@@ -35,6 +36,7 @@ export const queryClient = new QueryClient({
           toast.error(err.message);
         } else {
           console.log(err);
+          toast.error("Something Went wrong");
         }
       },
     },
@@ -44,4 +46,3 @@ export const queryClient = new QueryClient({
 export const trpcClient = trpcReact.createClient({
   links: [ipcLink()],
 });
-
