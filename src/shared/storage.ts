@@ -3,7 +3,7 @@ import Database from "better-sqlite3";
 import { migrate } from "drizzle-orm/better-sqlite3/migrator";
 import * as schema from "./schema/index";
 
-const sqlite = new Database("storage.db", {
+const sqlite = new Database(process.env.STORAGE_LOCATION!, {
   /// this line has to exist because for some reason webpack can't find the .node
   /// file on it's own which is kind of a bummer...
   /// I spent 3 days , one scrapped project and an experiment project
@@ -19,4 +19,3 @@ const sqlite = new Database("storage.db", {
 export const db = drizzle(sqlite, { schema });
 
 await migrate(db, { migrationsFolder: ".drizzle" });
-

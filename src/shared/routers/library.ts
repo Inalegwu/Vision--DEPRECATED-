@@ -5,6 +5,7 @@ import * as fs from "fs";
 import { TRPCError } from "@trpc/server";
 import { v4 } from "uuid";
 import { issues, pages } from "../schema";
+import { convertToImageUrl } from "../utils";
 
 export const libraryRouter = router({
   addToLibrary: publicProcedure.mutation(async ({ ctx }) => {
@@ -43,10 +44,9 @@ export const libraryRouter = router({
       const extracted = extractor.extract({ files });
       const extractedFiles = [...extracted.files];
 
-      const b64 = Buffer.from(extractedFiles[0].extraction?.buffer!).toString(
-        "base64"
+      const thumbnailUrl = convertToImageUrl(
+        extractedFiles[0].extraction?.buffer!
       );
-      const thumbnailUrl = "data:image/png;base64," + b64;
 
       const name = extractedFiles[0].fileHeader.name.split("-")[0];
 
@@ -60,15 +60,12 @@ export const libraryRouter = router({
         .returning({ id: issues.id, name: issues.name });
 
       extractedFiles.forEach(async (v, idx) => {
-        const b64 = Buffer.from(v.extraction?.buffer!).toString("base64");
-        const name =
-          v.fileHeader.name.split("-")[0] + v.fileHeader.name.split("-")[1];
-        const url = "data:image/png;base64" + b64;
+        const content = convertToImageUrl(v.extraction?.buffer!);
 
         await ctx.db.insert(pages).values({
           id: v4(),
           name: `${createdIssue[0].name}-${idx}`,
-          content: url,
+          content,
           issueId: createdIssue[0].id,
         });
       });

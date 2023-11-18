@@ -4,11 +4,16 @@ import { Layout, VStack, HStack, Spinner } from "../components";
 import { Plus } from "@phosphor-icons/react";
 
 export default function Library() {
+  const utils = trpcReact.useUtils();
   const {
     mutate: addToLibrary,
     data,
     isLoading: addingToLibrary,
-  } = trpcReact.library.addToLibrary.useMutation();
+  } = trpcReact.library.addToLibrary.useMutation({
+    onSuccess: () => {
+      utils.library.invalidate();
+    },
+  });
 
   const { data: libraryData, isLoading: fetchingLibraryContent } =
     trpcReact.library.getLibrary.useQuery();

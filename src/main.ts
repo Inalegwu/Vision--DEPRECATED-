@@ -25,6 +25,10 @@ const createWindow = () => {
 
   mainWindow.loadFile("dist/index.html");
   // mainWindow.webContents.openDevTools({ mode: "right" });
+
+  process.env = {
+    STORAGE_LOCATION: `${app.getPath("appData")}/Vision/storage.db`,
+  };
 };
 
 app.setName("Vision");
