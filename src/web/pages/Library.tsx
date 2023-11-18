@@ -12,6 +12,7 @@ export default function Library() {
 
   const { data: libraryData, isLoading: fetchingLibraryContent } =
     trpcReact.library.getLibrary.useQuery();
+  const { mutate: deleteIssue } = trpcReact.issue.deleteIssue.useMutation();
 
   if (fetchingLibraryContent) {
     return (
@@ -117,12 +118,16 @@ export default function Library() {
         <Box>
           {libraryData?.issues.map((v) => {
             return (
-              <Box>
+              <Box
+                onClick={() => {
+                  deleteIssue({ id: v.id });
+                }}
+              >
                 <Image
                   src={v.thumbnailUrl}
                   css={{
-                    width: 250,
-                    height: 300,
+                    width: 200,
+                    height: 260,
                     borderRadius: "$md",
                     border: "0.2px solid $gray",
                   }}
