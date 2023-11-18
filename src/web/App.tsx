@@ -17,11 +17,6 @@ export const App = () => {
         toastOptions={{
           style: {
             padding: 5,
-            display: "flex",
-            flexDirection: "column",
-            alignContent: "flex-start",
-            alignItems: "flex-start",
-            gap: 2,
             fontSize: 13,
             fontWeight: 500,
             color: "#FFFFFF",
@@ -32,4 +27,3 @@ export const App = () => {
     </HashRouter>
   );
 };
-

@@ -42,13 +42,13 @@ export const libraryRouter = router({
     const extracted = extractor.extract({ files });
     const extractedFiles = [...extracted.files];
 
-    console.log(extractedFiles[0]);
+    extractedFiles.forEach((v) => {
+      if (v.fileHeader.name.includes(".xml")) {
+        return;
+      }
 
-    const url = URL.createObjectURL(
-      new Blob([extractedFiles[0].extraction?.buffer!])
-    );
-
-    console.log(url);
+      console.log(v.fileHeader.name);
+    });
 
     return true;
   }),
