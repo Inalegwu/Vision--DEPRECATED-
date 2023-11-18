@@ -17,6 +17,8 @@ const createWindow = () => {
     },
   });
 
+  mainWindow.hide();
+
   createIPCHandler({
     router: appRouter,
     windows: [mainWindow],
@@ -24,6 +26,11 @@ const createWindow = () => {
   });
 
   mainWindow.loadFile("dist/index.html");
+
+  mainWindow.webContents.on("did-finish-load", () => {
+    mainWindow.show();
+  });
+
   // mainWindow.webContents.openDevTools({ mode: "right" });
 };
 

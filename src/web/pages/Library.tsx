@@ -42,7 +42,7 @@ export default function Library() {
               justifyContent: "center",
             }}
           >
-            <Spinner size={40} />
+            <Spinner size={30} />
             <Text css={{ color: "$lightGray" }}>Loading Library...</Text>
           </Box>
         </Box>
