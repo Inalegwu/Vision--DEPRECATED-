@@ -16,7 +16,7 @@
     "dev:electron": "wait-on dist/main.js dist/index.html && electronmon .",
     "db:generate": "drizzle-kit generate:sqlite",
     "postinstall": "electron-rebuild",
-    "package": "run-p build electron-build"
+    "package": "electron-build"
   },
   "build": {
     "appId": "com.vision.app",

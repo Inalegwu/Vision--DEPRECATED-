@@ -10,6 +10,7 @@ export const { styled, css } = createStitches({
       lightGray: "#ECECEC",
       deepBlack: "#1C1C1C",
       white: "#FFFFFF",
+      danger: "#ff0000",
     },
     space: {
       sm: "2px",
@@ -30,4 +31,3 @@ export const { styled, css } = createStitches({
     },
   },
 });
-

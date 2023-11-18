@@ -43,7 +43,7 @@ export default function Layout(props: LayoutProps) {
             display: "flex",
             alignContent: "flex-end",
             alignItems: "flex-end",
-            gap: "$lg",
+            gap: "$md",
           }}
         >
           <Text>Vision</Text>
@@ -58,13 +58,22 @@ export default function Layout(props: LayoutProps) {
           }}
         />
         <HStack gap={10}>
-          <Button css={{ color: "$white" }} onClick={() => minimizeWindow()}>
+          <Button
+            css={{ color: "$white", "&:hover": { color: "$lightGray" } }}
+            onClick={() => minimizeWindow()}
+          >
             <Minus />
           </Button>
-          <Button css={{ color: "$white" }} onClick={() => maximizeWindow()}>
+          <Button
+            css={{ color: "$white", "&:hover": { color: "$lightGray" } }}
+            onClick={() => maximizeWindow()}
+          >
             <CornersOut />
           </Button>
-          <Button css={{ color: "$white" }} onClick={() => closeWindow()}>
+          <Button
+            css={{ color: "$white", "&:hover": { color: "$danger" } }}
+            onClick={() => closeWindow()}
+          >
             <X />
           </Button>
         </HStack>

@@ -19,9 +19,11 @@ export const libraryRouter = router({
     if (canceled) {
       return {
         status: false,
+        url: "",
       };
     }
 
+    // load the wasm binary of node-unrar-js from {filePath}
     const wasmBinary = fs.readFileSync(
       "node_modules/node-unrar-js/dist/js/unrar.wasm"
     );
@@ -42,18 +44,19 @@ export const libraryRouter = router({
     const extracted = extractor.extract({ files });
     const extractedFiles = [...extracted.files];
 
-    extractedFiles.forEach((v) => {
-      if (v.fileHeader.name.includes(".xml")) {
-        return;
-      }
+    const b64 = Buffer.from(extractedFiles[0].extraction?.buffer!).toString(
+      "base64"
+    );
 
-      console.log(v.fileHeader.name);
-    });
+    const url = "data:image/png;base64," + b64;
 
-    return true;
+    return {
+      url,
+      status: true,
+    };
   }),
   getLibrary: publicProcedure.query(async ({ ctx }) => {
-    const issues = ctx.db.query.issues.findMany({});
+    const issues = await ctx.db.query.issues.findMany({});
 
     return {
       issues,

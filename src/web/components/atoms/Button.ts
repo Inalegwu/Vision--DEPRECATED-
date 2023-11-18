@@ -5,5 +5,5 @@ export const Button = styled("button", {
   border: "none",
   background: "none",
   outline: "none",
+  transition: "0.2s ease-in-out",
 });
-
