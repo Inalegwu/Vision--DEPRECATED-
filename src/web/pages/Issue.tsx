@@ -10,7 +10,12 @@ import { Spinner } from "../components";
 import { useParams } from "react-router-dom";
 import { IssueParams } from "../../shared/types";
 import { trpcReact } from "../../shared/config";
-import { CaretLeft, Boat, Car, CornersOut } from "@phosphor-icons/react";
+import {
+  CaretLeft,
+  SquareSplitVertical,
+  CornersOut,
+  Square,
+} from "@phosphor-icons/react";
 import { useEffect, useState } from "react";
 import { useAtom } from "jotai";
 import { layoutAtom } from "../state";
@@ -180,7 +185,7 @@ export default function Issue() {
                 }}
               >
                 {/* TODO  change to single page view icon */}
-                <Boat size={17} />
+                <Square size={17} />
               </Button>
               <Button
                 css={{
@@ -201,7 +206,8 @@ export default function Issue() {
                 onClick={() => setReaderLayout("DoublePage")}
               >
                 {/* TODO change to double page view icon */}
-                <Car size={17} />
+
+                <SquareSplitVertical size={17} />
               </Button>
               <Button
                 onClick={() => maximizeWindow()}
