@@ -2,6 +2,7 @@ import { Box, Image, LinkButton, Text } from "./atoms";
 import { Issue } from "../../shared/types";
 import { trpcReact } from "../../shared/config";
 import toast from "react-hot-toast";
+import { useNavigate, useNavigation } from "react-router-dom";
 
 type Props = {
   issue: Issue;
@@ -9,6 +10,7 @@ type Props = {
 
 export default function IssueCard(props: Props) {
   const utils = trpcReact.useUtils();
+  const router = useNavigate();
   const { mutate: deleteIssue, isLoading: deleting } =
     trpcReact.issue.deleteIssue.useMutation({
       onSuccess: () => {
@@ -30,6 +32,7 @@ export default function IssueCard(props: Props) {
         alignItems: "flex-start",
         gap: "$md",
       }}
+      onClick={() => router(`/${props.issue.id}`)}
     >
       <Box
         css={{
