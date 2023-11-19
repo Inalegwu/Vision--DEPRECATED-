@@ -6,6 +6,8 @@ export type InsertPage = typeof pages.$inferInsert;
 export type InsertIssue = typeof issues.$inferInsert;
 export type Issue = typeof issues.$inferSelect;
 
+export type ReaderLayout = "SinglePage" | "DoublePage";
+
 export type CollectionParams = {
   collectionId: string;
 };

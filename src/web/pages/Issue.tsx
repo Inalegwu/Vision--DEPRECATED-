@@ -12,8 +12,11 @@ import { IssueParams } from "../../shared/types";
 import { trpcReact } from "../../shared/config";
 import { CaretLeft, Boat, Car } from "@phosphor-icons/react";
 import { useEffect, useState } from "react";
+import { useAtom } from "jotai";
+import { layoutAtom } from "../state";
 
 export default function Issue() {
+  const [readerLayout, setReaderLayout] = useAtom(layoutAtom);
   const [navigationShowing, setNavigationShowing] = useState<boolean>(true);
   const { issueId } = useParams<IssueParams>();
 
@@ -156,6 +159,7 @@ export default function Issue() {
               }}
             >
               <Button
+                onClick={() => setReaderLayout("SinglePage")}
                 css={{
                   color: "$white",
                   padding: "$xxxl",
@@ -166,6 +170,9 @@ export default function Issue() {
                   borderRight: "0.1px solid rgba(255,255,255,0.1)",
                   borderTopLeftRadius: "$lg",
                   borderBottomLeftRadius: "$lg",
+                  background: `${
+                    readerLayout === "SinglePage" ? "$secondary" : ""
+                  }`,
                   "&:hover": {
                     background: "$secondary",
                   },
@@ -184,10 +191,14 @@ export default function Issue() {
                   justifyContent: "center",
                   borderTopRightRadius: "$lg",
                   borderBottomRightRadius: "$lg",
+                  background: `${
+                    readerLayout === "DoublePage" ? "$secondary" : ""
+                  }`,
                   "&:hover": {
                     background: "$secondary",
                   },
                 }}
+                onClick={() => setReaderLayout("DoublePage")}
               >
                 {/* TODO change to double page view icon */}
                 <Car size={17} />
