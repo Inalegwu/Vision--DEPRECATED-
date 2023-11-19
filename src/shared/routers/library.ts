@@ -45,10 +45,10 @@ export const libraryRouter = router({
       const extractedFiles = [...extracted.files];
 
       const thumbnailUrl = convertToImageUrl(
-        extractedFiles[0].extraction?.buffer!
+        extractedFiles[extractedFiles.length - 2].extraction?.buffer!
       );
 
-      const name = extractedFiles[0].fileHeader.name.split("-")[0];
+      const name = files[0].split("-")[0] + files[0].split("-")[1];
 
       const createdIssue = await ctx.db
         .insert(issues)
@@ -60,6 +60,10 @@ export const libraryRouter = router({
         .returning({ id: issues.id, name: issues.name });
 
       extractedFiles.forEach(async (v, idx) => {
+        if (v.fileHeader.name.includes("xml")) {
+          return;
+        }
+
         const content = convertToImageUrl(v.extraction?.buffer!);
 
         await ctx.db.insert(pages).values({

@@ -10,7 +10,7 @@ export const App = () => {
         <Route path="/:issueId" element={<Issue />} />
       </Routes>
       <Toaster
-        position="top-right"
+        position="bottom-center"
         containerStyle={{
           top: 30,
         }}

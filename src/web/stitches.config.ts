@@ -8,6 +8,7 @@ export const { styled, css } = createStitches({
       secondary: "#473BF0",
       gray: "#333333",
       lightGray: "#ECECEC",
+      blackMuted: "#1d1d1d79",
       deepBlack: "#1C1C1C",
       white: "#FFFFFF",
       danger: "#ff0000",
@@ -19,6 +20,7 @@ export const { styled, css } = createStitches({
       xl: "10px",
       xxl: "12px",
       xxxl: "14px",
+      hg: "20px",
     },
     radii: {
       sm: "2px",

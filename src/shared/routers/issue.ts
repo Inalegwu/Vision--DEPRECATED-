@@ -1,18 +1,21 @@
 import z from "zod";
+import { TRPCError } from "@trpc/server";
 import { publicProcedure, router } from "../../trpc";
-import { issues } from "../schema";
-import { eq } from "drizzle-orm";
+import { issues, pages } from "../schema";
+import { DrizzleError, eq } from "drizzle-orm";
 
 export const issueRouter = router({
-  getIssueById: publicProcedure
+  getIssue: publicProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
-      const issue = await ctx.db.query.issues.findMany({
+      const issue = await ctx.db.query.issues.findFirst({
         where: (issues, { eq }) => eq(issues.id, input.id),
         with: {
           pages: true,
         },
       });
+
+      console.log(issue);
 
       return {
         issue,
@@ -21,8 +24,28 @@ export const issueRouter = router({
   deleteIssue: publicProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      await ctx.db.delete(issues).where(eq(issues.id, input.id));
+      try {
+        console.log(input.id);
 
-      return true;
+        ctx.db.transaction(async (tx) => {
+          await tx.delete(pages).where(eq(pages.issueId, input.id));
+          await tx.delete(issues).where(eq(issues.id, input.id));
+        });
+
+        return true;
+      } catch (e) {
+        if (e instanceof DrizzleError) {
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Couldn't Delete Issue",
+            cause: e.cause,
+          });
+        } else {
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Couldn't Delete Issue",
+          });
+        }
+      }
     }),
 });
