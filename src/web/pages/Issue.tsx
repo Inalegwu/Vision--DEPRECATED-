@@ -12,7 +12,7 @@ import { IssueParams } from "../../shared/types";
 import { trpcReact } from "../../shared/config";
 import {
   CaretLeft,
-  SquareSplitVertical,
+  SquareSplitHorizontal,
   CornersOut,
   Square,
 } from "@phosphor-icons/react";
@@ -207,7 +207,7 @@ export default function Issue() {
               >
                 {/* TODO change to double page view icon */}
 
-                <SquareSplitVertical size={17} />
+                <SquareSplitHorizontal size={17} />
               </Button>
               <Button
                 onClick={() => maximizeWindow()}
@@ -220,9 +220,6 @@ export default function Issue() {
                   justifyContent: "center",
                   borderTopRightRadius: "$lg",
                   borderBottomRightRadius: "$lg",
-                  background: `${
-                    readerLayout === "DoublePage" ? "$secondary" : ""
-                  }`,
                   "&:hover": {
                     background: "$secondary",
                   },
