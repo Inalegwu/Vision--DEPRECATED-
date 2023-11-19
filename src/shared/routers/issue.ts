@@ -31,8 +31,6 @@ export const issueRouter = router({
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
       try {
-        console.log(input.id);
-
         ctx.db.transaction(async (tx) => {
           await tx.delete(pages).where(eq(pages.issueId, input.id));
           await tx.delete(issues).where(eq(issues.id, input.id));

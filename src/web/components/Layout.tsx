@@ -55,6 +55,7 @@ export default function Layout(props: LayoutProps) {
             display: "flex",
             flex: 1,
             padding: "$md",
+            height: 25,
           }}
         />
         <HStack gap={10}>

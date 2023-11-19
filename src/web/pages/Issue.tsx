@@ -121,6 +121,7 @@ export default function Issue() {
             <Text css={{ color: "$white", fontSize: 20 }}>
               {issue?.issue?.name}
             </Text>
+            {/* keep the window draggable */}
             <Box
               css={{
                 flex: 1,
@@ -142,10 +143,10 @@ export default function Issue() {
               display: "flex",
               alignContent: "center",
               alignItems: "center",
-              justifyContent: "flex-start",
+              justifyContent: "center",
               overflowX: "scroll",
               overflowY: "hidden",
-              gap: "$xxxl",
+              gap: "$md",
             }}
           >
             {issue?.issue?.pages.map((v) => {
@@ -153,7 +154,7 @@ export default function Issue() {
                 <Image
                   src={v.content}
                   alt={v.name}
-                  css={{ width: 100, height: 70, borderRadius: "$md" }}
+                  css={{ width: 100, height: 40, borderRadius: "$md" }}
                 />
               );
             })}

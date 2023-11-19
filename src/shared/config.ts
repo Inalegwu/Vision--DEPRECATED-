@@ -11,10 +11,7 @@ export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       refetchOnWindowFocus: false,
-      // It's not a network request is it
-      // so it's safe to say that things in the database won't be changing that often
-      // if i need the cache to change , I can always useQueryClient.invalidateQueries()
-      cacheTime: Infinity,
+      cacheTime: 60 * 60 * 24,
       networkMode: "always",
       retry: 0,
       onError: (err) => {
@@ -27,8 +24,7 @@ export const queryClient = new QueryClient({
       },
     },
     mutations: {
-      // Same goes for here
-      cacheTime: Infinity,
+      cacheTime: 60 * 60 * 24,
       networkMode: "always",
       retry: 1,
       onError: (err) => {

@@ -7,7 +7,7 @@ import {
   AnimatedBox,
 } from "../components/atoms";
 import { trpcReact } from "../../shared/config";
-import { Layout, VStack, HStack, Spinner } from "../components";
+import { Layout, VStack, HStack, Spinner, IssueCard } from "../components";
 import { Plus } from "@phosphor-icons/react";
 import { useCallback, useState } from "react";
 import toast from "react-hot-toast";
@@ -104,36 +104,6 @@ export default function Library() {
             </Box>
           </Box>
         )}
-        {/* deleting overlay */}
-        {deleting && (
-          <Box
-            css={{
-              position: "absolute",
-              zIndex: 99999,
-              width: "100%",
-              height: "100%",
-              display: "flex",
-              alignItems: "center",
-              alignContent: "center",
-              justifyContent: "center",
-            }}
-          >
-            <Box
-              css={{
-                display: "flex",
-                flexDirection: "column",
-                alignContent: "center",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: "$xxxl",
-                color: "$lightGray",
-              }}
-            >
-              <Spinner />
-              <Text>Goodbye Goodbye</Text>
-            </Box>
-          </Box>
-        )}
         {/* header */}
         <VStack gap={6}>
           <Text css={{ fontSize: 35, fontWeight: "bold" }}>My Library</Text>
@@ -171,31 +141,18 @@ export default function Library() {
           </HStack>
         </VStack>
         {/* body */}
-        <Box css={{ flexDirection: "row", gap: "$md" }}>
+        <Box
+          css={{
+            display: "flex",
+            gap: "$xxxl",
+            padding: "$md",
+            overflowX: "hidden",
+            overflowY: "scroll",
+            overflowWrap: "anywhere",
+          }}
+        >
           {libraryData?.issues.map((v) => {
-            return (
-              <Box
-              // onClick={() =>
-              //   deleteIssue({
-              //     id: v.id,
-              //   })
-              // }
-              >
-                <Image
-                  src={v.thumbnailUrl}
-                  css={{
-                    width: 180,
-                    height: 260,
-                    borderRadius: "$md",
-                    border: "0.2px solid $gray",
-                  }}
-                  alt={v.name}
-                />
-                <LinkButton to={`/${v.id}`} css={{ color: "$white" }}>
-                  <Text>{v.name}</Text>
-                </LinkButton>
-              </Box>
-            );
+            return <IssueCard issue={v} key={v.id} />;
           })}
         </Box>
       </Box>

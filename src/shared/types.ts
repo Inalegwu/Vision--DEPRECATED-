@@ -4,6 +4,7 @@ export type ThemeState = "dark" | "light";
 
 export type InsertPage = typeof pages.$inferInsert;
 export type InsertIssue = typeof issues.$inferInsert;
+export type Issue = typeof issues.$inferSelect;
 
 export type CollectionParams = {
   collectionId: string;
@@ -14,4 +15,3 @@ export type IssueParams = {
 };
 
 export type Filter = "Issues" | "Collections" | "All";
-
