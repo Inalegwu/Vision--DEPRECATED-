@@ -3,5 +3,14 @@ import IssueCard from "./IssueCard";
 import Layout from "./Layout";
 import Spinner from "./Spinner";
 import VStack from "./VStack";
+import ContextMenu, { ContextMenuRefProps } from "./ContextMenu";
 
-export { HStack, IssueCard, Layout, Spinner, VStack };
+export {
+  ContextMenu,
+  ContextMenuRefProps,
+  HStack,
+  IssueCard,
+  Layout,
+  Spinner,
+  VStack,
+};

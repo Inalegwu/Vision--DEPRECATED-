@@ -52,4 +52,22 @@ export const issueRouter = router({
         }
       }
     }),
+  changeIssueName: publicProcedure
+    .input(z.object({ id: z.string(), newName: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      try {
+        await ctx.db
+          .update(issues)
+          .set({
+            name: input.newName,
+          })
+          .where(eq(issues.id, input.id));
+      } catch (e) {
+        console.log(e);
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Couldn't Update Issue",
+        });
+      }
+    }),
 });

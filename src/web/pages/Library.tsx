@@ -128,7 +128,7 @@ export default function Library() {
                 padding: "$lg",
                 borderRadius: "$full",
                 "&:hover": {
-                  background: "$primary",
+                  background: "$secondary",
                 },
               }}
               onClick={() => addToLibrary()}
