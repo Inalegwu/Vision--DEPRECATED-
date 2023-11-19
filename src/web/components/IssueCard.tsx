@@ -60,8 +60,9 @@ export default function IssueCard(props: Props) {
           alt={props.issue.name}
         />
       </Box>
-
-      <Text>{props.issue.name}</Text>
+      <Box css={{ width: 170 }}>
+        <Text>{props.issue.name}</Text>
+      </Box>
     </Box>
   );
 }
