@@ -10,7 +10,7 @@ import { Spinner } from "../components";
 import { useParams } from "react-router-dom";
 import { IssueParams } from "../../shared/types";
 import { trpcReact } from "../../shared/config";
-import { CaretLeft, Boat, Car } from "@phosphor-icons/react";
+import { CaretLeft, Boat, Car, CornersOut } from "@phosphor-icons/react";
 import { useEffect, useState } from "react";
 import { useAtom } from "jotai";
 import { layoutAtom } from "../state";
@@ -19,6 +19,9 @@ export default function Issue() {
   const [readerLayout, setReaderLayout] = useAtom(layoutAtom);
   const [navigationShowing, setNavigationShowing] = useState<boolean>(true);
   const { issueId } = useParams<IssueParams>();
+
+  const { mutate: maximizeWindow } =
+    trpcReact.window.maximizeWindow.useMutation();
 
   window.addEventListener("mousemove", () => {
     if (!navigationShowing) {
@@ -187,8 +190,7 @@ export default function Issue() {
                   alignContent: "center",
                   alignItems: "center",
                   justifyContent: "center",
-                  borderTopRightRadius: "$lg",
-                  borderBottomRightRadius: "$lg",
+                  borderRight: "0.1px solid rgba(255,255,255,0.1)",
                   background: `${
                     readerLayout === "DoublePage" ? "$secondary" : ""
                   }`,
@@ -200,6 +202,27 @@ export default function Issue() {
               >
                 {/* TODO change to double page view icon */}
                 <Car size={17} />
+              </Button>
+              <Button
+                onClick={() => maximizeWindow()}
+                css={{
+                  color: "$lightGray",
+                  padding: "$xxxl",
+                  display: "flex",
+                  alignContent: "center",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  borderTopRightRadius: "$lg",
+                  borderBottomRightRadius: "$lg",
+                  background: `${
+                    readerLayout === "DoublePage" ? "$secondary" : ""
+                  }`,
+                  "&:hover": {
+                    background: "$secondary",
+                  },
+                }}
+              >
+                <CornersOut size={16} />
               </Button>
             </Box>
           </Box>
