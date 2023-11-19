@@ -31,6 +31,10 @@ export default function IssueCard(props: Props) {
         alignContent: "flex-start",
         alignItems: "flex-start",
         gap: "$md",
+        transition: "0.3s ease-in-out",
+        "&:hover": {
+          color: "$lightGray",
+        },
       }}
       onClick={() => router(`/${props.issue.id}`)}
     >
@@ -55,18 +59,8 @@ export default function IssueCard(props: Props) {
           alt={props.issue.name}
         />
       </Box>
-      <LinkButton
-        to={`/${props.issue.id}`}
-        css={{
-          color: "$white",
-          transition: "0.3s ease-in-out",
-          "&:hover": {
-            color: "$lightGray",
-          },
-        }}
-      >
-        <Text>{props.issue.name}</Text>
-      </LinkButton>
+
+      <Text>{props.issue.name}</Text>
     </Box>
   );
 }
