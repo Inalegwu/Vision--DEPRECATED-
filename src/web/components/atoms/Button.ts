@@ -6,4 +6,5 @@ export const Button = styled("button", {
   background: "none",
   outline: "none",
   transition: "0.2s ease-in-out",
+  cursor: "pointer",
 });
