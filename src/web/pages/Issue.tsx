@@ -23,7 +23,6 @@ export default function Issue() {
   window.addEventListener("mousemove", () => {
     if (!navigationShowing) {
       setNavigationShowing(true);
-      console.log("Showing navigation");
     }
   });
 
@@ -31,7 +30,6 @@ export default function Issue() {
     const navigationTimeout = setTimeout(() => {
       if (navigationShowing) {
         setNavigationShowing(false);
-        console.log("Hiding Navigation");
       }
     }, 7000);
 
