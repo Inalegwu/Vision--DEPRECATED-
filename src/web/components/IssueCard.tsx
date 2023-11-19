@@ -69,7 +69,7 @@ export default function IssueCard(props: Props) {
           top: mousePos.y + 10,
           left: mousePos.x + 10,
           background: "$blackMuted",
-          backdropFilter: "blur(200px)",
+          backdropFilter: "blur(700px)",
           borderRadius: "$md",
           border: "0.1px solid rgba(255,255,255,0.3)",
         }}
@@ -141,10 +141,9 @@ export default function IssueCard(props: Props) {
           src={props.issue.thumbnailUrl}
           alt={props.issue.name}
         />
-        C
       </Box>
       <Box css={{ width: 170 }}>
-        <Text>{props.issue.name}</Text>
+        <Text css={{ fontSize: 14 }}>{props.issue.name}</Text>
       </Box>
     </Box>
   );

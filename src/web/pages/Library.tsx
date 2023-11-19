@@ -7,9 +7,16 @@ import {
   AnimatedBox,
 } from "../components/atoms";
 import { trpcReact } from "../../shared/config";
-import { Layout, VStack, HStack, Spinner, IssueCard } from "../components";
+import {
+  Layout,
+  VStack,
+  HStack,
+  Spinner,
+  IssueCard,
+  ContextMenuRefProps,
+  ContextMenu,
+} from "../components";
 import { Plus } from "@phosphor-icons/react";
-import { useCallback, useState } from "react";
 import toast from "react-hot-toast";
 
 export default function Library() {
@@ -121,6 +128,7 @@ export default function Library() {
             >
               {/* TODO filters go here */}
             </HStack>
+
             <Button
               css={{
                 color: "$white",
@@ -149,6 +157,7 @@ export default function Library() {
             overflowX: "hidden",
             overflowY: "scroll",
             overflowWrap: "anywhere",
+            marginTop: "$lg",
           }}
         >
           {libraryData?.issues.map((v) => {

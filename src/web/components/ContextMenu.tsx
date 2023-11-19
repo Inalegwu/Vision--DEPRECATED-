@@ -50,11 +50,10 @@ const ContextMenu = React.forwardRef<ContextMenuRefProps, ContextMenuProps>(
           duration: 0.2,
           ease: "linear",
         }}
-        initial={{ display: "none", scale: 0 }}
+        initial={{ opacity: 0, display: "none" }}
         animate={{
-          // opacity: isVisible ? 1 : 0,
+          opacity: isVisible ? 1 : 0,
           display: "block",
-          scale: isVisible ? 1 : 0,
         }}
         css={props.style}
         onMouseEnter={() => {
