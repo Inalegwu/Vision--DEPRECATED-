@@ -107,7 +107,7 @@ export default function Issue() {
               to="/"
               css={{
                 padding: "$lg",
-                background: "$primary",
+                background: "$secondary",
                 color: "$white",
                 borderRadius: "$md",
                 display: "flex",
@@ -120,7 +120,6 @@ export default function Issue() {
             </LinkButton>
             <Text css={{ color: "$white", fontSize: 20 }}>
               {issue?.issue?.name}
-              Teen Titans
             </Text>
             <Box
               css={{
@@ -131,6 +130,7 @@ export default function Issue() {
               id="drag-region"
             />
           </Box>
+          {/* thumbnail view */}
           <Box
             css={{
               width: "100%",
@@ -139,9 +139,24 @@ export default function Issue() {
               background: "$blackMuted",
               backdropFilter: "blur(400px)",
               borderRadius: "$xl",
+              display: "flex",
+              alignContent: "center",
+              alignItems: "center",
+              justifyContent: "flex-start",
+              overflowX: "scroll",
+              overflowY: "hidden",
+              gap: "$xxxl",
             }}
           >
-            content
+            {issue?.issue?.pages.map((v) => {
+              return (
+                <Image
+                  src={v.content}
+                  alt={v.name}
+                  css={{ width: 100, height: 70, borderRadius: "$md" }}
+                />
+              );
+            })}
           </Box>
         </AnimatedBox>
       )}
@@ -154,17 +169,7 @@ export default function Issue() {
           alignItems: "center",
           justifyContent: "center",
         }}
-      >
-        {issue?.issue?.pages.map((v) => {
-          return (
-            <Image
-              src={v.content}
-              alt={v.name}
-              css={{ width: 100, height: 100 }}
-            />
-          );
-        })}
-      </Box>
+      ></Box>
     </Box>
   );
 }

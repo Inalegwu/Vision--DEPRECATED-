@@ -8,18 +8,24 @@ export const issueRouter = router({
   getIssue: publicProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
-      const issue = await ctx.db.query.issues.findFirst({
-        where: (issues, { eq }) => eq(issues.id, input.id),
-        with: {
-          pages: true,
-        },
-      });
+      try {
+        const issue = await ctx.db.query.issues.findFirst({
+          where: (issues, { eq }) => eq(issues.id, input.id),
+          with: {
+            pages: true,
+          },
+        });
 
-      console.log(issue);
-
-      return {
-        issue,
-      };
+        return {
+          issue,
+        };
+      } catch (e) {
+        console.log(e);
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Couldn't Get Issue",
+        });
+      }
     }),
   deleteIssue: publicProcedure
     .input(z.object({ id: z.string() }))
