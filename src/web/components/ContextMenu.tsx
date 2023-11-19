@@ -1,10 +1,11 @@
 import React, { useCallback } from "react";
 import { AnimatedBox, Box } from "./atoms";
 import { styled } from "../stitches.config";
+import { ThemeCSS } from "../../shared/types";
 
 export type ContextMenuProps = {
   children?: React.ReactNode;
-  style?: any;
+  style?: ThemeCSS;
 };
 
 export type ContextMenuRefProps = {

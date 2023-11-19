@@ -68,7 +68,8 @@ export default function IssueCard(props: Props) {
           position: "absolute",
           top: mousePos.y + 10,
           left: mousePos.x + 10,
-          background: "$gray",
+          background: "$blackMuted",
+          backdropFilter: "blur(200px)",
           borderRadius: "$md",
           border: "0.1px solid rgba(255,255,255,0.3)",
         }}
