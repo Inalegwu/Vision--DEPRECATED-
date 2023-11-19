@@ -34,6 +34,7 @@ export default function IssueCard(props: Props) {
         transition: "0.3s ease-in-out",
         "&:hover": {
           color: "$lightGray",
+          cursor: "pointer",
         },
       }}
       onClick={() => router(`/${props.issue.id}`)}

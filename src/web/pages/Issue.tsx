@@ -1,9 +1,16 @@
-import { Box, LinkButton, Image, Text, AnimatedBox } from "../components/atoms";
+import {
+  Box,
+  LinkButton,
+  Image,
+  Text,
+  AnimatedBox,
+  Button,
+} from "../components/atoms";
 import { Spinner } from "../components";
 import { useParams } from "react-router-dom";
 import { IssueParams } from "../../shared/types";
 import { trpcReact } from "../../shared/config";
-import { CaretLeft } from "@phosphor-icons/react";
+import { CaretLeft, Boat, Car } from "@phosphor-icons/react";
 import { useEffect, useState } from "react";
 
 export default function Issue() {
@@ -11,18 +18,24 @@ export default function Issue() {
   const { issueId } = useParams<IssueParams>();
 
   window.addEventListener("mousemove", () => {
-    setNavigationShowing(true);
+    if (!navigationShowing) {
+      setNavigationShowing(true);
+      console.log("Showing navigation");
+    }
   });
 
   useEffect(() => {
     const navigationTimeout = setTimeout(() => {
-      setNavigationShowing(false);
-    }, 3000);
+      if (navigationShowing) {
+        setNavigationShowing(false);
+        console.log("Hiding Navigation");
+      }
+    }, 7000);
 
     return () => {
       clearTimeout(navigationTimeout);
     };
-  }, [setNavigationShowing]);
+  }, [navigationShowing, setNavigationShowing]);
 
   if (!issueId) return;
 
@@ -68,6 +81,7 @@ export default function Issue() {
           </Box>
         </Box>
       )}
+      {/* navigation overlay */}
       {navigationShowing && (
         <AnimatedBox
           transition={{
@@ -91,6 +105,7 @@ export default function Issue() {
             alignContent: "center",
             alignItems: "center",
             justifyContent: "space-between",
+            background: "$blackMuted",
           }}
         >
           <Box
@@ -130,6 +145,54 @@ export default function Issue() {
               }}
               id="drag-region"
             />
+            <Box
+              css={{
+                display: "flex",
+                alignContent: "center",
+                alignItems: "center",
+                background: "$blackMuted",
+                backdropFilter: "blur(400px)",
+                borderRadius: "$lg",
+              }}
+            >
+              <Button
+                css={{
+                  color: "$white",
+                  padding: "$xxxl",
+                  display: "flex",
+                  alignContent: "center",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  borderRight: "0.1px solid rgba(255,255,255,0.1)",
+                  borderTopLeftRadius: "$lg",
+                  borderBottomLeftRadius: "$lg",
+                  "&:hover": {
+                    background: "$secondary",
+                  },
+                }}
+              >
+                {/* TODO  change to single page view icon */}
+                <Boat size={17} />
+              </Button>
+              <Button
+                css={{
+                  color: "$lightGray",
+                  padding: "$xxxl",
+                  display: "flex",
+                  alignContent: "center",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  borderTopRightRadius: "$lg",
+                  borderBottomRightRadius: "$lg",
+                  "&:hover": {
+                    background: "$secondary",
+                  },
+                }}
+              >
+                {/* TODO change to double page view icon */}
+                <Car size={17} />
+              </Button>
+            </Box>
           </Box>
           {/* thumbnail view */}
           <Box
@@ -152,6 +215,7 @@ export default function Issue() {
             {issue?.issue?.pages.map((v) => {
               return (
                 <Image
+                  key={v.id}
                   src={v.content}
                   alt={v.name}
                   css={{ width: 100, height: 40, borderRadius: "$md" }}
@@ -170,7 +234,13 @@ export default function Issue() {
           alignItems: "center",
           justifyContent: "center",
         }}
-      ></Box>
+      >
+        <Image
+          src={issue?.issue?.pages[0].content}
+          alt={issue?.issue?.pages[0].name}
+          css={{ width: "50%", height: "100%", margin: "auto" }}
+        />
+      </Box>
     </Box>
   );
 }
