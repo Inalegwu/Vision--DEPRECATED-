@@ -174,46 +174,6 @@ export default function Issue() {
               }}
             >
               <Button
-                onClick={() => setReaderLayout("SinglePage")}
-                css={{
-                  color: "$white",
-                  padding: "$xxxl",
-                  display: "flex",
-                  alignContent: "center",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  borderTopLeftRadius: "$lg",
-                  borderBottomLeftRadius: "$lg",
-                  background: `${
-                    readerLayout === "SinglePage" ? "$secondary" : ""
-                  }`,
-                  "&:hover": {
-                    background: "$secondary",
-                  },
-                }}
-              >
-                <Square size={17} />
-              </Button>
-              <Button
-                css={{
-                  color: "$lightGray",
-                  padding: "$xxxl",
-                  display: "flex",
-                  alignContent: "center",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  background: `${
-                    readerLayout === "DoublePage" ? "$secondary" : ""
-                  }`,
-                  "&:hover": {
-                    background: "$secondary",
-                  },
-                }}
-                onClick={() => setReaderLayout("DoublePage")}
-              >
-                <SquareSplitHorizontal size={17} />
-              </Button>
-              <Button
                 onClick={() => maximizeWindow()}
                 css={{
                   color: "$lightGray",
@@ -222,10 +182,10 @@ export default function Issue() {
                   alignContent: "center",
                   alignItems: "center",
                   justifyContent: "center",
-                  borderTopRightRadius: "$lg",
-                  borderBottomRightRadius: "$lg",
+                  borderRadius: "$md",
                   "&:hover": {
                     background: "$secondary",
+                    color: "$white",
                   },
                 }}
               >

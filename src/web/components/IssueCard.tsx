@@ -39,9 +39,11 @@ export default function IssueCard(props: Props) {
 
   const handleClick = useCallback(
     (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-      if (e.ctrlKey) {
+      if (e.ctrlKey && !contextMenuVisible) {
         contextMenuRef.current?.toggle();
         setMousePos({ x: e.nativeEvent.x, y: e.nativeEvent.y });
+      } else if (contextMenuVisible) {
+        return;
       } else {
         router(`/${props.issue.id}`);
       }
@@ -53,6 +55,7 @@ export default function IssueCard(props: Props) {
     <Box
       css={{
         display: "flex",
+        pointerEvents: `${contextMenuVisible ? "none" : "auto"}`,
         flexDirection: "column",
         alignContent: "flex-start",
         alignItems: "flex-start",
@@ -96,6 +99,7 @@ export default function IssueCard(props: Props) {
               color: "$white",
             },
           }}
+          onClick={() => router(`/editIssue/${props.issue.id}`)}
         >
           <Pencil />
           <Text>Edit Issue Data</Text>

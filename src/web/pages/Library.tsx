@@ -125,11 +125,7 @@ export default function Library() {
               alignContent="center"
               alignItems="center"
               gap={6}
-            >
-              <Text css={{ color: "$lightGray", fontSize: 15 }}>
-                {libraryData?.issues.length ?? ""} issues in your library
-              </Text>
-            </HStack>
+            ></HStack>
             <Button
               css={{
                 color: "$white",

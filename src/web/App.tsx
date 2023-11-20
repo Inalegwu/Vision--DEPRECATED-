@@ -1,5 +1,5 @@
 import { HashRouter, Routes, Route } from "react-router-dom";
-import { Issue, Library } from "./pages";
+import { EditIssue, Issue, Library } from "./pages";
 import { Toaster } from "react-hot-toast";
 
 export const App = () => {
@@ -8,6 +8,7 @@ export const App = () => {
       <Routes>
         <Route path="/" element={<Library />} />
         <Route path="/:issueId" element={<Issue />} />
+        <Route path="/editIssue/:issueId" element={<EditIssue />} />
       </Routes>
       <Toaster
         position="bottom-center"

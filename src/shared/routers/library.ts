@@ -1,7 +1,7 @@
+import * as fs from "fs";
 import { dialog } from "electron";
 import { publicProcedure, router } from "../../trpc";
 import { createExtractorFromData } from "node-unrar-js/esm";
-import * as fs from "fs";
 import { TRPCError } from "@trpc/server";
 import { v4 } from "uuid";
 import { issues, pages } from "../schema";
@@ -43,6 +43,8 @@ export const libraryRouter = router({
 
       const extracted = extractor.extract({ files });
       const extractedFiles = [...extracted.files];
+
+      console.log(extractedFiles);
 
       const thumbnailUrl = convertToImageUrl(
         extractedFiles[extractedFiles.length - 2].extraction?.buffer!
