@@ -13,7 +13,7 @@ export const issueRouter = router({
           where: (issues, { eq }) => eq(issues.id, input.id),
           with: {
             pages: {
-              limit: 5,
+              limit: 7,
             },
           },
         });

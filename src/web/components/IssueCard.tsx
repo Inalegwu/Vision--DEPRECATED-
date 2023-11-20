@@ -16,6 +16,8 @@ export default function IssueCard(props: Props) {
   const router = useNavigate();
   const contextMenuRef = useRef<ContextMenuRefProps>(null);
 
+  const contextMenuVisible = contextMenuRef?.current?.visible();
+
   // use to position context menu
   const [mousePos, setMousePos] = useState<{ x: number; y: number }>({
     x: 0,
@@ -55,9 +57,10 @@ export default function IssueCard(props: Props) {
         alignContent: "flex-start",
         alignItems: "flex-start",
         gap: "$md",
+        color: "$lightGray",
         transition: "0.3s ease-in-out",
         "&:hover": {
-          color: "$lightGray",
+          color: "$white",
           cursor: "pointer",
         },
       }}

@@ -25,6 +25,20 @@ export default function Issue() {
   const [navigationShowing, setNavigationShowing] = useState<boolean>(true);
   const { issueId } = useParams<IssueParams>();
 
+  const [activePanelId, setActivePanelId] = useState<string>("");
+
+  const { data: issue, isLoading: loadingIssue } =
+    trpcReact.issue.getIssue.useQuery(
+      {
+        id: issueId!,
+      },
+      {
+        onSuccess: (data) => {
+          setActivePanelId(data.issue?.pages[0].id!);
+        },
+      }
+    );
+
   const { mutate: maximizeWindow } =
     trpcReact.window.maximizeWindow.useMutation();
 
@@ -47,11 +61,6 @@ export default function Issue() {
   }, [navigationShowing, setNavigationShowing]);
 
   if (!issueId) return;
-
-  const { data: issue, isLoading: loadingIssue } =
-    trpcReact.issue.getIssue.useQuery({
-      id: issueId!,
-    });
 
   return (
     <Box
@@ -173,7 +182,6 @@ export default function Issue() {
                   alignContent: "center",
                   alignItems: "center",
                   justifyContent: "center",
-                  borderRight: "0.1px solid rgba(255,255,255,0.1)",
                   borderTopLeftRadius: "$lg",
                   borderBottomLeftRadius: "$lg",
                   background: `${
@@ -184,7 +192,6 @@ export default function Issue() {
                   },
                 }}
               >
-                {/* TODO  change to single page view icon */}
                 <Square size={17} />
               </Button>
               <Button
@@ -195,7 +202,6 @@ export default function Issue() {
                   alignContent: "center",
                   alignItems: "center",
                   justifyContent: "center",
-                  borderRight: "0.1px solid rgba(255,255,255,0.1)",
                   background: `${
                     readerLayout === "DoublePage" ? "$secondary" : ""
                   }`,
@@ -205,8 +211,6 @@ export default function Issue() {
                 }}
                 onClick={() => setReaderLayout("DoublePage")}
               >
-                {/* TODO change to double page view icon */}
-
                 <SquareSplitHorizontal size={17} />
               </Button>
               <Button
@@ -232,34 +236,41 @@ export default function Issue() {
           {/* thumbnail view */}
           <Box
             css={{
-              width: "100%",
-              padding: "$hg",
-              height: 80,
               background: "$blackMuted",
-              backdropFilter: "blur(400px)",
-              borderRadius: "$xl",
+              backdropFilter: "blur(50px)",
+              padding: "$md",
+              borderRadius: "$md",
+              width: "100%",
               display: "flex",
               alignContent: "center",
               alignItems: "center",
-              justifyContent: "center",
-              overflowX: "scroll",
-              overflowY: "hidden",
               gap: "$md",
+              height: 80,
             }}
           >
             {issue?.issue?.pages.map((v) => {
+              console.log(activePanelId, v.id);
               return (
                 <Image
+                  onClick={() => setActivePanelId(v.id)}
                   key={v.id}
                   src={v.content}
                   alt={v.name}
-                  css={{ width: 100, height: 40, borderRadius: "$md" }}
+                  css={{
+                    width: 60,
+                    height: "100%",
+                    borderRadius: "$md",
+                    border: `${
+                      activePanelId === v.id ? "2px solid $primary" : ""
+                    }`,
+                  }}
                 />
               );
             })}
           </Box>
         </AnimatedBox>
       )}
+      {/* Panel View */}
       <Box
         css={{
           width: "100%",
@@ -271,9 +282,9 @@ export default function Issue() {
         }}
       >
         <Image
-          src={issue?.issue?.pages[0].content}
-          alt={issue?.issue?.pages[0].name}
-          css={{ width: "50%", height: "100%", margin: "auto" }}
+          src={issue?.issue?.pages.find((v) => v.id === activePanelId)?.content}
+          alt={issue?.issue?.pages.find((v) => v.id === activePanelId)?.name}
+          css={{ width: "42%", height: "100%", margin: "auto" }}
         />
       </Box>
     </Box>

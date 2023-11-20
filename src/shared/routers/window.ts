@@ -27,4 +27,7 @@ export const windowRouter = router({
   minimizeWindow: publicProcedure.mutation(({ ctx }) => {
     ctx.window?.minimize();
   }),
+  showEmojiPanel: publicProcedure.mutation(({ ctx }) => {
+    ctx.app.showEmojiPanel();
+  }),
 });

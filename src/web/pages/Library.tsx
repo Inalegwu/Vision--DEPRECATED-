@@ -126,9 +126,10 @@ export default function Library() {
               alignItems="center"
               gap={6}
             >
-              {/* TODO filters go here */}
+              <Text css={{ color: "$lightGray", fontSize: 15 }}>
+                {libraryData?.issues.length ?? ""} issues in your library
+              </Text>
             </HStack>
-
             <Button
               css={{
                 color: "$white",
