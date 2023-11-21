@@ -66,7 +66,9 @@ export default function Library() {
             }}
           >
             <Spinner size={30} />
-            <Text css={{ color: "$lightGray" }}>Loading Library...</Text>
+            <Text css={{ color: "$lightGray" }}>
+              Getting things in order...
+            </Text>
           </Box>
         </Box>
       </Layout>
@@ -102,7 +104,7 @@ export default function Library() {
               }}
             >
               <Spinner />
-              <Text>Sit back while we add that to your library...</Text>
+              <Text>Sit back , This might take a while 😉 ...</Text>
             </Box>
           </Box>
         )}

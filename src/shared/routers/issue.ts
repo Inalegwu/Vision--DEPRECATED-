@@ -12,13 +12,24 @@ export const issueRouter = router({
       try {
         const issue = await ctx.db.query.issues.findFirst({
           where: (issues, { eq }) => eq(issues.id, input.id),
-          with: {
-            pages: true,
-          },
+        });
+
+        if (!issue) {
+          throw new TRPCError({
+            code: "NOT_FOUND",
+            message: "Couldn't find that issue , sorry 🤷‍♂️",
+          });
+        }
+
+        const pages = await ctx.db.query.pages.findMany({
+          where: (pages, { eq }) => eq(pages.issueId, input.id),
         });
 
         return {
-          issue,
+          issue: {
+            name: issue.name,
+            pages,
+          },
         };
       } catch (e) {
         console.log(e);

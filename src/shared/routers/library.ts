@@ -99,7 +99,7 @@ export const libraryRouter = router({
     } catch (e) {
       if (e instanceof UnrarError) {
         throw new TRPCError({
-          code: "PARSE_ERROR",
+          code: "UNPROCESSABLE_CONTENT",
           message: "Couldn't Add To Library , Unsupported file type",
           cause: e.file,
         });

@@ -4,35 +4,30 @@ import {
   Image,
   Text,
   AnimatedBox,
+  AnimatedImage,
   Button,
 } from "../components/atoms";
 import { Spinner } from "../components";
 import { useParams } from "react-router-dom";
 import { IssueParams } from "../../shared/types";
 import { trpcReact } from "../../shared/config";
-import { CaretLeft, CornersOut } from "@phosphor-icons/react";
-import { useEffect, useState } from "react";
+import { CaretLeft, CaretRight, CornersOut } from "@phosphor-icons/react";
+import { useCallback, useEffect, useState } from "react";
 import { useAtom } from "jotai";
 import { layoutAtom } from "../state";
 
 export default function Issue() {
   const [readerLayout, setReaderLayout] = useAtom(layoutAtom);
-  const [navigationShowing, setNavigationShowing] = useState<boolean>(true);
   const { issueId } = useParams<IssueParams>();
 
-  const [activePanelId, setActivePanelId] = useState<string>("");
+  const [activeIndex, setActiveIndex] = useState<number>(0);
+  const [mouseOver, setMouseOver] = useState<boolean>(false);
+  const [navigationShowing, setNavigationShowing] = useState<boolean>(true);
 
   const { data: issue, isLoading: loadingIssue } =
-    trpcReact.issue.getIssue.useQuery(
-      {
-        id: issueId!,
-      },
-      {
-        onSuccess: (data) => {
-          setActivePanelId(data.issue?.pages[0].id!);
-        },
-      }
-    );
+    trpcReact.issue.getIssue.useQuery({
+      id: issueId!,
+    });
 
   const { mutate: maximizeWindow } =
     trpcReact.window.maximizeWindow.useMutation();
@@ -45,7 +40,7 @@ export default function Issue() {
 
   useEffect(() => {
     const navigationTimeout = setTimeout(() => {
-      if (navigationShowing) {
+      if (navigationShowing && !mouseOver) {
         setNavigationShowing(false);
       }
     }, 7000);
@@ -53,7 +48,31 @@ export default function Issue() {
     return () => {
       clearTimeout(navigationTimeout);
     };
-  }, [navigationShowing, setNavigationShowing]);
+  }, [navigationShowing, setNavigationShowing, mouseOver]);
+
+  const handleRightClick = useCallback(() => {
+    if (activeIndex + 1 > issue?.issue.pages.length!) {
+      setActiveIndex(0);
+    }
+    setActiveIndex(activeIndex + 1);
+  }, [activeIndex, setActiveIndex, issue]);
+
+  const handleLeftClick = useCallback(() => {
+    if (activeIndex === 0) {
+      return;
+    }
+    setActiveIndex(activeIndex - 1);
+  }, [activeIndex, setActiveIndex]);
+
+  window.addEventListener("keydown", (e) => {
+    if (e.key === "[" || e.key === "ArrowLeft") {
+      handleLeftClick();
+    } else if (e.key === "]" || e.key === "ArrowRight") {
+      handleRightClick();
+    } else {
+      return;
+    }
+  });
 
   if (!issueId) return;
 
@@ -132,6 +151,8 @@ export default function Issue() {
             }}
           >
             <LinkButton
+              onMouseOver={() => setMouseOver(true)}
+              onMouseLeave={() => setMouseOver(false)}
               to="/"
               css={{
                 padding: "$lg",
@@ -169,6 +190,8 @@ export default function Issue() {
               }}
             >
               <Button
+                onMouseOver={() => setMouseOver(true)}
+                onMouseLeave={() => setMouseOver(false)}
                 onClick={() => maximizeWindow()}
                 css={{
                   color: "$lightGray",
@@ -188,41 +211,89 @@ export default function Issue() {
               </Button>
             </Box>
           </Box>
-          {/* thumbnail view */}
+          {/* distance view */}
           <Box
+            onMouseOver={() => setMouseOver(true)}
+            onMouseDown={() => setMouseOver(false)}
             css={{
               background: "$blackMuted",
               backdropFilter: "blur(50px)",
-              padding: "$md",
               borderRadius: "$md",
               width: "100%",
               display: "flex",
               alignContent: "center",
               alignItems: "center",
-              gap: "$md",
-              height: 80,
+              lineHeight: 80,
+              overflowY: "hidden",
             }}
           >
-            {issue?.issue?.pages.map((v) => {
-              console.log(activePanelId, v.id);
-              return (
-                <Image
-                  onClick={() => setActivePanelId(v.id)}
-                  key={v.id}
-                  src={v.content}
-                  alt={v.name}
-                  css={{
-                    width: 60,
-                    height: "100%",
-                    borderRadius: "$md",
-                    cursor: "pointer",
-                    border: `${
-                      activePanelId === v.id ? "2px solid $primary" : ""
-                    }`,
-                  }}
-                />
-              );
-            })}
+            <Button
+              css={{
+                display: "flex",
+                alignContent: "center",
+                alignItems: "center",
+                justifyContent: "center",
+                color: "$white",
+                padding: "$md",
+                height: "100%",
+                width: "5%",
+                background: "$blackMuted",
+                backdropFilter: "blur(400px)",
+                borderTopLeftRadius: "$md",
+                borderBottomLeftRadius: "$md",
+              }}
+              onClick={handleLeftClick}
+            >
+              <CaretLeft />
+            </Button>
+            <Box css={{ width: "90%", height: "100%" }}>
+              <AnimatedBox
+                initial={{
+                  width: "",
+                }}
+                transition={{
+                  duration: 0.3,
+                  bounce: true,
+                  ease: "easeOut",
+                }}
+                animate={{
+                  width: `${(activeIndex / issue?.issue.pages.length!) * 100}%`,
+                }}
+                css={{
+                  display: "flex",
+                  alignContent: "center",
+                  alignItems: "center",
+                  gap: "$md",
+                  height: "90%",
+                  padding: "$sm",
+                  borderRadius: "$md",
+                  overflowY: "scroll",
+                  background: "$secondary",
+                }}
+              />
+            </Box>
+            <Button
+              onMouseOver={() => setMouseOver(true)}
+              onMouseLeave={() => setMouseOver(false)}
+              css={{
+                display: "flex",
+                alignContent: "center",
+                alignItems: "center",
+                justifyContent: "center",
+                color: "$white",
+                padding: "$md",
+                background: "$blackMuted",
+                backdropFilter: "blur(400px)",
+                left: "95%",
+                height: "100%",
+                width: "5%",
+                borderTopRightRadius: "$md",
+                borderBottomRightRadius: "$md",
+              }}
+              onClick={handleRightClick}
+            >
+              <CaretRight />
+            </Button>
           </Box>
         </AnimatedBox>
       )}
@@ -237,10 +308,25 @@ export default function Issue() {
           justifyContent: "center",
         }}
       >
-        <Image
-          src={issue?.issue?.pages.find((v) => v.id === activePanelId)?.content}
-          alt={issue?.issue?.pages.find((v) => v.id === activePanelId)?.name}
-          css={{ width: "42%", height: "100%", margin: "auto" }}
+        <AnimatedImage
+          transition={{
+            duration: 0.3,
+            ease: "easeInOut",
+          }}
+          initial={{
+            opacity: 1,
+          }}
+          animate={{
+            opacity: loadingIssue ? 0 : 1,
+          }}
+          src={issue?.issue.pages[activeIndex].content}
+          alt={issue?.issue.pages[activeIndex].name}
+          css={{
+            width: "50%",
+            height: "100%",
+            margin: "auto",
+            aspectRatio: 1,
+          }}
         />
       </Box>
     </Box>

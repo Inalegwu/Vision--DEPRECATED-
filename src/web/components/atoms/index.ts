@@ -1,5 +1,6 @@
 export * from "./AnimatedBox";
 export * from "./AnimatedButton";
+export * from "./AnimatedImage";
 export * from "./AnimatedText";
 export * from "./Box";
 export * from "./Button";

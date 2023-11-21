@@ -19,6 +19,7 @@ export const pages = sqliteTable(
   (table) => {
     return {
       idIdx: uniqueIndex("id_idx").on(table.id),
+      issueIdIdx: uniqueIndex("issue_id_idx").on(table.issueId),
     };
   }
 );
@@ -30,4 +31,3 @@ export const issuePageRelation = relations(pages, ({ one }) => ({
     relationName: "issue",
   }),
 }));
-
