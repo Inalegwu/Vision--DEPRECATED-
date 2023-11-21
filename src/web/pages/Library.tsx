@@ -1,5 +1,5 @@
 import { trackEvent } from "@aptabase/electron/renderer";
-import { Box, Button, Image, Text } from "../components/atoms";
+import { AnimatedBox, Box, Button, Image, Text } from "../components/atoms";
 import { trpcReact } from "../../shared/config";
 import { Layout, VStack, HStack, Spinner, IssueCard } from "../components";
 import { Plus } from "@phosphor-icons/react";
@@ -79,37 +79,40 @@ export default function Library() {
     <Layout>
       <Box css={{ width: "100%", height: "100%" }}>
         {/* loading overlay */}
-        {addingToLibrary && (
+        <AnimatedBox
+          initial={{ opacity: 0, display: "none" }}
+          animate={{
+            opacity: addingToLibrary ? 1 : 0,
+            display: addingToLibrary ? "flex" : "none",
+          }}
+          css={{
+            position: "absolute",
+            zIndex: 99999,
+            width: "100%",
+            height: "100%",
+            display: "flex",
+            alignItems: "center",
+            alignContent: "center",
+            justifyContent: "center",
+            background: "$blackMuted",
+            backdropFilter: "blur(20px)",
+          }}
+        >
           <Box
             css={{
-              position: "absolute",
-              zIndex: 99999,
-              width: "100%",
-              height: "100%",
               display: "flex",
-              alignItems: "center",
+              flexDirection: "column",
               alignContent: "center",
+              alignItems: "center",
               justifyContent: "center",
-              background: "$blackMuted",
-              backdropFilter: "blur(20px)",
+              gap: "$xxxl",
+              color: "$lightGray",
             }}
           >
-            <Box
-              css={{
-                display: "flex",
-                flexDirection: "column",
-                alignContent: "center",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: "$xxxl",
-                color: "$lightGray",
-              }}
-            >
-              <Spinner />
-              <Text>Sit back , This might take a while 😉 ...</Text>
-            </Box>
+            <Spinner />
+            <Text>Sit back , This might take a while 😉 ...</Text>
           </Box>
-        )}
+        </AnimatedBox>
         {/* header */}
         <VStack gap={6} style={{ padding: "$lg" }}>
           <Text css={{ fontSize: 35, fontWeight: "bold" }}>My Library</Text>
