@@ -14,7 +14,6 @@ import { DrizzleError } from "drizzle-orm";
 export const libraryRouter = router({
   addToLibrary: publicProcedure.mutation(async ({ ctx }) => {
     trackEvent("Add To Library");
-
     try {
       const { canceled, filePaths } = await dialog.showOpenDialog({
         title: "Select Issue",
@@ -66,6 +65,18 @@ export const libraryRouter = router({
         .replace(/(\d+)$/g, "")
         .replace("-", "");
 
+      const issueExists = await ctx.db.query.issues.findFirst({
+        where: (issues, { eq }) => eq(issues.name, name),
+      });
+
+      if (issueExists) {
+        throw new TRPCError({
+          message: "You've already added that to your library",
+          code: "CONFLICT",
+          cause: `tried adding issue ${name} again`,
+        });
+      }
+
       const createdIssue = await ctx.db
         .insert(issues)
         .values({
@@ -109,6 +120,13 @@ export const libraryRouter = router({
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "Save Error",
+          cause: e.cause,
+        });
+      }
+      if (e instanceof TRPCError) {
+        throw new TRPCError({
+          code: e.code,
+          message: e.message,
           cause: e.cause,
         });
       }

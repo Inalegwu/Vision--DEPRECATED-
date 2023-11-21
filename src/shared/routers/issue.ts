@@ -1,9 +1,10 @@
 import z from "zod";
 import { trackEvent } from "@aptabase/electron/main";
+import { DrizzleError, eq } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
 import { publicProcedure, router } from "../../trpc";
 import { issues, pages } from "../schema";
-import { DrizzleError, eq } from "drizzle-orm";
+import { SqliteError } from "better-sqlite3";
 
 export const issueRouter = router({
   getIssue: publicProcedure
@@ -29,6 +30,13 @@ export const issueRouter = router({
         };
       } catch (e) {
         console.log(e);
+        if (e instanceof SqliteError) {
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: e.message,
+            cause: e.cause,
+          });
+        }
         throw new TRPCError({
           code: "NOT_FOUND",
           message: "Couldn't Get Issue",

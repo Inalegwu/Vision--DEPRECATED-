@@ -30,7 +30,7 @@ export default function Library() {
   });
 
   const { data: libraryData, isLoading: fetchingLibraryContent } =
-    trpcReact.library.getLibrary.useQuery();
+    trpcReact.library.getLibrary.useQuery(undefined, {});
 
   const { mutate: deleteIssue, isLoading: deleting } =
     trpcReact.issue.deleteIssue.useMutation({
@@ -90,6 +90,8 @@ export default function Library() {
               alignItems: "center",
               alignContent: "center",
               justifyContent: "center",
+              background: "$blackMuted",
+              backdropFilter: "blur(20px)",
             }}
           >
             <Box

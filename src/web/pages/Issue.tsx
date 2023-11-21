@@ -15,6 +15,7 @@ import { CaretLeft, CaretRight, CornersOut } from "@phosphor-icons/react";
 import { useCallback, useEffect, useState } from "react";
 import { useAtom } from "jotai";
 import { layoutAtom } from "../state";
+import toast from "react-hot-toast";
 
 export default function Issue() {
   const [readerLayout, setReaderLayout] = useAtom(layoutAtom);
@@ -25,9 +26,16 @@ export default function Issue() {
   const [navigationShowing, setNavigationShowing] = useState<boolean>(true);
 
   const { data: issue, isLoading: loadingIssue } =
-    trpcReact.issue.getIssue.useQuery({
-      id: issueId!,
-    });
+    trpcReact.issue.getIssue.useQuery(
+      {
+        id: issueId!,
+      },
+      {
+        onError: (e) => {
+          toast.error(e.message);
+        },
+      }
+    );
 
   const { mutate: maximizeWindow } =
     trpcReact.window.maximizeWindow.useMutation();
