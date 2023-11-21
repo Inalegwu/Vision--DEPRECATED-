@@ -8,6 +8,8 @@ import { v4 } from "uuid";
 import { issues, pages } from "../schema";
 import { convertToImageUrl, sortPages } from "../utils";
 import { Reasons } from "../types";
+import { UnrarError } from "node-unrar-js";
+import { DrizzleError } from "drizzle-orm";
 
 export const libraryRouter = router({
   addToLibrary: publicProcedure.mutation(async ({ ctx }) => {
@@ -95,10 +97,18 @@ export const libraryRouter = router({
         reason: Reasons.NONE,
       };
     } catch (e) {
-      if (e instanceof Error) {
+      if (e instanceof UnrarError) {
         throw new TRPCError({
           code: "PARSE_ERROR",
-          message: "Couldn't Add To Library",
+          message: "Couldn't Add To Library , Unsupported file type",
+          cause: e.file,
+        });
+      }
+      if (e instanceof DrizzleError) {
+        console.log(e);
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Save Error",
           cause: e.cause,
         });
       }

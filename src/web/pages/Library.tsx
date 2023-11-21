@@ -24,6 +24,9 @@ export default function Library() {
       });
       utils.library.invalidate();
     },
+    onError: (err) => {
+      toast.error(err.message);
+    },
   });
 
   const { data: libraryData, isLoading: fetchingLibraryContent } =

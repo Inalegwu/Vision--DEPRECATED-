@@ -26,7 +26,7 @@ export const queryClient = new QueryClient({
     mutations: {
       cacheTime: 60 * 60 * 24,
       networkMode: "always",
-      retry: 1,
+      retry: 0,
       onError: (err) => {
         if (err instanceof TRPCClientError || err instanceof TRPCError) {
           console.log(err.cause);
