@@ -13,9 +13,7 @@ export const issueRouter = router({
         const issue = await ctx.db.query.issues.findFirst({
           where: (issues, { eq }) => eq(issues.id, input.id),
           with: {
-            pages: {
-              limit: 7,
-            },
+            pages: true,
           },
         });
 
