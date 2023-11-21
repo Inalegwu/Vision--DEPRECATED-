@@ -59,8 +59,9 @@ export default function Issue() {
   }, [navigationShowing, setNavigationShowing, mouseOver]);
 
   const handleRightClick = useCallback(() => {
-    if (activeIndex + 1 > issue?.issue.pages.length!) {
-      setActiveIndex(0);
+    console.log(activeIndex);
+    if (activeIndex === issue?.issue.pages.length! - 1) {
+      return;
     }
     setActiveIndex(activeIndex + 1);
   }, [activeIndex, setActiveIndex, issue]);
@@ -254,10 +255,21 @@ export default function Issue() {
             >
               <CaretLeft />
             </Button>
-            <Box css={{ width: "90%", height: "100%" }}>
+            <Box
+              css={{
+                width: "90%",
+                height: "100%",
+                display: "flex",
+                alignContent: "center",
+                alignItems: "center",
+              }}
+            >
               <AnimatedBox
                 initial={{
                   width: "",
+                }}
+                onPan={(_, i) => {
+                  console.log(i);
                 }}
                 transition={{
                   duration: 0.3,
@@ -272,7 +284,7 @@ export default function Issue() {
                   alignContent: "center",
                   alignItems: "center",
                   gap: "$md",
-                  height: "90%",
+                  height: "80%",
                   padding: "$sm",
                   borderRadius: "$md",
                   overflowY: "scroll",
