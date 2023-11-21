@@ -1,4 +1,5 @@
 import z from "zod";
+import { trackEvent } from "@aptabase/electron/main";
 import { TRPCError } from "@trpc/server";
 import { publicProcedure, router } from "../../trpc";
 import { issues, pages } from "../schema";
@@ -32,8 +33,12 @@ export const issueRouter = router({
   deleteIssue: publicProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
+      trackEvent("Delete Issue");
       try {
         ctx.db.transaction(async (tx) => {
+          trackEvent("Issue deleted", {
+            id: input.id,
+          });
           await tx.delete(pages).where(eq(pages.issueId, input.id));
           await tx.delete(issues).where(eq(issues.id, input.id));
         });

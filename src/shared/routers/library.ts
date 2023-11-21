@@ -1,5 +1,6 @@
 import * as fs from "fs";
 import { dialog } from "electron";
+import { trackEvent } from "@aptabase/electron/main";
 import { publicProcedure, router } from "../../trpc";
 import { createExtractorFromData } from "node-unrar-js/esm";
 import { TRPCError } from "@trpc/server";
@@ -9,6 +10,8 @@ import { convertToImageUrl } from "../utils";
 
 export const libraryRouter = router({
   addToLibrary: publicProcedure.mutation(async ({ ctx }) => {
+    trackEvent("Add To Library");
+
     try {
       const { canceled, filePaths } = await dialog.showOpenDialog({
         title: "Select Issue",
@@ -61,6 +64,11 @@ export const libraryRouter = router({
         })
         .returning({ id: issues.id, name: issues.name });
 
+      trackEvent("write to DB", {
+        name,
+        id: createdIssue[0].id,
+      });
+
       extractedFiles.forEach(async (v, idx) => {
         if (v.fileHeader.name.includes("xml")) {
           return;
@@ -90,6 +98,8 @@ export const libraryRouter = router({
     }
   }),
   getLibrary: publicProcedure.query(async ({ ctx }) => {
+    trackEvent("Load Library");
+
     const issues = await ctx.db.query.issues.findMany({});
 
     return {

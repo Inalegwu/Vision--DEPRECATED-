@@ -1,3 +1,4 @@
+import { trackEvent } from "@aptabase/electron/renderer";
 import {
   Box,
   Button,
@@ -19,6 +20,8 @@ import {
 import { Plus } from "@phosphor-icons/react";
 import toast from "react-hot-toast";
 
+trackEvent("Library Loaded");
+
 export default function Library() {
   const utils = trpcReact.useUtils();
   const {
@@ -35,7 +38,13 @@ export default function Library() {
   });
 
   const { data: libraryData, isLoading: fetchingLibraryContent } =
-    trpcReact.library.getLibrary.useQuery();
+    trpcReact.library.getLibrary.useQuery(undefined, {
+      onSuccess: (data) => {
+        trackEvent("Library Loaded", {
+          id: data.issues[0].id,
+        });
+      },
+    });
 
   const { mutate: deleteIssue, isLoading: deleting } =
     trpcReact.issue.deleteIssue.useMutation({

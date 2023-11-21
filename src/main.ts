@@ -1,8 +1,11 @@
 import path from "path";
+import { initialize, trackEvent } from "@aptabase/electron/main";
 import { BrowserWindow, app, screen } from "electron";
 import { appRouter } from "./shared/routers/_app";
 import { createIPCHandler } from "electron-trpc/main";
 import { createContext } from "./shared/context";
+
+initialize("A-EU-0154526847");
 
 const createWindow = () => {
   const windowSize = screen.getPrimaryDisplay().workAreaSize;
@@ -37,6 +40,7 @@ const createWindow = () => {
 app.setName("Vision");
 
 app.whenReady().then(() => {
+  trackEvent("Window Created");
   createWindow();
 });
 
