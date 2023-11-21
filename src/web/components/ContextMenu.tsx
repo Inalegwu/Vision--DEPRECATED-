@@ -1,4 +1,9 @@
-import React, { useCallback } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useState,
+} from "react";
 import { AnimatedBox, Box } from "./atoms";
 import { styled } from "../stitches.config";
 import { ThemeCSS } from "../../shared/types";
@@ -15,10 +20,10 @@ export type ContextMenuRefProps = {
 
 const ContextMenu = React.forwardRef<ContextMenuRefProps, ContextMenuProps>(
   (props, ref) => {
-    const [isVisible, setIsVisible] = React.useState<boolean>(false);
-    const [mouseOver, setMouseOver] = React.useState<boolean>(false);
+    const [isVisible, setIsVisible] = useState<boolean>(false);
+    const [mouseOver, setMouseOver] = useState<boolean>(false);
 
-    React.useEffect(() => {
+    useEffect(() => {
       const visibleTimeout = setTimeout(() => {
         if (isVisible && !mouseOver) {
           setIsVisible(false);
@@ -31,6 +36,7 @@ const ContextMenu = React.forwardRef<ContextMenuRefProps, ContextMenuProps>(
     }, [isVisible, setIsVisible]);
 
     const visible = useCallback(() => {
+      console.log("From Context Menu : ", isVisible);
       return isVisible;
     }, [isVisible]);
 
@@ -38,17 +44,13 @@ const ContextMenu = React.forwardRef<ContextMenuRefProps, ContextMenuProps>(
       setIsVisible((v) => !v);
     }, [setIsVisible]);
 
-    React.useImperativeHandle(ref, () => ({ toggle, visible }));
-
-    // if (!isVisible) {
-    //   return <></>;
-    // }
+    useImperativeHandle(ref, () => ({ toggle, visible }));
 
     return (
       <AnimatedBox
         transition={{
           duration: 0.2,
-          ease: "linear",
+          ease: "easeInOut",
         }}
         initial={{ opacity: 0, display: "none" }}
         animate={{

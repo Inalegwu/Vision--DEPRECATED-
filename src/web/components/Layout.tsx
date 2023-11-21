@@ -26,6 +26,7 @@ export default function Layout(props: LayoutProps) {
         background: "$background",
       }}
     >
+      {/* titlebar */}
       <Box
         css={{
           width: "100%",

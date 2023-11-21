@@ -1,22 +1,7 @@
 import { trackEvent } from "@aptabase/electron/renderer";
-import {
-  Box,
-  Button,
-  Image,
-  Text,
-  LinkButton,
-  AnimatedBox,
-} from "../components/atoms";
+import { Box, Button, Image, Text } from "../components/atoms";
 import { trpcReact } from "../../shared/config";
-import {
-  Layout,
-  VStack,
-  HStack,
-  Spinner,
-  IssueCard,
-  ContextMenuRefProps,
-  ContextMenu,
-} from "../components";
+import { Layout, VStack, HStack, Spinner, IssueCard } from "../components";
 import { Plus } from "@phosphor-icons/react";
 import toast from "react-hot-toast";
 
@@ -38,13 +23,7 @@ export default function Library() {
   });
 
   const { data: libraryData, isLoading: fetchingLibraryContent } =
-    trpcReact.library.getLibrary.useQuery(undefined, {
-      onSuccess: (data) => {
-        trackEvent("Library Loaded", {
-          id: data.issues[0].id,
-        });
-      },
-    });
+    trpcReact.library.getLibrary.useQuery();
 
   const { mutate: deleteIssue, isLoading: deleting } =
     trpcReact.issue.deleteIssue.useMutation({
@@ -163,7 +142,7 @@ export default function Library() {
             overflowX: "hidden",
             overflowY: "scroll",
             overflowWrap: "anywhere",
-            marginTop: "$lg",
+            marginTop: "$xl",
           }}
         >
           {libraryData?.issues.map((v) => {

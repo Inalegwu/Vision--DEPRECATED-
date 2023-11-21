@@ -6,7 +6,7 @@ import { createExtractorFromData } from "node-unrar-js/esm";
 import { TRPCError } from "@trpc/server";
 import { v4 } from "uuid";
 import { issues, pages } from "../schema";
-import { convertToImageUrl } from "../utils";
+import { convertToImageUrl, sortPages } from "../utils";
 
 export const libraryRouter = router({
   addToLibrary: publicProcedure.mutation(async ({ ctx }) => {
@@ -47,13 +47,22 @@ export const libraryRouter = router({
       const extracted = extractor.extract({ files });
       const extractedFiles = [...extracted.files];
 
-      console.log(extractedFiles);
+      const sortedFiles = extractedFiles.sort(sortPages);
 
-      const thumbnailUrl = convertToImageUrl(
-        extractedFiles[extractedFiles.length - 2].extraction?.buffer!
+      const metaDataFile = sortedFiles.find((v) =>
+        v.fileHeader.name.includes("xml")
       );
 
-      const name = files[0].split("-")[0] + files[0].split("-")[1];
+      const thumbnailUrl = convertToImageUrl(
+        sortedFiles[0].extraction?.buffer!
+      );
+
+      const name = sortedFiles[0].fileHeader.name
+        .replace(/\.[^/.]+$/, "")
+        .replace(/(\d+)$/g, "")
+        .replace("-", "");
+
+      console.log(name);
 
       const createdIssue = await ctx.db
         .insert(issues)
@@ -64,25 +73,22 @@ export const libraryRouter = router({
         })
         .returning({ id: issues.id, name: issues.name });
 
-      trackEvent("write to DB", {
-        name,
-        id: createdIssue[0].id,
-      });
+      sortedFiles
+        .filter((v) => !v.fileHeader.name.includes("xml"))
+        .forEach(async (v, idx) => {
+          if (v.fileHeader.name.includes("xml")) {
+            return;
+          }
 
-      extractedFiles.forEach(async (v, idx) => {
-        if (v.fileHeader.name.includes("xml")) {
-          return;
-        }
+          const content = convertToImageUrl(v.extraction?.buffer!);
 
-        const content = convertToImageUrl(v.extraction?.buffer!);
-
-        await ctx.db.insert(pages).values({
-          id: v4(),
-          name: `${createdIssue[0].name}-${idx}`,
-          content,
-          issueId: createdIssue[0].id,
+          await ctx.db.insert(pages).values({
+            id: v4(),
+            name: `${createdIssue[0].name}-${idx}`,
+            content,
+            issueId: createdIssue[0].id,
+          });
         });
-      });
 
       return {
         status: true,

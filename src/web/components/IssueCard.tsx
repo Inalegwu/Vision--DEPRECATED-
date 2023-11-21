@@ -1,11 +1,12 @@
-import { Box, Button, Image, LinkButton, Text } from "./atoms";
+import { AnimatedBox, Box, Button, Image, LinkButton, Text } from "./atoms";
 import { Issue } from "../../shared/types";
 import { trpcReact } from "../../shared/config";
 import toast from "react-hot-toast";
 import { useNavigate, useNavigation } from "react-router-dom";
 import React, { useCallback, useRef, useState } from "react";
 import ContextMenu, { ContextMenuRefProps } from "./ContextMenu";
-import { Pencil, Trash } from "@phosphor-icons/react";
+import { Eye, EyeClosed, Pencil, Trash } from "@phosphor-icons/react";
+import { useAtom } from "jotai";
 
 type Props = {
   issue: Issue;
@@ -31,6 +32,7 @@ export default function IssueCard(props: Props) {
       onSuccess: () => {
         utils.library.invalidate();
         toast.success("Gone for now 😣");
+        utils.issue.invalidate();
       },
       onError: () => {
         toast.error("Couldn't Remove from Library 🫤");
@@ -41,18 +43,21 @@ export default function IssueCard(props: Props) {
     (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
       if (e.ctrlKey && !contextMenuVisible) {
         contextMenuRef.current?.toggle();
-        setMousePos({ x: e.nativeEvent.x, y: e.nativeEvent.y });
-      } else if (contextMenuVisible) {
-        return;
-      } else {
-        router(`/${props.issue.id}`);
+        // position the context menu close to the mouse position
+        setMousePos({ x: e.nativeEvent.x + 10, y: e.nativeEvent.y + 10 });
       }
     },
     [props.issue, setMousePos]
   );
 
   return (
-    <Box
+    <AnimatedBox
+      initial={{
+        opacity: 0,
+      }}
+      animate={{
+        opacity: 1,
+      }}
       css={{
         display: "flex",
         pointerEvents: `${contextMenuVisible ? "none" : "auto"}`,
@@ -72,10 +77,10 @@ export default function IssueCard(props: Props) {
       <ContextMenu
         style={{
           position: "absolute",
-          top: mousePos.y + 10,
-          left: mousePos.x + 10,
+          top: mousePos.y,
+          left: mousePos.x,
           background: "$blackMuted",
-          backdropFilter: "blur(700px)",
+          backdropFilter: "blur(100px)",
           borderRadius: "$md",
           border: "0.1px solid rgba(255,255,255,0.3)",
         }}
@@ -150,8 +155,13 @@ export default function IssueCard(props: Props) {
         />
       </Box>
       <Box css={{ width: 170 }}>
-        <Text css={{ fontSize: 14 }}>{props.issue.name}</Text>
+        <LinkButton
+          to={`/${props.issue.id}`}
+          css={{ fontSize: 14, color: "$lightGray" }}
+        >
+          {props.issue.name}
+        </LinkButton>
       </Box>
-    </Box>
+    </AnimatedBox>
   );
 }

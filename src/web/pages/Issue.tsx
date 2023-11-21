@@ -10,12 +10,7 @@ import { Spinner } from "../components";
 import { useParams } from "react-router-dom";
 import { IssueParams } from "../../shared/types";
 import { trpcReact } from "../../shared/config";
-import {
-  CaretLeft,
-  SquareSplitHorizontal,
-  CornersOut,
-  Square,
-} from "@phosphor-icons/react";
+import { CaretLeft, CornersOut } from "@phosphor-icons/react";
 import { useEffect, useState } from "react";
 import { useAtom } from "jotai";
 import { layoutAtom } from "../state";
@@ -220,6 +215,7 @@ export default function Issue() {
                     width: 60,
                     height: "100%",
                     borderRadius: "$md",
+                    cursor: "pointer",
                     border: `${
                       activePanelId === v.id ? "2px solid $primary" : ""
                     }`,
