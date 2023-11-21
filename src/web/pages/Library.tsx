@@ -77,7 +77,7 @@ export default function Library() {
 
   return (
     <Layout>
-      <Box css={{ width: "100%", height: "100%", padding: "$lg" }}>
+      <Box css={{ width: "100%", height: "100%" }}>
         {/* loading overlay */}
         {addingToLibrary && (
           <Box
@@ -111,7 +111,7 @@ export default function Library() {
           </Box>
         )}
         {/* header */}
-        <VStack gap={6}>
+        <VStack gap={6} style={{ padding: "$lg" }}>
           <Text css={{ fontSize: 35, fontWeight: "bold" }}>My Library</Text>
           <HStack
             width="100%"
@@ -149,7 +149,7 @@ export default function Library() {
           css={{
             display: "flex",
             gap: "$xxxl",
-            padding: "$md",
+            padding: "$lg",
             overflowX: "hidden",
             overflowY: "scroll",
             overflowWrap: "anywhere",

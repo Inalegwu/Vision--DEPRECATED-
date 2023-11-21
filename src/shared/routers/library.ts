@@ -71,7 +71,7 @@ export const libraryRouter = router({
 
       if (issueExists) {
         throw new TRPCError({
-          message: "You've already added that to your library",
+          message: `${name} , is already in your library`,
           code: "CONFLICT",
           cause: `tried adding issue ${name} again`,
         });
