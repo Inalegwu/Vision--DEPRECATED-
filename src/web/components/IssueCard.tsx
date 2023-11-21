@@ -86,7 +86,8 @@ export default function IssueCard(props: Props) {
         }}
         ref={contextMenuRef}
       >
-        <Button
+        {/* !IMPORTANT this will be implemented when I can fully parse the metadata files */}
+        {/* <Button
           css={{
             padding: "$xl",
             borderBottom: "0.1px solid rgba(255,255,255,0.3)",
@@ -108,7 +109,7 @@ export default function IssueCard(props: Props) {
         >
           <Pencil />
           <Text>Edit Issue Data</Text>
-        </Button>
+        </Button> */}
         <Button
           onClick={() => deleteIssue({ id: props.issue.id })}
           css={{

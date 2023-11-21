@@ -2,6 +2,11 @@ import { config } from "../web/stitches.config";
 import { issues, pages } from "./schema";
 import * as Stitches from "@stitches/react";
 
+export enum Reasons {
+  CANCELLED = "100",
+  NONE = "000",
+}
+
 export type ThemeState = "dark" | "light";
 
 export type ThemeCSS = Stitches.CSS<typeof config>;

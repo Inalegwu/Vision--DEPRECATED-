@@ -7,6 +7,7 @@ import { TRPCError } from "@trpc/server";
 import { v4 } from "uuid";
 import { issues, pages } from "../schema";
 import { convertToImageUrl, sortPages } from "../utils";
+import { Reasons } from "../types";
 
 export const libraryRouter = router({
   addToLibrary: publicProcedure.mutation(async ({ ctx }) => {
@@ -23,6 +24,7 @@ export const libraryRouter = router({
       if (canceled) {
         return {
           status: false,
+          reason: Reasons.CANCELLED,
         };
       }
 
@@ -62,8 +64,6 @@ export const libraryRouter = router({
         .replace(/(\d+)$/g, "")
         .replace("-", "");
 
-      console.log(name);
-
       const createdIssue = await ctx.db
         .insert(issues)
         .values({
@@ -92,6 +92,7 @@ export const libraryRouter = router({
 
       return {
         status: true,
+        reason: Reasons.NONE,
       };
     } catch (e) {
       if (e instanceof Error) {

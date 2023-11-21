@@ -4,6 +4,7 @@ import { trpcReact } from "../../shared/config";
 import { Layout, VStack, HStack, Spinner, IssueCard } from "../components";
 import { Plus } from "@phosphor-icons/react";
 import toast from "react-hot-toast";
+import { Reasons } from "../../shared/types";
 
 trackEvent("Library Loaded");
 
@@ -14,7 +15,10 @@ export default function Library() {
     data,
     isLoading: addingToLibrary,
   } = trpcReact.library.addToLibrary.useMutation({
-    onSuccess: () => {
+    onSuccess: (data) => {
+      if (data?.status === false && data.reason === Reasons.CANCELLED) {
+        return;
+      }
       toast.success("Added To Library", {
         duration: 6000,
       });
