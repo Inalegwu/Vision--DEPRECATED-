@@ -62,6 +62,7 @@ export default function Issue() {
     console.log(activeIndex);
     if (activeIndex === issue?.issue.pages.length! - 1) {
       return;
+      toast.success("That's all folks 😊");
     }
     setActiveIndex(activeIndex + 1);
   }, [activeIndex, setActiveIndex, issue]);

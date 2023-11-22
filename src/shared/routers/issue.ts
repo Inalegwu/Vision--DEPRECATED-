@@ -13,9 +13,10 @@ export const issueRouter = router({
       try {
         const issue = await ctx.db.query.issues.findFirst({
           where: (issues, { eq }) => eq(issues.id, input.id),
-          with: {
-            pages: true,
-          },
+        });
+
+        const pages = await ctx.db.query.pages.findMany({
+          where: (pages, { eq }) => eq(pages.issueId, input.id),
         });
 
         if (!issue) {
@@ -26,7 +27,10 @@ export const issueRouter = router({
         }
 
         return {
-          issue,
+          issue: {
+            ...issue,
+            pages,
+          },
         };
       } catch (e) {
         console.log(e);
