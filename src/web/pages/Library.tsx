@@ -1,10 +1,10 @@
-import { trackEvent } from "@aptabase/electron/renderer";
-import { AnimatedBox, Box, Button, Image, Text } from "../components/atoms";
-import { trpcReact } from "../../shared/config";
-import { Layout, VStack, HStack, Spinner, IssueCard } from "../components";
-import { Plus } from "@phosphor-icons/react";
 import toast from "react-hot-toast";
+import { trackEvent } from "@aptabase/electron/renderer";
+import { trpcReact } from "../../shared/config";
+import { Plus } from "@phosphor-icons/react";
 import { Reasons } from "../../shared/types";
+import { Layout, VStack, HStack, Spinner, IssueCard } from "../components";
+import { AnimatedBox, Box, Button, Text } from "../components/atoms";
 
 trackEvent("Library Loaded");
 
