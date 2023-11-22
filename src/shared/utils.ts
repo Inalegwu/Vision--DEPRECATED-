@@ -35,3 +35,7 @@ export function sortPages(a: ArcFile<Uint8Array>, b: ArcFile<Uint8Array>) {
 
   return a.fileHeader.name > a.fileHeader.name ? 1 : -1;
 }
+
+export function clamp(num: number, min: number, max: number): number {
+  return Math.max(Math.min(num, max), min);
+}
