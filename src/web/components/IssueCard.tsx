@@ -1,50 +1,20 @@
-import toast from "react-hot-toast";
-import { Trash } from "@phosphor-icons/react";
 import { Issue } from "../../shared/types";
-import { trpcReact } from "../../shared/config";
-import { useCallback, useRef, useState } from "react";
-import ContextMenu, { ContextMenuRefProps } from "./ContextMenu";
-import { AnimatedBox, Box, Button, Image, LinkButton, Text } from "./atoms";
+import { useCallback } from "react";
+import { AnimatedBox, Box, Image, Text } from "./atoms";
+import { useNavigate } from "react-router-dom";
 
 type Props = {
   issue: Issue;
 };
 
 export default function IssueCard(props: Props) {
-  const utils = trpcReact.useUtils();
-  const contextMenuRef = useRef<ContextMenuRefProps>(null);
-
-  const contextMenuVisible = contextMenuRef?.current?.visible();
-
-  // use to position context menu
-  const [mousePos, setMousePos] = useState<{ x: number; y: number }>({
-    x: 0,
-    y: 0,
-  });
-
-  // the only actions this component can carry out
-  // are editing and deleting
-  const { mutate: deleteIssue, isLoading: deleting } =
-    trpcReact.issue.deleteIssue.useMutation({
-      onSuccess: () => {
-        utils.library.invalidate();
-        toast.success("Gone for now 😣");
-        utils.issue.invalidate();
-      },
-      onError: () => {
-        toast.error("Couldn't Remove from Library 🫤");
-      },
-    });
+  const router = useNavigate();
 
   const handleClick = useCallback(
     (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-      if (e.ctrlKey && !contextMenuVisible) {
-        contextMenuRef.current?.toggle();
-        // position the context menu close to the mouse position
-        setMousePos({ x: e.nativeEvent.x + 10, y: e.nativeEvent.y + 10 });
-      }
+      router(`/${props.issue.id}`);
     },
-    [props.issue, setMousePos]
+    [props.issue]
   );
 
   return (
@@ -57,7 +27,6 @@ export default function IssueCard(props: Props) {
       }}
       css={{
         display: "flex",
-        pointerEvents: `${contextMenuVisible ? "none" : "auto"}`,
         flexDirection: "column",
         alignContent: "flex-start",
         alignItems: "flex-start",
@@ -71,66 +40,6 @@ export default function IssueCard(props: Props) {
       }}
       onClick={handleClick}
     >
-      <ContextMenu
-        style={{
-          position: "absolute",
-          top: mousePos.y,
-          left: mousePos.x,
-          background: "$blackMuted",
-          backdropFilter: "blur(100px)",
-          borderRadius: "$md",
-          border: "0.1px solid rgba(255,255,255,0.3)",
-        }}
-        ref={contextMenuRef}
-      >
-        {/* !IMPORTANT this will be implemented when I can fully parse the metadata files */}
-        {/* <Button
-          css={{
-            padding: "$xl",
-            borderBottom: "0.1px solid rgba(255,255,255,0.3)",
-            display: "flex",
-            alignContent: "center",
-            alignItems: "center",
-            gap: "$md",
-            justifyContent: "flex-start",
-            color: "$lightGray",
-            width: "100%",
-            borderTopRightRadius: "$md",
-            borderTopLeftRadius: "$md",
-            "&:hover": {
-              background: "$secondary",
-              color: "$white",
-            },
-          }}
-          onClick={() => router(`/editIssue/${props.issue.id}`)}
-        >
-          <Pencil />
-          <Text>Edit Issue Data</Text>
-        </Button> */}
-        <Button
-          onClick={() => deleteIssue({ id: props.issue.id })}
-          css={{
-            padding: "$xl",
-            borderBottom: "0.1px solid rgba(255,255,255,0.3)",
-            display: "flex",
-            alignContent: "center",
-            alignItems: "center",
-            gap: "$md",
-            justifyContent: "flex-start",
-            color: "$danger",
-            width: "100%",
-            borderBottomRightRadius: "$md",
-            borderBottomLeftRadius: "$md",
-            "&:hover": {
-              background: "$danger",
-              color: "$white",
-            },
-          }}
-        >
-          <Trash />
-          <Text>Remove {props.issue.name} from library</Text>
-        </Button>
-      </ContextMenu>
       <Box
         css={{
           border: "0.1px solid rgba(255,255,255,0.3)",
@@ -143,7 +52,6 @@ export default function IssueCard(props: Props) {
           "&:hover": {
             border: "0.1px solid rgba(255,255,255,0.6)",
           },
-          opacity: `${deleting ? "0.5" : "1"}`,
         }}
       >
         <Image
@@ -153,12 +61,7 @@ export default function IssueCard(props: Props) {
         />
       </Box>
       <Box css={{ width: 170 }}>
-        <LinkButton
-          to={`/${props.issue.id}`}
-          css={{ fontSize: 14, color: "$lightGray" }}
-        >
-          {props.issue.name}
-        </LinkButton>
+        <Text>{props.issue.name}</Text>
       </Box>
     </AnimatedBox>
   );

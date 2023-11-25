@@ -10,7 +10,6 @@ import {
   LinkButton,
   Text,
   AnimatedBox,
-  AnimatedImage,
   Button,
 } from "../components/atoms";
 import { useAtom } from "jotai";
@@ -22,7 +21,7 @@ export default function Issue() {
   const router = useNavigate();
 
   if (!issueId) {
-    return router("/");
+    return;
   }
 
   const [activeIndex, setActiveIndex] = useState<number>(0);

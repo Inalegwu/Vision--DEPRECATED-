@@ -1,6 +1,7 @@
 import z from "zod";
 import { TRPCError } from "@trpc/server";
 import { trackEvent } from "@aptabase/electron/main";
+import { SqliteError } from "better-sqlite3";
 import { issues, pages } from "../schema";
 import { DrizzleError, eq } from "drizzle-orm";
 import { publicProcedure, router } from "../../trpc";
@@ -75,8 +76,11 @@ export const issueRouter = router({
        */
 
       if (!issue) {
+        trackEvent("Fetch issue error", {
+          issue_id: input.id,
+        });
         throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
+          code: "NOT_FOUND",
           message: "No Issue With That ID",
         });
       }
@@ -96,11 +100,31 @@ export const issueRouter = router({
           })
           .where(eq(issues.id, input.id));
       } catch (e) {
-        console.log(e);
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "Couldn't Update Issue",
-        });
+        if (e instanceof DrizzleError) {
+          console.log(e);
+          trackEvent("Couldn't Update Issue", {
+            cause: e.message,
+          });
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Couldn't Update Issue",
+          });
+        } else if (e instanceof SqliteError) {
+          console.log(e);
+          trackEvent("Update Issue Sqlite Error", {
+            cause: e.message,
+          });
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Couldn't Update Issue",
+          });
+        } else {
+          trackEvent("Unknown Error while updating issue");
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Couldn't Update Issue",
+          });
+        }
       }
     }),
 });

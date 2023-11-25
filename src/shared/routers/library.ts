@@ -39,6 +39,9 @@ export const libraryRouter = router({
       // convert the buffer from the file we read
       // to a UInt8Array which node-unrar-js uses
       // IDK why
+      // NB This only works in the main
+      // process , trying to do this from the
+      // renderer process will require webpack
       const data = Uint8Array.from(fs.readFileSync(filePaths[0])).buffer;
 
       const extractor = await createExtractorFromData({
@@ -124,6 +127,9 @@ export const libraryRouter = router({
       };
     } catch (e) {
       if (e instanceof UnrarError) {
+        trackEvent("Zip Parse Failed", {
+          cause: e.message,
+        });
         throw new TRPCError({
           code: "UNPROCESSABLE_CONTENT",
           message: "Couldn't Add To Library , Unsupported file type",
@@ -131,14 +137,20 @@ export const libraryRouter = router({
         });
       }
       if (e instanceof DrizzleError) {
+        trackEvent("Drizzle Failed to Save File", {
+          cause: e.message,
+        });
         console.log(e);
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
-          message: "Save Error",
+          message: "Couldn't Save Issue",
           cause: e.cause,
         });
       }
       if (e instanceof TRPCError) {
+        trackEvent("Generic Error Event", {
+          cause: e.cause?.message!,
+        });
         throw new TRPCError({
           code: e.code,
           message: e.message,
@@ -158,18 +170,27 @@ export const libraryRouter = router({
       };
     } catch (e) {
       if (e instanceof DrizzleError) {
+        trackEvent("Drizzle Query Error", {
+          cause: e.message,
+        });
         throw new TRPCError({
           message: "Couldn't Get Your Library",
           code: "INTERNAL_SERVER_ERROR",
           cause: e.cause,
         });
       } else if (e instanceof SqliteError) {
+        trackEvent("SQLite Query Error", {
+          cause: e.message,
+        });
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           cause: e.cause,
           message: "Couldn't Get Your Library",
         });
-      } else {
+      } else if (e instanceof TRPCError) {
+        trackEvent("Generic Error Occurred", {
+          cause: e.message,
+        });
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "Unexpected Error While trying to load your library",

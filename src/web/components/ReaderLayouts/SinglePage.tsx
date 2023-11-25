@@ -1,5 +1,5 @@
 import { LayoutProps } from "../../../shared/types";
-import { AnimatedImage, Box } from "../atoms";
+import { AnimatedBox, AnimatedImage } from "../atoms";
 
 function SinglePage({ pages, activeIndex }: LayoutProps) {
   if (!pages) {
@@ -7,7 +7,8 @@ function SinglePage({ pages, activeIndex }: LayoutProps) {
   }
 
   return (
-    <Box
+    <AnimatedBox
+      animate={{ left: `${activeIndex}*100%` }}
       css={{
         width: "100%",
         height: "100%",
@@ -15,19 +16,20 @@ function SinglePage({ pages, activeIndex }: LayoutProps) {
         alignContent: "center",
         alignItems: "center",
         justifyContent: "center",
+        overflow: "hidden",
       }}
     >
-      <AnimatedImage
-        src={pages[activeIndex].content}
-        alt={pages[activeIndex].name}
-        css={{
-          width: "50%",
-          height: "100%",
-          margin: "auto",
-          aspectRatio: 1,
-        }}
-      />
-    </Box>
+      {pages.map((v) => {
+        return (
+          <AnimatedImage
+            src={v.content}
+            key={v.id}
+            alt={v.name}
+            css={{ width: "50%", height: "100%", aspectRatio: 16 / 9 }}
+          />
+        );
+      })}
+    </AnimatedBox>
   );
 }
 

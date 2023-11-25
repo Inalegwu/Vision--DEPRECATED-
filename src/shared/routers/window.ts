@@ -3,7 +3,7 @@ import { publicProcedure, router } from "../../trpc";
 
 export const windowRouter = router({
   closeWindow: publicProcedure.mutation(({ ctx }) => {
-    trackEvent("Close Window");
+    trackEvent("App Closed");
     if (!ctx.window) return;
 
     ctx.window.close();

@@ -16,6 +16,8 @@ export function convertToImageUrl(buffer: ArrayBufferLike): string {
 
 // implemented based on
 // https://github.com/codedread/kthoom/blob/master/code/comics/comic-book-page-sorter.js
+// I'll have to try and understand this regex on my own , so I'll be able to extend this code if
+// necessary
 export function sortPages(a: ArcFile<Uint8Array>, b: ArcFile<Uint8Array>) {
   // Strip off file extension.
   const aName = a.fileHeader.name.replace(/\.[^/.]+$/, "");

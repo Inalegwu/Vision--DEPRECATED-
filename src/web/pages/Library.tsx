@@ -19,7 +19,7 @@ export default function Library() {
         toast.success("Added To Library", {
           duration: 6000,
         });
-        utils.library.invalidate();
+        utils.library.getLibrary.invalidate();
       },
       onError: (err) => {
         toast.error(err.message);

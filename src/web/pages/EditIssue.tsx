@@ -10,7 +10,7 @@ export default function EditIssue() {
   const { issueId } = useParams<IssueParams>();
 
   if (!issueId) {
-    return router("/");
+    return;
   }
 
   const [newName, setNewName] = useState<string>("");
