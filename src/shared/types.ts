@@ -14,6 +14,7 @@ export type ThemeCSS = Stitches.CSS<typeof config>;
 export type InsertPage = typeof pages.$inferInsert;
 export type InsertIssue = typeof issues.$inferInsert;
 export type Issue = typeof issues.$inferSelect;
+export type Page = typeof pages.$inferSelect;
 
 export type ReaderLayout = "SinglePage" | "DoublePage";
 
@@ -25,4 +26,7 @@ export type IssueParams = {
   issueId: string;
 };
 
-export type Filter = "Issues" | "Collections" | "All";
+export type LayoutProps = {
+  pages?: Page[];
+  activeIndex: number;
+};

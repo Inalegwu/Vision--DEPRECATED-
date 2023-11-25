@@ -7,7 +7,10 @@
     "resolveJsonModule": true,
     "lib": ["DOM", "ESNext"],
     "jsx": "react-jsx",
-    "strict": true
+    "strict": true,
+    "noUnusedLocals": true,
+    "baseUrl": ".",
+    "paths": {}
   },
   "include": ["src"],
   "ts-node": {
@@ -16,4 +19,3 @@
     }
   }
 }
-

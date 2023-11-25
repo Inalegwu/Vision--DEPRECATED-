@@ -5,6 +5,7 @@ import { Reasons } from "../types";
 import { TRPCError } from "@trpc/server";
 import { trackEvent } from "@aptabase/electron/main";
 import { UnrarError } from "node-unrar-js";
+import { SqliteError } from "better-sqlite3";
 import { DrizzleError } from "drizzle-orm";
 import { issues, pages } from "../schema";
 import { publicProcedure, router } from "../../trpc";
@@ -30,24 +31,27 @@ export const libraryRouter = router({
       }
 
       // load the wasm binary of node-unrar-js from {filePath}
+      // as a buffer.I don't ask why , I couldn't tell you.
       const wasmBinary = fs.readFileSync(
         "node_modules/node-unrar-js/dist/js/unrar.wasm"
       );
 
-      const buf = Uint8Array.from(fs.readFileSync(filePaths[0])).buffer;
+      // convert the buffer from the file we read
+      // to a UInt8Array which node-unrar-js uses
+      // IDK why
+      const data = Uint8Array.from(fs.readFileSync(filePaths[0])).buffer;
 
       const extractor = await createExtractorFromData({
-        data: buf,
+        data,
         wasmBinary,
       });
 
       const list = extractor.getFileList();
-      const listArcHeader = list.arcHeader;
       const fileHeaders = [...list.fileHeaders];
 
       const files = fileHeaders.map((v) => v.name);
-
       const extracted = extractor.extract({ files });
+
       const extractedFiles = [...extracted.files];
 
       const sortedFiles = extractedFiles.sort(sortPages);
@@ -56,15 +60,30 @@ export const libraryRouter = router({
         v.fileHeader.name.includes("xml")
       );
 
+      // TODO parse metadata file to save to database which will come in handy later
+      if (metaDataFile) {
+        console.log(metaDataFile.fileHeader.name);
+      }
+
+      // convert first page of sorted file
+      // to thumbnail url for the issue
+      // as it is
       const thumbnailUrl = convertToImageUrl(
-        sortedFiles[0].extraction?.buffer!
+        sortedFiles[0]?.extraction?.buffer!
       );
 
-      const name = sortedFiles[0].fileHeader.name
+      // parse the name from the file
+      // header to create the issue name
+      // using regex to strip off
+      // some extraneous stuff
+      const name = sortedFiles[0]?.fileHeader.name
         .replace(/\.[^/.]+$/, "")
         .replace(/(\d+)$/g, "")
         .replace("-", "");
 
+      // check if the issue already exists
+      // based on the parsed name
+      // since I can guarantee that will always be the same
       const issueExists = await ctx.db.query.issues.findFirst({
         where: (issues, { eq }) => eq(issues.name, name),
       });
@@ -89,10 +108,6 @@ export const libraryRouter = router({
       sortedFiles
         .filter((v) => !v.fileHeader.name.includes("xml"))
         .forEach(async (v, idx) => {
-          if (v.fileHeader.name.includes("xml")) {
-            return;
-          }
-
           const content = convertToImageUrl(v.extraction?.buffer!);
 
           await ctx.db.insert(pages).values({
@@ -133,12 +148,33 @@ export const libraryRouter = router({
     }
   }),
   getLibrary: publicProcedure.query(async ({ ctx }) => {
-    trackEvent("Load Library");
+    try {
+      trackEvent("Load Library");
 
-    const issues = await ctx.db.query.issues.findMany({});
+      const issues = await ctx.db.query.issues.findMany({});
 
-    return {
-      issues,
-    };
+      return {
+        issues,
+      };
+    } catch (e) {
+      if (e instanceof DrizzleError) {
+        throw new TRPCError({
+          message: "Couldn't Get Your Library",
+          code: "INTERNAL_SERVER_ERROR",
+          cause: e.cause,
+        });
+      } else if (e instanceof SqliteError) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          cause: e.cause,
+          message: "Couldn't Get Your Library",
+        });
+      } else {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Unexpected Error While trying to load your library",
+        });
+      }
+    }
   }),
 });

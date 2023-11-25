@@ -1,9 +1,9 @@
 import path from "path";
+import { appRouter } from "./shared/routers/_app";
+import { createContext } from "./shared/context";
+import { createIPCHandler } from "electron-trpc/main";
 import { initialize, trackEvent } from "@aptabase/electron/main";
 import { BrowserWindow, app, screen } from "electron";
-import { appRouter } from "./shared/routers/_app";
-import { createIPCHandler } from "electron-trpc/main";
-import { createContext } from "./shared/context";
 
 initialize("A-EU-0154526847");
 

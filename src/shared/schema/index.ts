@@ -1,3 +1,2 @@
-export * from "./issue/issue.schema";
-export * from "./page/page.schema";
-
+export * from "./issue.schema";
+export * from "./page.schema";

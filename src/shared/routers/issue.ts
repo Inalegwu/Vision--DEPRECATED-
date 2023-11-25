@@ -1,51 +1,31 @@
 import z from "zod";
-import { trackEvent } from "@aptabase/electron/main";
-import { DrizzleError, eq } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
-import { publicProcedure, router } from "../../trpc";
+import { trackEvent } from "@aptabase/electron/main";
 import { issues, pages } from "../schema";
-import { SqliteError } from "better-sqlite3";
+import { DrizzleError, eq } from "drizzle-orm";
+import { publicProcedure, router } from "../../trpc";
 
 export const issueRouter = router({
   getIssue: publicProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
-      try {
-        const issue = await ctx.db.query.issues.findFirst({
-          where: (issues, { eq }) => eq(issues.id, input.id),
-        });
+      const issue = await ctx.db.query.issues.findFirst({
+        where: (issues, { eq }) => eq(issues.id, input.id),
+        with: {
+          pages: true,
+        },
+      });
 
-        const pages = await ctx.db.query.pages.findMany({
-          where: (pages, { eq }) => eq(pages.issueId, input.id),
-        });
-
-        if (!issue) {
-          throw new TRPCError({
-            code: "NOT_FOUND",
-            message: "Couldn't find that issue , sorry 🤷‍♂️",
-          });
-        }
-
-        return {
-          issue: {
-            ...issue,
-            pages,
-          },
-        };
-      } catch (e) {
-        console.log(e);
-        if (e instanceof SqliteError) {
-          throw new TRPCError({
-            code: "INTERNAL_SERVER_ERROR",
-            message: e.message,
-            cause: e.cause,
-          });
-        }
+      if (!issue) {
         throw new TRPCError({
           code: "NOT_FOUND",
-          message: "Couldn't Get Issue",
+          message: "Couldn't find that issue , sorry 🤷‍♂️",
         });
       }
+
+      return {
+        issue,
+      };
     }),
   deleteIssue: publicProcedure
     .input(z.object({ id: z.string() }))
@@ -75,6 +55,35 @@ export const issueRouter = router({
           });
         }
       }
+    }),
+  getIssueData: publicProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const issue = await ctx.db.query.issues.findFirst({
+        where: (issues, { eq }) => eq(issues.id, input.id),
+      });
+
+      /**
+       * TODO something like this will be implemented
+       * when the metadata files are being saved
+       *
+       * const metadata=await ctx.db.query.meta.findFirst({
+       *  where:(meta,{eq})=>eq(meta.issueId.input.id),
+       * });
+       *
+       *
+       */
+
+      if (!issue) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "No Issue With That ID",
+        });
+      }
+
+      return {
+        data: issue,
+      };
     }),
   changeIssueName: publicProcedure
     .input(z.object({ id: z.string(), newName: z.string() }))

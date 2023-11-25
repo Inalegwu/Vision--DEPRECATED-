@@ -1,15 +1,32 @@
-import { useParams } from "react-router-dom";
-import { IssueParams } from "../../shared/types";
 import { Layout } from "../components";
-import { Box, LinkButton, Text } from "../components/atoms";
-import { CaretLeft } from "@phosphor-icons/react";
 import { trpcReact } from "../../shared/config";
+import { Box, Text } from "../components/atoms";
+import { IssueParams } from "../../shared/types";
+import { useNavigate, useParams } from "react-router-dom";
+import { useCallback, useState } from "react";
 
 export default function EditIssue() {
+  const router = useNavigate();
   const { issueId } = useParams<IssueParams>();
 
+  if (!issueId) {
+    return router("/");
+  }
+
+  const [newName, setNewName] = useState<string>("");
+
   const { data: issue, isLoading: fetchingIssue } =
-    trpcReact.issue.getIssue.useQuery({ id: issueId! });
+    trpcReact.issue.getIssueData.useQuery({ id: issueId! });
+
+  const { mutate: updateIssueName, isLoading: updatingIssue } =
+    trpcReact.issue.changeIssueName.useMutation();
+
+  const changeIssueName = useCallback(() => {
+    updateIssueName({
+      id: issueId,
+      newName,
+    });
+  }, [issueId, newName]);
 
   return (
     <Layout>
@@ -27,7 +44,7 @@ export default function EditIssue() {
           }}
         >
           <Text css={{ fontSize: 30, fontWeight: "bold" }}>
-            {issue?.issue?.name}
+            {issue?.data?.name}
           </Text>
           <Box
             css={{

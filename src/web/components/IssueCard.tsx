@@ -1,12 +1,10 @@
-import { AnimatedBox, Box, Button, Image, LinkButton, Text } from "./atoms";
+import toast from "react-hot-toast";
+import { Trash } from "@phosphor-icons/react";
 import { Issue } from "../../shared/types";
 import { trpcReact } from "../../shared/config";
-import toast from "react-hot-toast";
-import { useNavigate, useNavigation } from "react-router-dom";
-import React, { useCallback, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import ContextMenu, { ContextMenuRefProps } from "./ContextMenu";
-import { Eye, EyeClosed, Pencil, Trash } from "@phosphor-icons/react";
-import { useAtom } from "jotai";
+import { AnimatedBox, Box, Button, Image, LinkButton, Text } from "./atoms";
 
 type Props = {
   issue: Issue;
@@ -14,7 +12,6 @@ type Props = {
 
 export default function IssueCard(props: Props) {
   const utils = trpcReact.useUtils();
-  const router = useNavigate();
   const contextMenuRef = useRef<ContextMenuRefProps>(null);
 
   const contextMenuVisible = contextMenuRef?.current?.visible();

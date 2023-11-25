@@ -10,37 +10,24 @@ trackEvent("Library Loaded");
 
 export default function Library() {
   const utils = trpcReact.useUtils();
-  const {
-    mutate: addToLibrary,
-    data,
-    isLoading: addingToLibrary,
-  } = trpcReact.library.addToLibrary.useMutation({
-    onSuccess: (data) => {
-      if (data?.status === false && data.reason === Reasons.CANCELLED) {
-        return;
-      }
-      toast.success("Added To Library", {
-        duration: 6000,
-      });
-      utils.library.invalidate();
-    },
-    onError: (err) => {
-      toast.error(err.message);
-    },
-  });
-
-  const { data: libraryData, isLoading: fetchingLibraryContent } =
-    trpcReact.library.getLibrary.useQuery(undefined, {});
-
-  const { mutate: deleteIssue, isLoading: deleting } =
-    trpcReact.issue.deleteIssue.useMutation({
-      onSuccess: () => {
-        toast.success("Issue Deleted", {
+  const { mutate: addToLibrary, isLoading: addingToLibrary } =
+    trpcReact.library.addToLibrary.useMutation({
+      onSuccess: (data) => {
+        if (data?.status === false && data.reason === Reasons.CANCELLED) {
+          return;
+        }
+        toast.success("Added To Library", {
           duration: 6000,
         });
         utils.library.invalidate();
       },
+      onError: (err) => {
+        toast.error(err.message);
+      },
     });
+
+  const { data: libraryData, isLoading: fetchingLibraryContent } =
+    trpcReact.library.getLibrary.useQuery(undefined, {});
 
   if (fetchingLibraryContent) {
     return (

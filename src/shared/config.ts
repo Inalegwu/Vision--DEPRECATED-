@@ -1,9 +1,7 @@
-import { QueryClient } from "@tanstack/react-query";
-import { TRPCClientError, createTRPCReact } from "@trpc/react-query";
 import { ipcLink } from "electron-trpc/renderer";
 import { AppRouter } from "./routers/_app";
-import toast from "react-hot-toast";
-import { TRPCError } from "@trpc/server";
+import { QueryClient } from "@tanstack/react-query";
+import { createTRPCReact } from "@trpc/react-query";
 
 export const trpcReact = createTRPCReact<AppRouter>();
 
@@ -14,28 +12,11 @@ export const queryClient = new QueryClient({
       cacheTime: 60 * 60 * 24,
       networkMode: "always",
       retry: 0,
-      onError: (err) => {
-        if (err instanceof TRPCClientError) {
-          console.log(err.cause);
-          toast.error(err.message);
-        } else {
-          console.log(err);
-        }
-      },
     },
     mutations: {
       cacheTime: 60 * 60 * 24,
       networkMode: "always",
       retry: 0,
-      onError: (err) => {
-        if (err instanceof TRPCClientError || err instanceof TRPCError) {
-          console.log(err.cause);
-          toast.error(err.message);
-        } else {
-          console.log(err);
-          toast.error("Something Went wrong");
-        }
-      },
     },
   },
 });

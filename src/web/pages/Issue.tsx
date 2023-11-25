@@ -1,38 +1,44 @@
+import toast from "react-hot-toast";
+import { Spinner } from "../components";
+import { trpcReact } from "../../shared/config";
+import { useNavigate, useParams } from "react-router-dom";
+import { IssueParams } from "../../shared/types";
+import { useCallback, useEffect, useState } from "react";
+import { CaretLeft, CaretRight, CornersOut } from "@phosphor-icons/react";
 import {
   Box,
   LinkButton,
-  Image,
   Text,
   AnimatedBox,
   AnimatedImage,
   Button,
 } from "../components/atoms";
-import { Spinner } from "../components";
-import { useParams } from "react-router-dom";
-import { IssueParams } from "../../shared/types";
-import { trpcReact } from "../../shared/config";
-import { CaretLeft, CaretRight, CornersOut } from "@phosphor-icons/react";
-import { useCallback, useEffect, useState } from "react";
 import { useAtom } from "jotai";
 import { layoutAtom } from "../state";
-import toast from "react-hot-toast";
+import { DoublePage, SinglePage } from "../components/ReaderLayouts";
 
 export default function Issue() {
-  const [readerLayout, setReaderLayout] = useAtom(layoutAtom);
   const { issueId } = useParams<IssueParams>();
+  const router = useNavigate();
+
+  if (!issueId) {
+    return router("/");
+  }
 
   const [activeIndex, setActiveIndex] = useState<number>(0);
   const [mouseOver, setMouseOver] = useState<boolean>(false);
   const [navigationShowing, setNavigationShowing] = useState<boolean>(true);
+  const [readerLayout] = useAtom(layoutAtom);
 
   const { data: issue, isLoading: loadingIssue } =
     trpcReact.issue.getIssue.useQuery(
       {
-        id: issueId!,
+        id: issueId,
       },
       {
         onError: (e) => {
           toast.error(e.message);
+          router("/");
         },
       }
     );
@@ -59,10 +65,9 @@ export default function Issue() {
   }, [navigationShowing, setNavigationShowing, mouseOver]);
 
   const handleRightClick = useCallback(() => {
-    console.log(activeIndex);
     if (activeIndex === issue?.issue.pages.length! - 1) {
       return;
-      toast.success("That's all folks 😊");
+      toast.success(`You've reached the end of ${issue?.issue?.name}`);
     }
     setActiveIndex(activeIndex + 1);
   }, [activeIndex, setActiveIndex, issue]);
@@ -319,37 +324,11 @@ export default function Issue() {
         </AnimatedBox>
       )}
       {/* Panel View */}
-      <Box
-        css={{
-          width: "100%",
-          height: "100%",
-          display: "flex",
-          alignContent: "center",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <AnimatedImage
-          transition={{
-            duration: 0.3,
-            ease: "easeInOut",
-          }}
-          initial={{
-            opacity: 1,
-          }}
-          animate={{
-            opacity: loadingIssue ? 0 : 1,
-          }}
-          src={issue?.issue.pages[activeIndex].content}
-          alt={issue?.issue.pages[activeIndex].name}
-          css={{
-            width: "50%",
-            height: "100%",
-            margin: "auto",
-            aspectRatio: 1,
-          }}
-        />
-      </Box>
+      {readerLayout === "SinglePage" ? (
+        <SinglePage pages={issue?.issue.pages} activeIndex={activeIndex} />
+      ) : (
+        <DoublePage pages={issue?.issue.pages} activeIndex={activeIndex} />
+      )}
     </Box>
   );
 }
