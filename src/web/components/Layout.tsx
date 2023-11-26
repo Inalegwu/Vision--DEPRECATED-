@@ -3,6 +3,7 @@ import { X, Minus, CornersOut } from "@phosphor-icons/react";
 import { trpcReact } from "../../shared/config";
 
 import HStack from "./HStack";
+import { useKeyPress } from "../hooks";
 
 type LayoutProps = {
   children: React.ReactNode;
@@ -16,6 +17,17 @@ export default function Layout(props: LayoutProps) {
     trpcReact.window.minimizeWindow.useMutation();
 
   const { data: appVer } = trpcReact.version.useQuery();
+
+  // ctrl+q exit
+  // only on pages
+  // with Layout as their wrapper
+  // which is all except
+  // The Reader view
+  useKeyPress((e) => {
+    if (e.ctrlKey && e.key === "q") {
+      closeWindow();
+    }
+  });
 
   return (
     <Box

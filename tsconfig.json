@@ -10,7 +10,9 @@
     "strict": true,
     "noUnusedLocals": true,
     "baseUrl": ".",
-    "paths": {}
+    "paths": {
+      "@src/*": ["src/*"]
+    }
   },
   "include": ["src"],
   "ts-node": {

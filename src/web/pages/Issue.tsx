@@ -15,6 +15,7 @@ import {
 import { useAtom } from "jotai";
 import { layoutAtom } from "../state";
 import { DoublePage, SinglePage } from "../components/ReaderLayouts";
+import { useKeyPress } from "../hooks";
 
 export default function Issue() {
   const { issueId } = useParams<IssueParams>();
@@ -37,7 +38,9 @@ export default function Issue() {
       {
         onError: (e) => {
           toast.error(e.message);
-          router("/");
+          if (e.data?.code === "NOT_FOUND") {
+            router("/");
+          }
         },
       }
     );
@@ -65,8 +68,10 @@ export default function Issue() {
 
   const handleRightClick = useCallback(() => {
     if (activeIndex === issue?.issue.pages.length! - 1) {
+      toast.success(`You've reached the end of ${issue?.issue?.name} 🎉`, {
+        position: "top-right",
+      });
       return;
-      toast.success(`You've reached the end of ${issue?.issue?.name}`);
     }
     setActiveIndex(activeIndex + 1);
   }, [activeIndex, setActiveIndex, issue]);
@@ -78,8 +83,8 @@ export default function Issue() {
     setActiveIndex(activeIndex - 1);
   }, [activeIndex, setActiveIndex]);
 
-  window.addEventListener("keydown", (e) => {
-    if (e.key === "[" || e.key === "ArrowLeft") {
+  useKeyPress((e) => {
+    if (e.key === "[" || e.key === "ArrowRight") {
       handleLeftClick();
     } else if (e.key === "]" || e.key === "ArrowRight") {
       handleRightClick();
