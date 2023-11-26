@@ -11,7 +11,10 @@
     "noUnusedLocals": true,
     "baseUrl": ".",
     "paths": {
-      "@src/*": ["src/*"]
+      "@src/*": ["src/*"],
+      "@shared/*": ["src/shared/*"],
+      "@components/*": ["src/web/components/*"],
+      "@assets/*": ["src/assets/*"]
     }
   },
   "include": ["src"],
