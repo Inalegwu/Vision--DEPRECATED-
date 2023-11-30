@@ -28,7 +28,7 @@ export type IssueParams = {
 };
 
 export type LayoutProps = {
-  pages: Page[];
+  pages?: Page[];
   activeIndex: number;
 };
 

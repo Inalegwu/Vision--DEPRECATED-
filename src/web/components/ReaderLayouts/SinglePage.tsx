@@ -14,6 +14,10 @@ function SinglePage({ pages, activeIndex }: LayoutProps) {
   // TODO react-use-gesture for pinch to zoom
   // and dragging and all the fun stuff
 
+  if (!pages) {
+    return;
+  }
+
   return (
     <AnimatedBox
       transition={{

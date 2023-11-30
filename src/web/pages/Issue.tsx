@@ -1,7 +1,7 @@
 import toast from "react-hot-toast";
 import { Spinner } from "../components";
 import { trpcReact } from "@shared/config";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { IssueParams } from "@shared/types";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { CaretLeft, CaretRight, CornersOut } from "@phosphor-icons/react";
@@ -18,8 +18,14 @@ import { DoublePage, SinglePage } from "@components/index";
 import { useKeyPress } from "@src/web/hooks";
 
 export default function Issue() {
+  const router = useNavigate();
   const { issueId } = useParams<IssueParams>();
   const scrubRef = useRef<HTMLDivElement>(null);
+
+  if (!issueId) {
+    router("/");
+    return;
+  }
 
   const [activeIndex, setActiveIndex] = useState<number>(0);
   const [mouseOver, setMouseOver] = useState<boolean>(false);
@@ -28,7 +34,7 @@ export default function Issue() {
 
   const { data: issue, isLoading: loadingIssue } =
     trpcReact.issue.getIssue.useQuery({
-      id: issueId!,
+      id: issueId,
     });
 
   const { mutate: maximizeWindow } =
@@ -79,8 +85,6 @@ export default function Issue() {
       return;
     }
   });
-
-  if (!issueId) return;
 
   return (
     <Box
@@ -314,9 +318,9 @@ export default function Issue() {
       )}
       {/* Panel View */}
       {readerLayout === "SinglePage" ? (
-        <SinglePage pages={issue?.issue.pages!} activeIndex={activeIndex} />
+        <SinglePage pages={issue?.issue.pages} activeIndex={activeIndex} />
       ) : (
-        <DoublePage pages={issue?.issue.pages!} activeIndex={activeIndex} />
+        <DoublePage pages={issue?.issue.pages} activeIndex={activeIndex} />
       )}
     </Box>
   );
