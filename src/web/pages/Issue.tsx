@@ -16,7 +16,6 @@ import { useAtom } from "jotai";
 import { layoutAtom } from "@src/web/state";
 import { DoublePage, SinglePage } from "@components/index";
 import { useKeyPress } from "@src/web/hooks";
-import { clamp } from "@src/shared/utils";
 
 export default function Issue() {
   const { issueId } = useParams<IssueParams>();
@@ -29,19 +28,9 @@ export default function Issue() {
   const [readerLayout, setReaderLayout] = useAtom(layoutAtom);
 
   const { data: issue, isLoading: loadingIssue } =
-    trpcReact.issue.getIssue.useQuery(
-      {
-        id: issueId ?? "",
-      },
-      {
-        onError: (e) => {
-          toast.error(e.message);
-          if (e.data?.code === "NOT_FOUND") {
-            router("/");
-          }
-        },
-      }
-    );
+    trpcReact.issue.getIssue.useQuery({
+      id: issueId!,
+    });
 
   const { mutate: maximizeWindow } =
     trpcReact.window.maximizeWindow.useMutation();

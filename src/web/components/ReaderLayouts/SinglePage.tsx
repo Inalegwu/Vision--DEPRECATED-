@@ -41,7 +41,13 @@ function SinglePage({ pages, activeIndex }: LayoutProps) {
       <AnimatedImage
         src={pages[activeIndex].content}
         alt={pages[activeIndex].name}
-        css={{ width: "50%", height: "100%" }}
+        css={{
+          width: "40%",
+          height: "100%",
+          aspectRatio: 16 / 9,
+          borderRight: "1px solid $gray",
+          borderLeft: "0.3px solid $gray",
+        }}
       />
     </AnimatedBox>
   );
