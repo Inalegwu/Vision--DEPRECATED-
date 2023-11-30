@@ -3,10 +3,10 @@ import { createStitches } from "@stitches/react";
 export const { styled, css, config } = createStitches({
   theme: {
     colors: {
-      primary: "#4097E8",
+      primary: "rgb(23,200,156)",
       background: "#000000",
-      secondary: "#473BF0",
-      gray: "#333333",
+      secondary: "rgba(23,220,156,0.6)",
+      gray: "rgba(210,210,205,0.2)",
       lightGray: "#ecececa4",
       blackMuted: "#1d1d1d79",
       deepBlack: "#1C1C1C",

@@ -166,7 +166,7 @@ export default function Issue() {
               to="/"
               css={{
                 padding: "$lg",
-                background: "$secondary",
+                background: "$primary",
                 color: "$white",
                 borderRadius: "$md",
                 display: "flex",
@@ -204,7 +204,7 @@ export default function Issue() {
                 onMouseLeave={() => setMouseOver(false)}
                 onClick={() => maximizeWindow()}
                 css={{
-                  color: "$lightGray",
+                  color: "$gray",
                   padding: "$xxxl",
                   display: "flex",
                   alignContent: "center",
@@ -212,7 +212,7 @@ export default function Issue() {
                   justifyContent: "center",
                   borderRadius: "$md",
                   "&:hover": {
-                    background: "$secondary",
+                    background: "$primary",
                     color: "$white",
                   },
                 }}
@@ -287,7 +287,7 @@ export default function Issue() {
                   padding: "$sm",
                   borderRadius: "$md",
                   overflowY: "scroll",
-                  background: "$secondary",
+                  background: "$primary",
                 }}
               />
             </Box>

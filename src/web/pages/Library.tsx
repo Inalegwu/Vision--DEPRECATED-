@@ -1,8 +1,8 @@
 import toast from "react-hot-toast";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { trackEvent } from "@aptabase/electron/renderer";
 import { trpcReact } from "@shared/config";
-import { Plus, X } from "@phosphor-icons/react";
+import { Plus } from "@phosphor-icons/react";
 import { Reasons } from "@shared/types";
 import {
   Layout,
@@ -21,14 +21,11 @@ import {
   Input,
   Text,
 } from "@components/atoms";
-import { useAtom } from "jotai";
-import { applicationState } from "@src/web/state";
 import { AnimatePresence } from "framer-motion";
 
 trackEvent("Library Loaded");
 
 export default function Library() {
-  const [_, setAppState] = useAtom(applicationState);
   const utils = trpcReact.useUtils();
   const [createModalVisible, setCreateModalVisible] = useState<boolean>(false);
   const [collectionName, setCollectionName] = useState<string>("");
@@ -61,7 +58,7 @@ export default function Library() {
 
   const { data: library, isLoading: fetchingLibraryContent } =
     trpcReact.library.getLibrary.useQuery();
-  const { mutate: createCollection, isLoading: creating } =
+  const { mutate: createCollection, isLoading: _creating } =
     trpcReact.library.createCollection.useMutation({
       onSuccess: (data) => {
         toast.success(`${data?.data[0].name} Created Successfully`);
@@ -176,7 +173,7 @@ export default function Library() {
                   padding: "$lg",
                   borderRadius: "$full",
                   "&:hover": {
-                    background: "$secondary",
+                    background: "$primary",
                   },
                 }}
                 onClick={() => setCreateModalVisible(true)}
@@ -192,7 +189,7 @@ export default function Library() {
                   padding: "$lg",
                   borderRadius: "$full",
                   "&:hover": {
-                    background: "$secondary",
+                    background: "$primary",
                   },
                 }}
                 onClick={() => addToLibrary()}

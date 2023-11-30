@@ -41,3 +41,9 @@ export function sortPages(a: ArcFile<Uint8Array>, b: ArcFile<Uint8Array>) {
 export function clamp(num: number, min: number, max: number): number {
   return Math.max(Math.min(num, max), min);
 }
+
+// TODO implement a debounce function
+// for events
+export function debounce(event: any) {
+  setTimeout(() => {}, 4000);
+}

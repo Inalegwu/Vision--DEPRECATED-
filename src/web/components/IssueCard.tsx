@@ -49,7 +49,7 @@ export default function IssueCard(props: Props) {
           color: "$white",
           transition: "0.5s ease-in-out",
           "&:hover": {
-            border: "0.1px solid rgba(255,255,255,0.6)",
+            border: "0.1px solid $secondary",
           },
         }}
       >

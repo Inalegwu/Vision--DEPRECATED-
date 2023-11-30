@@ -35,10 +35,10 @@ export default function CollectionCard({ collection }: CollectionCardProps) {
               height: 260,
               border: "0.1px solid rgba(255,255,255,0.3)",
               transition: "0.5s ease-in-out",
-              //   transform: "rotate(-1deg)",
+              // transform: "rotate(-1deg)",
               borderRadius: "$md",
               "&:hover": {
-                border: "0.1px solid rgba(255,255,255,0.6)",
+                border: "0.1px solid $secondary",
               },
             }}
           />
@@ -49,7 +49,7 @@ export default function CollectionCard({ collection }: CollectionCardProps) {
               width: 23,
               height: 23,
               borderRadius: "$full",
-              top: "81%",
+              top: 230,
               left: "2%",
               background: "$secondary",
               color: "$white",
@@ -88,7 +88,9 @@ export default function CollectionCard({ collection }: CollectionCardProps) {
           </Box>
         </>
       )}
-      <Text>{collection.name}</Text>
+      <Box css={{ width: 170 }}>
+        <Text>{collection.name}</Text>
+      </Box>
     </AnimatedBox>
   );
 }

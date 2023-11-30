@@ -33,6 +33,12 @@ export const libraryRouter = router({
         filePaths[0]
       );
 
+      const text = new TextDecoder("utf-8");
+
+      const decodedMeta = text.decode(_md?.extraction?.buffer);
+
+      console.log(decodedMeta);
+
       const thumbnailUrl = convertToImageUrl(
         sortedFiles[0]?.extraction?.buffer!
       );
@@ -177,6 +183,7 @@ export const libraryRouter = router({
           .values({
             id: v4(),
             name: input.name,
+            dateCreated: Date.now(),
           })
           .returning({ name: collections.name, id: collections.id });
 

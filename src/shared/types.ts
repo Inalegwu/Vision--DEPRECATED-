@@ -37,6 +37,9 @@ export type ComicMetaData = {
   Language: string;
   Summary: string;
   Publisher: string;
+  Notes?: string;
+  Genre?: string;
+  PageCount: number;
 };
 
 export type ApplicationState = {

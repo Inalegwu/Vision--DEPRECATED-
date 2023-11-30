@@ -65,7 +65,7 @@ export default function Collection() {
               to="/"
               css={{
                 padding: "$md",
-                background: "$secondary",
+                background: "$primary",
                 borderRadius: "$md",
                 color: "$white",
                 display: "flex",
@@ -137,6 +137,7 @@ export default function Collection() {
                   overflowY: "scroll",
                   borderTopRightRadius: "$md",
                   background: "$blackMuted",
+                  backdropFilter: "blur(100px)",
                   position: "absolute",
                   zIndex: 1,
                   left: 0,
@@ -207,7 +208,7 @@ export default function Collection() {
               borderRadius: "$full",
               transition: "0.5s ease-in-out",
               top: "92%",
-              left: "95%",
+              left: "96%",
               "&:hover": {
                 background: "$secondary",
               },
