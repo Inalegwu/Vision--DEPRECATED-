@@ -21,7 +21,7 @@ export default function Collection() {
 
   const [issuesListVisible, setIssuesListVisible] = useState<boolean>(false);
 
-  const { data: collection, isLoading: getting } =
+  const { data: collection, isLoading: _getting } =
     trpcReact.library.getCollectionById.useQuery({
       collectionId: collectionId!,
     });
