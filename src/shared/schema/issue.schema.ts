@@ -14,6 +14,7 @@ export const issues = sqliteTable(
     name: text("name").notNull(),
     dateCreated: integer("date_created").default(Date.now()),
     thumbnailUrl: text("thumbnail_url").notNull(),
+    collectionId: text("collection_id"),
   },
   (table) => {
     return {

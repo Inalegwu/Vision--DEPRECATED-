@@ -30,9 +30,13 @@ export default async function RarExtractor(filePath: string) {
       v.fileHeader.name.includes("xml")
     );
 
+    const sortedFilesWithoutMetaData = sortedFiles.filter(
+      (v) => !v.fileHeader.name.includes("xml")
+    );
+
     return {
       metaDataFile,
-      sortedFiles,
+      sortedFiles: sortedFilesWithoutMetaData,
     };
   } catch (e) {
     throw e;

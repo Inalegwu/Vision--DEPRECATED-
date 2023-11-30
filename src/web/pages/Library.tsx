@@ -4,7 +4,14 @@ import { trackEvent } from "@aptabase/electron/renderer";
 import { trpcReact } from "@shared/config";
 import { Plus } from "@phosphor-icons/react";
 import { Reasons } from "@shared/types";
-import { Layout, VStack, HStack, Spinner, IssueCard } from "@components/index";
+import {
+  Layout,
+  VStack,
+  HStack,
+  Spinner,
+  IssueCard,
+  Skeleton,
+} from "@components/index";
 import { AnimatedBox, Box, Button, Text } from "@components/atoms";
 import { useAtom } from "jotai";
 import { applicationState } from "@src/web/state";
@@ -53,43 +60,11 @@ export default function Library() {
 
   const { data: libraryData, isLoading: fetchingLibraryContent } =
     trpcReact.library.getLibrary.useQuery();
-  if (fetchingLibraryContent) {
-    return (
-      <Layout>
-        <Box
-          css={{
-            width: "100%",
-            height: "100%",
-            display: "flex",
-            alignContent: "center",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <Box
-            css={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "$xxxl",
-              alignContent: "center",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <Spinner size={30} />
-            <Text css={{ color: "$lightGray" }}>
-              Getting things in order...
-            </Text>
-          </Box>
-        </Box>
-      </Layout>
-    );
-  }
 
   return (
     <Layout>
       <Box css={{ width: "100%", height: "100%" }}>
-        {/* loading overlay */}
+        {/* add to library loading overlay */}
         <AnimatedBox
           initial={{ opacity: 0, display: "none" }}
           animate={{
@@ -162,16 +137,54 @@ export default function Library() {
         <Box
           css={{
             display: "flex",
-            alignContent: "center",
-            alignItems: "center",
-            justifyContent: "center",
+            alignContent: "flex-start",
+            alignItems: "flex-start",
+            justifyContent: "flex-start",
             flexWrap: "wrap",
             overflowY: "scroll",
             gap: "$xxxl",
             padding: "$lg",
             width: "100%",
+            height: "90%",
+            paddingBottom: "$hg",
           }}
         >
+          {/* skeleton loader , ideally , the user won't ever see this */}
+          {fetchingLibraryContent &&
+            Array(10).map((_, idx) => {
+              return (
+                <Skeleton
+                  key={idx}
+                  css={{ display: "flex", flexDirection: "column", gap: "$md" }}
+                >
+                  <Box
+                    css={{
+                      borderRadius: "$md",
+                      border: "0.1px solid rgba(255,255,255,0.2)",
+                      height: 260,
+                      width: 175,
+                      background: "$gray",
+                    }}
+                  />
+                  <Box
+                    css={{
+                      padding: "$md",
+                      width: "100%",
+                      borderRadius: "$sm",
+                      background: "$gray",
+                    }}
+                  />
+                  <Box
+                    css={{
+                      padding: "$md",
+                      width: "60%",
+                      borderRadius: "$sm",
+                      background: "$gray",
+                    }}
+                  />
+                </Skeleton>
+              );
+            })}
           {libraryData?.issues.map((v) => {
             return <IssueCard issue={v} key={v.id} />;
           })}

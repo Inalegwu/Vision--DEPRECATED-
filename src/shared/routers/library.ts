@@ -7,7 +7,7 @@ import { UnrarError } from "node-unrar-js";
 import { SqliteError } from "better-sqlite3";
 import { DrizzleError } from "drizzle-orm";
 import { issues, pages } from "@shared/schema";
-import { convertToImageUrl, sortIssues } from "@shared/utils";
+import { convertToImageUrl } from "@shared/utils";
 import { publicProcedure, router } from "@src/trpc";
 import { RarExtractor } from "@shared/extractors";
 
@@ -19,7 +19,7 @@ export const libraryRouter = router({
         title: "Select Issue",
         defaultPath: ctx.app.getPath("downloads"),
         buttonLabel: "Add To Library",
-        properties: ["openFile", "multiSelections"],
+        properties: ["openFile"],
       });
 
       if (canceled) {
@@ -28,60 +28,6 @@ export const libraryRouter = router({
           reason: Reasons.CANCELLED,
         };
       }
-
-      if (filePaths.length > 1) {
-        filePaths.forEach(async (v) => {
-          const { metaDataFile, sortedFiles } = await RarExtractor(v);
-          const thumbnailUrl = convertToImageUrl(
-            sortedFiles[0]?.extraction?.buffer!
-          );
-
-          const name = sortedFiles[0]?.fileHeader.name
-            .replace(/\.[^/.]+$/, "")
-            .replace(/(\d+)$/g, "")
-            .replace("-", "");
-
-          const issueExists = await ctx.db.query.issues.findFirst({
-            where: (issues, { eq }) => eq(issues.name, name),
-          });
-
-          if (issueExists) {
-            throw new TRPCError({
-              message: `${name} , is already in your library`,
-              code: "CONFLICT",
-              cause: `tried adding issue ${name} again`,
-            });
-          }
-
-          const createdIssue = await ctx.db
-            .insert(issues)
-            .values({
-              id: v4(),
-              name,
-              thumbnailUrl,
-            })
-            .returning({ id: issues.id, name: issues.name });
-
-          sortedFiles
-            .filter((v) => !v.fileHeader.name.includes("xml"))
-            .forEach(async (v, idx) => {
-              const content = convertToImageUrl(v.extraction?.buffer!);
-
-              await ctx.db.insert(pages).values({
-                id: v4(),
-                name: `${createdIssue[0].name}-${idx}`,
-                content,
-                issueId: createdIssue[0].id,
-              });
-            });
-
-          return {
-            status: true,
-            reason: Reasons.NONE,
-          };
-        });
-      }
-
       const { metaDataFile, sortedFiles } = await RarExtractor(filePaths[0]);
 
       const thumbnailUrl = convertToImageUrl(
@@ -114,18 +60,16 @@ export const libraryRouter = router({
         })
         .returning({ id: issues.id, name: issues.name });
 
-      sortedFiles
-        .filter((v) => !v.fileHeader.name.includes("xml"))
-        .forEach(async (v, idx) => {
-          const content = convertToImageUrl(v.extraction?.buffer!);
+      sortedFiles.forEach(async (v, idx) => {
+        const content = convertToImageUrl(v.extraction?.buffer!);
 
-          await ctx.db.insert(pages).values({
-            id: v4(),
-            name: `${createdIssue[0].name}-${idx}`,
-            content,
-            issueId: createdIssue[0].id,
-          });
+        await ctx.db.insert(pages).values({
+          id: v4(),
+          name: `${createdIssue[0].name}-${idx}`,
+          content,
+          issueId: createdIssue[0].id,
         });
+      });
 
       return {
         status: true,
