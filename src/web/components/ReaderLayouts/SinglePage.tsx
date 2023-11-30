@@ -16,7 +16,6 @@ function SinglePage({ pages, activeIndex }: LayoutProps) {
   // and dragging and all the fun stuff
 
   if (!pages) {
-    router("/");
     return;
   }
 

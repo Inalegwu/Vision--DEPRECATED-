@@ -18,21 +18,17 @@ import {
   AnimatedButton,
   Box,
   Button,
-  Image,
   Input,
   Text,
 } from "@components/atoms";
 import { useAtom } from "jotai";
 import { applicationState } from "@src/web/state";
-import { generateUUID } from "@src/shared/utils";
-import { useNavigate } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 
 trackEvent("Library Loaded");
 
 export default function Library() {
   const [_, setAppState] = useAtom(applicationState);
-  const router = useNavigate();
   const utils = trpcReact.useUtils();
   const [createModalVisible, setCreateModalVisible] = useState<boolean>(false);
   const [collectionName, setCollectionName] = useState<string>("");
@@ -54,22 +50,6 @@ export default function Library() {
     });
 
   useEffect(() => {
-    // check first launch state of the app and pass an application id
-    setAppState((v) => {
-      if (v.firstLaunch) {
-        // show the user a first launch screen if they are a first time user
-        router("/first_launch");
-        // the make sure they are never a first time user again
-        // and give the app an application_id
-        return {
-          applicationId: generateUUID(),
-          firstLaunch: false,
-        };
-      } else {
-        return v;
-      }
-    });
-
     const dismissToolTip = setTimeout(() => {
       setCreateModalVisible(false);
     }, 6000);
@@ -77,7 +57,7 @@ export default function Library() {
     return () => {
       clearTimeout(dismissToolTip);
     };
-  }, [setAppState]);
+  }, []);
 
   const { data: library, isLoading: fetchingLibraryContent } =
     trpcReact.library.getLibrary.useQuery();

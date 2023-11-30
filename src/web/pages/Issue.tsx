@@ -1,7 +1,7 @@
 import toast from "react-hot-toast";
 import { Spinner } from "../components";
 import { trpcReact } from "@shared/config";
-import { useNavigate, useNavigation, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { IssueParams } from "@shared/types";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { CaretLeft, CaretRight, CornersOut } from "@phosphor-icons/react";
@@ -19,7 +19,6 @@ import { useKeyPress } from "@src/web/hooks";
 
 export default function Issue() {
   const { issueId } = useParams<IssueParams>();
-  const router = useNavigate();
   const scrubRef = useRef<HTMLDivElement>(null);
 
   const [activeIndex, setActiveIndex] = useState<number>(0);
