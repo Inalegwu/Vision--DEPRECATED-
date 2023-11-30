@@ -31,10 +31,9 @@ export default function IssueCard(props: Props) {
         alignContent: "flex-start",
         alignItems: "flex-start",
         gap: "$md",
-        color: "$lightGray",
+        color: "$white",
         transition: "0.3s ease-in-out",
         "&:hover": {
-          color: "$white",
           cursor: "pointer",
         },
       }}

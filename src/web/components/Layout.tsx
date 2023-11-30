@@ -69,6 +69,7 @@ export default function Layout(props: LayoutProps) {
             flex: 1,
             padding: "$md",
             height: 25,
+            cursor: "grab",
           }}
         />
         <HStack gap={10}>

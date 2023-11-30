@@ -21,11 +21,9 @@ export default function CollectionCard({ collection }: CollectionCardProps) {
       animate={{ opacity: 1 }}
       css={{
         cursor: "pointer",
-        color: "$gray",
+        color: "$white",
         transition: "0.5s ease-in-out",
-        "&:hover": {
-          color: "$white",
-        },
+        position: "relative",
       }}
     >
       {collection.issues[0] ? (
@@ -44,6 +42,26 @@ export default function CollectionCard({ collection }: CollectionCardProps) {
               },
             }}
           />
+          <Box
+            css={{
+              position: "absolute",
+              padding: "$lg",
+              width: 23,
+              height: 23,
+              borderRadius: "$full",
+              top: "81%",
+              left: "2%",
+              background: "$secondary",
+              color: "$white",
+              display: "flex",
+              alignContent: "center",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+            title={`${collection.name} Has ${collection.issues.length} Issues`}
+          >
+            <Text>{collection.issues.length}</Text>
+          </Box>
         </>
       ) : (
         <>

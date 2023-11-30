@@ -13,6 +13,7 @@ import { CaretLeft, Plus, X } from "@phosphor-icons/react";
 import { trpcReact } from "@src/shared/config";
 import { useCallback, useState } from "react";
 import { AnimatePresence } from "framer-motion";
+import toast from "react-hot-toast";
 
 export default function Collection() {
   const router = useNavigate();
@@ -21,12 +22,10 @@ export default function Collection() {
 
   const [issuesListVisible, setIssuesListVisible] = useState<boolean>(false);
 
-  if (!collectionId) {
-    return router("/");
-  }
-
   const { data: collection, isLoading: getting } =
-    trpcReact.library.getCollectionById.useQuery({ collectionId });
+    trpcReact.library.getCollectionById.useQuery({
+      collectionId: collectionId!,
+    });
 
   const { data: issues, isLoading: gettingIssues } =
     trpcReact.library.getLibrary.useQuery();
@@ -34,6 +33,7 @@ export default function Collection() {
   const { mutate: addIssueToLibrary, isLoading: saving } =
     trpcReact.library.addIssueToCollection.useMutation({
       onSuccess: (data) => {
+        toast.success(`${data.result[0].name} Added To Library`);
         utils.library.getCollectionById.invalidate();
         utils.library.invalidate();
         setIssuesListVisible(false);
@@ -42,7 +42,7 @@ export default function Collection() {
 
   const addToLibrary = useCallback(
     (v: string) => {
-      addIssueToLibrary({ issueId: v, collectionId });
+      addIssueToLibrary({ issueId: v, collectionId: collectionId! });
     },
     [collectionId]
   );
@@ -85,10 +85,26 @@ export default function Collection() {
           alignItems="flex-start"
           justifyContent="flex-start"
           gap={8}
-          style={{ height: "97%", paddingTop: "$xxl", overflowY: "scroll" }}
+          style={{
+            height: "97%",
+            paddingTop: "$xxl",
+            overflowY: "scroll",
+            flexWrap: "wrap",
+          }}
         >
           {collection?.collection?.issues.length === 0 && (
-            <Box css={{ display: "flex", flexDirection: "column", gap: 6 }}>
+            <Box
+              css={{
+                display: "flex",
+                flexDirection: "column",
+                gap: 6,
+                width: "100%",
+                height: "100%",
+                alignContent: "center",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
               <Text css={{ fontSize: 25 }}>Such Empty 😣</Text>
               <Button
                 css={{
@@ -115,13 +131,13 @@ export default function Collection() {
               <AnimatedBox
                 initial={{ height: 0, opacity: 0 }}
                 animate={{ height: 500, opacity: 1 }}
-                exit={{ width: 0, opacity: 0 }}
+                exit={{ height: 0, opacity: 0 }}
                 css={{
                   width: 400,
                   borderTopLeftRadius: "$md",
                   overflowY: "scroll",
                   borderTopRightRadius: "$md",
-                  background: "$gray",
+                  background: "$blackMuted",
                   position: "absolute",
                   zIndex: 1,
                   left: 0,

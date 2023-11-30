@@ -231,12 +231,17 @@ export const libraryRouter = router({
           });
         }
 
-        await ctx.db
+        const result = await ctx.db
           .update(issues)
           .set({
             collectionId: collection.id,
           })
-          .where(eq(issues.id, input.issueId));
+          .where(eq(issues.id, input.issueId))
+          .returning({ name: issues.name });
+
+        return {
+          result,
+        };
       } catch (e) {
         if (e instanceof DrizzleError) {
           throw new TRPCError({
