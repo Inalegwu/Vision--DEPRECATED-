@@ -12,9 +12,6 @@ export const issueRouter = router({
     .query(async ({ ctx, input }) => {
       const issue = await ctx.db.query.issues.findFirst({
         where: (issues, { eq }) => eq(issues.id, input.id),
-        with: {
-          pages: true,
-        },
       });
 
       if (!issue) {
@@ -24,8 +21,15 @@ export const issueRouter = router({
         });
       }
 
+      const pages = await ctx.db.query.pages.findMany({
+        where: (pages, { eq }) => eq(pages.issueId, issue.id),
+      });
+
       return {
-        issue,
+        issue: {
+          ...issue,
+          pages,
+        },
       };
     }),
   deleteIssue: publicProcedure

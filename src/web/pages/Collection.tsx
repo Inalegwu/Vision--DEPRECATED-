@@ -77,14 +77,15 @@ export default function Collection() {
             >
               <CaretLeft size={17} />
             </LinkButton>
-            <Text css={{ fontSize: 20 }}>{collection?.collection!.name}</Text>
+            <Text css={{ fontSize: 30 }}>{collection?.collection!.name}</Text>
           </HStack>
         </HStack>
-        <VStack
+        <HStack
           alignContent="flex-start"
           alignItems="flex-start"
           justifyContent="flex-start"
-          style={{ height: "97%", paddingTop: "$xxl" }}
+          gap={8}
+          style={{ height: "97%", paddingTop: "$xxl", overflowY: "scroll" }}
         >
           {collection?.collection?.issues.length === 0 && (
             <Box css={{ display: "flex", flexDirection: "column", gap: 6 }}>
@@ -112,18 +113,19 @@ export default function Collection() {
           <AnimatePresence>
             {issuesListVisible && (
               <AnimatedBox
-                initial={{ width: 0, opacity: 0 }}
-                animate={{ width: 300, opacity: 1 }}
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: 500, opacity: 1 }}
                 exit={{ width: 0, opacity: 0 }}
                 css={{
-                  height: 300,
+                  width: 400,
                   borderTopLeftRadius: "$md",
+                  overflowY: "scroll",
                   borderTopRightRadius: "$md",
                   background: "$gray",
                   position: "absolute",
                   zIndex: 1,
                   left: 0,
-                  top: "60%",
+                  top: "50%",
                 }}
               >
                 <Box
@@ -174,7 +176,31 @@ export default function Collection() {
           {collection?.collection?.issues.map((v) => {
             return <IssueCard issue={v} key={v.id} />;
           })}
-        </VStack>
+          <Button
+            onClick={() => setIssuesListVisible(true)}
+            css={{
+              position: "absolute",
+              zIndex: 1,
+              padding: "$xxl",
+              background: "$gray",
+              display: "flex",
+              alignContent: "center",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "$md",
+              color: "$white",
+              borderRadius: "$full",
+              transition: "0.5s ease-in-out",
+              top: "92%",
+              left: "95%",
+              "&:hover": {
+                background: "$secondary",
+              },
+            }}
+          >
+            <Plus size={17} />
+          </Button>
+        </HStack>
       </Box>
     </Layout>
   );
