@@ -1,7 +1,7 @@
 import toast from "react-hot-toast";
 import { Spinner } from "../components";
 import { trpcReact } from "@shared/config";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useNavigation, useParams } from "react-router-dom";
 import { IssueParams } from "@shared/types";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { CaretLeft, CaretRight, CornersOut } from "@phosphor-icons/react";
