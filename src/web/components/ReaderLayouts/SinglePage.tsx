@@ -1,10 +1,9 @@
 import { useNavigate } from "react-router-dom";
-import { LayoutProps } from "../../../shared/types";
-import { AnimatedBox, AnimatedImage, Box } from "../atoms";
+import { LayoutProps } from "@src/shared/types";
+import { AnimatedBox, AnimatedImage, Box } from "@components/atoms";
 import { useState } from "react";
 
 function SinglePage({ pages, activeIndex }: LayoutProps) {
-  const router = useNavigate();
   // for zooming
   const [_crop, _setCrop] = useState({
     crop: 0,
@@ -14,10 +13,6 @@ function SinglePage({ pages, activeIndex }: LayoutProps) {
 
   // TODO react-use-gesture for pinch to zoom
   // and dragging and all the fun stuff
-
-  if (!pages) {
-    return;
-  }
 
   return (
     <AnimatedBox

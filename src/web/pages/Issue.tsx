@@ -314,9 +314,9 @@ export default function Issue() {
       )}
       {/* Panel View */}
       {readerLayout === "SinglePage" ? (
-        <SinglePage pages={issue?.issue.pages} activeIndex={activeIndex} />
+        <SinglePage pages={issue?.issue.pages!} activeIndex={activeIndex} />
       ) : (
-        <DoublePage pages={issue?.issue.pages} activeIndex={activeIndex} />
+        <DoublePage pages={issue?.issue.pages!} activeIndex={activeIndex} />
       )}
     </Box>
   );
