@@ -1,14 +1,21 @@
 import toast from "react-hot-toast";
+import { useEffect } from "react";
 import { trackEvent } from "@aptabase/electron/renderer";
-import { trpcReact } from "../../shared/config";
+import { trpcReact } from "@shared/config";
 import { Plus } from "@phosphor-icons/react";
-import { Reasons } from "../../shared/types";
-import { Layout, VStack, HStack, Spinner, IssueCard } from "../components";
-import { AnimatedBox, Box, Button, Text } from "../components/atoms";
+import { Reasons } from "@shared/types";
+import { Layout, VStack, HStack, Spinner, IssueCard } from "@components/index";
+import { AnimatedBox, Box, Button, Text } from "@components/atoms";
+import { useAtom } from "jotai";
+import { applicationState } from "@src/web/state";
+import { generateUUID } from "@src/shared/utils";
+import { useNavigate } from "react-router-dom";
 
 trackEvent("Library Loaded");
 
 export default function Library() {
+  const [_, setAppState] = useAtom(applicationState);
+  const router = useNavigate();
   const utils = trpcReact.useUtils();
   const { mutate: addToLibrary, isLoading: addingToLibrary } =
     trpcReact.library.addToLibrary.useMutation({
@@ -26,9 +33,26 @@ export default function Library() {
       },
     });
 
-  const { data: libraryData, isLoading: fetchingLibraryContent } =
-    trpcReact.library.getLibrary.useQuery(undefined, {});
+  useEffect(() => {
+    // check first launch state of the app and pass an application id
+    setAppState((v) => {
+      if (v.firstLaunch) {
+        // show the user a first launch screen if they are a first time user
+        router("/first_launch");
+        // the make sure they are never a first time user again
+        // and give the app an application_id
+        return {
+          applicationId: generateUUID(),
+          firstLaunch: false,
+        };
+      } else {
+        return v;
+      }
+    });
+  }, [setAppState]);
 
+  const { data: libraryData, isLoading: fetchingLibraryContent } =
+    trpcReact.library.getLibrary.useQuery();
   if (fetchingLibraryContent) {
     return (
       <Layout>

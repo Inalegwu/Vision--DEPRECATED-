@@ -4,8 +4,7 @@ import React, {
   useImperativeHandle,
   useState,
 } from "react";
-import { AnimatedBox, Box } from "./atoms";
-import { styled } from "../stitches.config";
+import { AnimatedBox } from "./atoms";
 import { ThemeCSS } from "../../shared/types";
 
 export type ContextMenuProps = {

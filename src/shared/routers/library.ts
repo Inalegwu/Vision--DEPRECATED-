@@ -1,16 +1,15 @@
-import * as fs from "fs";
 import { v4 } from "uuid";
 import { dialog } from "electron";
-import { Reasons } from "../types";
+import { Reasons } from "@shared/types";
 import { TRPCError } from "@trpc/server";
 import { trackEvent } from "@aptabase/electron/main";
 import { UnrarError } from "node-unrar-js";
 import { SqliteError } from "better-sqlite3";
 import { DrizzleError } from "drizzle-orm";
-import { issues, pages } from "../schema";
-import { convertToImageUrl } from "../utils";
-import { publicProcedure, router } from "../../trpc";
-import { RarExtractor, ZipExtractor } from "../extractors";
+import { issues, pages } from "@shared/schema";
+import { convertToImageUrl } from "@shared/utils";
+import { publicProcedure, router } from "@src/trpc";
+import { RarExtractor } from "@shared/extractors";
 
 export const libraryRouter = router({
   addToLibrary: publicProcedure.mutation(async ({ ctx }) => {
@@ -20,7 +19,7 @@ export const libraryRouter = router({
         title: "Select Issue",
         defaultPath: ctx.app.getPath("downloads"),
         buttonLabel: "Add To Library",
-        properties: ["openFile"],
+        properties: ["openFile", "multiSelections"],
       });
 
       if (canceled) {
@@ -30,80 +29,108 @@ export const libraryRouter = router({
         };
       }
 
-      const { metaDataFile, sortedFiles } = await RarExtractor(filePaths[0]);
+      if (filePaths.length > 1) {
+        filePaths.forEach(async (v) => {
+          const { metaDataFile, sortedFiles } = await RarExtractor(v);
+          const thumbnailUrl = convertToImageUrl(
+            sortedFiles[0]?.extraction?.buffer!
+          );
 
-      if (filePaths.includes(".cbr")) {
-        // TODO parse metadata file to save to database which will come in handy later
-        if (metaDataFile) {
-          console.log(metaDataFile.fileHeader.name);
-        }
+          const name = sortedFiles[0]?.fileHeader.name
+            .replace(/\.[^/.]+$/, "")
+            .replace(/(\d+)$/g, "")
+            .replace("-", "");
 
-        // convert first page of sorted file
-        // to thumbnail url for the issue
-        // as it is
-        const thumbnailUrl = convertToImageUrl(
-          sortedFiles[0]?.extraction?.buffer!
-        );
-
-        // parse the name from the file
-        // header to create the issue name
-        // using regex to strip off
-        // some extraneous stuff
-        const name = sortedFiles[0]?.fileHeader.name
-          .replace(/\.[^/.]+$/, "")
-          .replace(/(\d+)$/g, "")
-          .replace("-", "");
-
-        // check if the issue already exists
-        // based on the parsed name
-        // since I can guarantee that will always be the same
-        const issueExists = await ctx.db.query.issues.findFirst({
-          where: (issues, { eq }) => eq(issues.name, name),
-        });
-
-        if (issueExists) {
-          throw new TRPCError({
-            message: `${name} , is already in your library`,
-            code: "CONFLICT",
-            cause: `tried adding issue ${name} again`,
+          const issueExists = await ctx.db.query.issues.findFirst({
+            where: (issues, { eq }) => eq(issues.name, name),
           });
-        }
 
-        const createdIssue = await ctx.db
-          .insert(issues)
-          .values({
-            id: v4(),
-            name,
-            thumbnailUrl,
-          })
-          .returning({ id: issues.id, name: issues.name });
-
-        sortedFiles
-          .filter((v) => !v.fileHeader.name.includes("xml"))
-          .forEach(async (v, idx) => {
-            const content = convertToImageUrl(v.extraction?.buffer!);
-
-            await ctx.db.insert(pages).values({
-              id: v4(),
-              name: `${createdIssue[0].name}-${idx}`,
-              content,
-              issueId: createdIssue[0].id,
+          if (issueExists) {
+            throw new TRPCError({
+              message: `${name} , is already in your library`,
+              code: "CONFLICT",
+              cause: `tried adding issue ${name} again`,
             });
-          });
+          }
 
-        return {
-          status: true,
-          reason: Reasons.NONE,
-        };
-      } else if (filePaths.includes(".cbz")) {
-        const result = await ZipExtractor(filePaths[0]);
-        console.log(result);
-      } else {
-        throw new TRPCError({
-          code: "UNPROCESSABLE_CONTENT",
-          message: "We Don't Support That File Type Yet 😳 ",
+          const createdIssue = await ctx.db
+            .insert(issues)
+            .values({
+              id: v4(),
+              name,
+              thumbnailUrl,
+            })
+            .returning({ id: issues.id, name: issues.name });
+
+          sortedFiles
+            .filter((v) => !v.fileHeader.name.includes("xml"))
+            .forEach(async (v, idx) => {
+              const content = convertToImageUrl(v.extraction?.buffer!);
+
+              await ctx.db.insert(pages).values({
+                id: v4(),
+                name: `${createdIssue[0].name}-${idx}`,
+                content,
+                issueId: createdIssue[0].id,
+              });
+            });
+
+          return {
+            status: true,
+            reason: Reasons.NONE,
+          };
         });
       }
+
+      const { metaDataFile, sortedFiles } = await RarExtractor(filePaths[0]);
+
+      const thumbnailUrl = convertToImageUrl(
+        sortedFiles[0]?.extraction?.buffer!
+      );
+
+      const name = sortedFiles[0]?.fileHeader.name
+        .replace(/\.[^/.]+$/, "")
+        .replace(/(\d+)$/g, "")
+        .replace("-", "");
+
+      const issueExists = await ctx.db.query.issues.findFirst({
+        where: (issues, { eq }) => eq(issues.name, name),
+      });
+
+      if (issueExists) {
+        throw new TRPCError({
+          message: `${name} , is already in your library`,
+          code: "CONFLICT",
+          cause: `tried adding issue ${name} again`,
+        });
+      }
+
+      const createdIssue = await ctx.db
+        .insert(issues)
+        .values({
+          id: v4(),
+          name,
+          thumbnailUrl,
+        })
+        .returning({ id: issues.id, name: issues.name });
+
+      sortedFiles
+        .filter((v) => !v.fileHeader.name.includes("xml"))
+        .forEach(async (v, idx) => {
+          const content = convertToImageUrl(v.extraction?.buffer!);
+
+          await ctx.db.insert(pages).values({
+            id: v4(),
+            name: `${createdIssue[0].name}-${idx}`,
+            content,
+            issueId: createdIssue[0].id,
+          });
+        });
+
+      return {
+        status: true,
+        reason: Reasons.NONE,
+      };
     } catch (e) {
       if (e instanceof UnrarError) {
         trackEvent("Zip Parse Failed", {

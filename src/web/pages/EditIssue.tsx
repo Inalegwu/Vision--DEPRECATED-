@@ -1,36 +1,48 @@
-import { Layout } from "../components";
+import { Layout, Spinner } from "../components";
 import { trpcReact } from "../../shared/config";
 import { Box, Text } from "../components/atoms";
 import { IssueParams } from "../../shared/types";
-import { useNavigate, useParams } from "react-router-dom";
-import { useCallback, useState } from "react";
+import { useParams } from "react-router-dom";
+// import { useCallback, useState } from "react";
 
 export default function EditIssue() {
-  const router = useNavigate();
+  // const router = useNavigate();
   const { issueId } = useParams<IssueParams>();
 
   if (!issueId) {
     return;
   }
 
-  const [newName, setNewName] = useState<string>("");
+  // const [newName, setNewName] = useState<string>("");
 
   const { data: issue, isLoading: fetchingIssue } =
     trpcReact.issue.getIssueData.useQuery({ id: issueId! });
 
-  const { mutate: updateIssueName, isLoading: updatingIssue } =
-    trpcReact.issue.changeIssueName.useMutation();
+  // const { mutate: updateIssueName, isLoading: updatingIssue } =
+  //   trpcReact.issue.changeIssueName.useMutation();
 
-  const changeIssueName = useCallback(() => {
-    updateIssueName({
-      id: issueId,
-      newName,
-    });
-  }, [issueId, newName]);
+  // const changeIssueName = useCallback(() => {
+  //   updateIssueName({
+  //     id: issueId,
+  //     newName,
+  //   });
+  // }, [issueId, newName]);
 
   return (
     <Layout>
       <Box css={{ width: "100%", height: "100%", display: "flex" }}>
+        {fetchingIssue && (
+          <Box
+            css={{
+              width: "100%",
+              height: "100%",
+              position: "absolute",
+              zIndex: 1,
+            }}
+          >
+            <Spinner size={40} />
+          </Box>
+        )}
         <Box
           css={{
             width: "70%",

@@ -30,3 +30,15 @@ export type LayoutProps = {
   pages?: Page[];
   activeIndex: number;
 };
+
+export type ComicMetaData = {
+  Series: string;
+  Language: string;
+  Summary: string;
+  Publisher: string;
+};
+
+export type ApplicationState = {
+  firstLaunch: boolean;
+  applicationId: string | undefined;
+};

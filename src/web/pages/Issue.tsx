@@ -1,9 +1,9 @@
 import toast from "react-hot-toast";
 import { Spinner } from "../components";
-import { trpcReact } from "../../shared/config";
+import { trpcReact } from "@shared/config";
 import { useNavigate, useParams } from "react-router-dom";
-import { IssueParams } from "../../shared/types";
-import { useCallback, useEffect, useState } from "react";
+import { IssueParams } from "@shared/types";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { CaretLeft, CaretRight, CornersOut } from "@phosphor-icons/react";
 import {
   Box,
@@ -13,27 +13,25 @@ import {
   Button,
 } from "../components/atoms";
 import { useAtom } from "jotai";
-import { layoutAtom } from "../state";
-import { DoublePage, SinglePage } from "../components/ReaderLayouts";
-import { useKeyPress } from "../hooks";
+import { layoutAtom } from "@src/web/state";
+import { DoublePage, SinglePage } from "@components/index";
+import { useKeyPress } from "@src/web/hooks";
+import { clamp } from "@src/shared/utils";
 
 export default function Issue() {
   const { issueId } = useParams<IssueParams>();
   const router = useNavigate();
-
-  if (!issueId) {
-    return;
-  }
+  const scrubRef = useRef<HTMLDivElement>(null);
 
   const [activeIndex, setActiveIndex] = useState<number>(0);
   const [mouseOver, setMouseOver] = useState<boolean>(false);
   const [navigationShowing, setNavigationShowing] = useState<boolean>(true);
-  const [readerLayout] = useAtom(layoutAtom);
+  const [readerLayout, setReaderLayout] = useAtom(layoutAtom);
 
   const { data: issue, isLoading: loadingIssue } =
     trpcReact.issue.getIssue.useQuery(
       {
-        id: issueId,
+        id: issueId ?? "",
       },
       {
         onError: (e) => {
@@ -84,6 +82,7 @@ export default function Issue() {
   }, [activeIndex, setActiveIndex]);
 
   useKeyPress((e) => {
+    console.log(e.key);
     if (e.key === "[" || e.key === "ArrowRight") {
       handleLeftClick();
     } else if (e.key === "]" || e.key === "ArrowRight") {
@@ -230,7 +229,7 @@ export default function Issue() {
               </Button>
             </Box>
           </Box>
-          {/* distance view */}
+          {/* track view view */}
           <Box
             onMouseOver={() => setMouseOver(true)}
             onMouseDown={() => setMouseOver(false)}
@@ -276,10 +275,7 @@ export default function Issue() {
             >
               <AnimatedBox
                 initial={{
-                  width: "",
-                }}
-                onPan={(_, i) => {
-                  console.log(i);
+                  width: 0,
                 }}
                 transition={{
                   duration: 0.3,
@@ -289,6 +285,7 @@ export default function Issue() {
                 animate={{
                   width: `${(activeIndex / issue?.issue.pages.length!) * 100}%`,
                 }}
+                ref={scrubRef}
                 css={{
                   display: "flex",
                   alignContent: "center",

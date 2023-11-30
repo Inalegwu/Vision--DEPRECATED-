@@ -1,4 +1,3 @@
-import { motionValue } from "framer-motion";
 import { AnimatedBox } from "./atoms";
 
 export type SpinnerProps = {
@@ -22,4 +21,3 @@ export default function Spinner({ size }: SpinnerProps) {
     />
   );
 }
-

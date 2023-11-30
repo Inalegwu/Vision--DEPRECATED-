@@ -1,6 +1,5 @@
 import { relations } from "drizzle-orm";
 import {
-  index,
   integer,
   sqliteTable,
   text,
@@ -19,7 +18,6 @@ export const issues = sqliteTable(
   (table) => {
     return {
       idIdx: uniqueIndex("issue_id_idx").on(table.id),
-      nameIdx: index("issue_name_idx").on(table.name),
     };
   }
 );

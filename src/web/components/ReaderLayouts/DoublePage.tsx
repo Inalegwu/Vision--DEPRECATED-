@@ -23,7 +23,7 @@ function DoublePage({ pages, activeIndex }: LayoutProps) {
         src={pages[activeIndex].content}
         alt={pages[activeIndex].name}
         css={{
-          width: "30%",
+          width: "50%",
           height: "100%",
           margin: "auto",
           aspectRatio: 1,
@@ -33,7 +33,7 @@ function DoublePage({ pages, activeIndex }: LayoutProps) {
         src={pages[activeIndex + 1].content}
         alt={pages[activeIndex + 1].content}
         css={{
-          width: "30%",
+          width: "50%",
           height: "100%",
           margin: "auto",
           aspectRatio: 1,

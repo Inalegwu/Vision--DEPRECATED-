@@ -28,7 +28,6 @@ function SinglePage({ pages, activeIndex }: LayoutProps) {
         ease: "anticipate",
         damping: 2,
       }}
-      animate={{ left: `${activeIndex}*100%` }}
       css={{
         width: "100%",
         height: "100%",
@@ -39,27 +38,11 @@ function SinglePage({ pages, activeIndex }: LayoutProps) {
         overflow: "hidden",
       }}
     >
-      {pages.map((v) => {
-        return (
-          <Box
-            css={{
-              width: "100%",
-              height: "100%",
-              display: "flex",
-              alignContent: "center",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <AnimatedImage
-              src={v.content}
-              key={v.id}
-              alt={v.name}
-              css={{ width: "50%", height: "100%", aspectRatio: 16 / 9 }}
-            />
-          </Box>
-        );
-      })}
+      <AnimatedImage
+        src={pages[activeIndex].content}
+        alt={pages[activeIndex].name}
+        css={{ width: "50%", height: "100%" }}
+      />
     </AnimatedBox>
   );
 }

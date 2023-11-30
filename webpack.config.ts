@@ -15,6 +15,12 @@ const common: Configuration = {
   },
   resolve: {
     extensions: [".js", ".ts", ".jsx", ".tsx", ".json"],
+    alias: {
+      "@src": path.resolve(__dirname, "src/"),
+      "@shared": path.resolve(__dirname, "src/shared/"),
+      "@components": path.resolve(__dirname, "src/web/components/"),
+      "@assets": path.resolve(__dirname, "src/assets/"),
+    },
   },
   module: {
     rules: [
@@ -69,4 +75,3 @@ const renderer: Configuration = {
 };
 
 export default [main, preload, renderer];
-

@@ -15,9 +15,9 @@
     "dev:webpack": "cross-env NODE_ENV=\"development\" webpack --progress",
     "dev:electron": "wait-on dist/main.js dist/index.html && electronmon .",
     "db:generate": "drizzle-kit generate:sqlite",
-    "db:push": "drizzle-kiy push:sqlite",
+    "db:push": "drizzle-kit push:sqlite",
     "postinstall": "electron-rebuild",
-    "package": "electron-build"
+    "package": "pnpm exec electron-builder"
   },
   "build": {
     "appId": "com.vision.app",
@@ -49,6 +49,7 @@
     "@trpc/react-query": "^10.43.1",
     "@trpc/server": "^10.43.1",
     "@types/better-sqlite3": "^7.6.6",
+    "@types/eslint": "^8.44.8",
     "better-sqlite3": "^9.0.0",
     "drizzle-orm": "^0.28.6",
     "electron-trpc": "^0.5.2",
@@ -56,7 +57,7 @@
     "jotai": "^2.5.1",
     "localforage": "^1.10.0",
     "match-sorter": "^6.3.1",
-    "node-unrar-js": "^2.0.0",
+    "node-unrar-js": "^2.0.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hot-toast": "^2.4.1",
@@ -74,6 +75,7 @@
     "css-loader": "^6.8.1",
     "drizzle-kit": "^0.19.13",
     "electron": "^27.0.3",
+    "electron-builder": "^24.9.1",
     "electronmon": "^2.0.2",
     "html-webpack-plugin": "^5.5.3",
     "mini-css-extract-plugin": "^2.7.6",

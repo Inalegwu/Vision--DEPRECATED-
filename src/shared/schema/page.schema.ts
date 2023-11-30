@@ -4,6 +4,7 @@ import {
   sqliteTable,
   text,
   uniqueIndex,
+  index,
 } from "drizzle-orm/sqlite-core";
 import { issues } from "./issue.schema";
 
@@ -19,7 +20,7 @@ export const pages = sqliteTable(
   (table) => {
     return {
       idIdx: uniqueIndex("id_idx").on(table.id),
-      issueIdIdx: uniqueIndex("page_issue_id_idx").on(table.issueId),
+      issueIdIdx: index("page_issue_id_idx").on(table.issueId),
     };
   }
 );

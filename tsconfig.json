@@ -8,7 +8,6 @@
     "lib": ["DOM", "ESNext"],
     "jsx": "react-jsx",
     "strict": true,
-    "noUnusedLocals": true,
     "baseUrl": ".",
     "paths": {
       "@src/*": ["src/*"],
