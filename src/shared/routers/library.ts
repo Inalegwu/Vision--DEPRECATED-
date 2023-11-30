@@ -29,7 +29,9 @@ export const libraryRouter = router({
           reason: Reasons.CANCELLED,
         };
       }
-      const { metaDataFile, sortedFiles } = await RarExtractor(filePaths[0]);
+      const { metaDataFile: _md, sortedFiles } = await RarExtractor(
+        filePaths[0]
+      );
 
       const thumbnailUrl = convertToImageUrl(
         sortedFiles[0]?.extraction?.buffer!

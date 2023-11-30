@@ -23,6 +23,7 @@
     "appId": "com.vision.app",
     "productName": "Vision",
     "artifactName": "${productName}-${version}-${platform}-${arch}.${ext}",
+    "buildDependenciesFromSource": true,
     "files": [
       "dist/**/*"
     ],

@@ -1,5 +1,5 @@
-import { useNavigate, useParams } from "react-router-dom";
-import { HStack, IssueCard, Layout, Spinner, VStack } from "../components";
+import { useParams } from "react-router-dom";
+import { HStack, IssueCard, Layout, Spinner } from "../components";
 import {
   AnimatedBox,
   Box,
@@ -16,7 +16,6 @@ import { AnimatePresence } from "framer-motion";
 import toast from "react-hot-toast";
 
 export default function Collection() {
-  const router = useNavigate();
   const utils = trpcReact.useUtils();
   const { collectionId } = useParams<CollectionParams>();
 
