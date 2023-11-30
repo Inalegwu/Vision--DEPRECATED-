@@ -25,7 +25,7 @@ export default function Issue() {
   const [activeIndex, setActiveIndex] = useState<number>(0);
   const [mouseOver, setMouseOver] = useState<boolean>(false);
   const [navigationShowing, setNavigationShowing] = useState<boolean>(true);
-  const [readerLayout, setReaderLayout] = useAtom(layoutAtom);
+  const [readerLayout] = useAtom(layoutAtom);
 
   const { data: issue, isLoading: loadingIssue } =
     trpcReact.issue.getIssue.useQuery({

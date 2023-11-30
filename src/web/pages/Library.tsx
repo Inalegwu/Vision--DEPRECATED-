@@ -1,8 +1,8 @@
 import toast from "react-hot-toast";
-import { useEffect } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { trackEvent } from "@aptabase/electron/renderer";
 import { trpcReact } from "@shared/config";
-import { Plus } from "@phosphor-icons/react";
+import { Plus, X } from "@phosphor-icons/react";
 import { Reasons } from "@shared/types";
 import {
   Layout,
@@ -11,12 +11,22 @@ import {
   Spinner,
   IssueCard,
   Skeleton,
+  CollectionCard,
 } from "@components/index";
-import { AnimatedBox, Box, Button, Text } from "@components/atoms";
+import {
+  AnimatedBox,
+  AnimatedButton,
+  Box,
+  Button,
+  Image,
+  Input,
+  Text,
+} from "@components/atoms";
 import { useAtom } from "jotai";
 import { applicationState } from "@src/web/state";
 import { generateUUID } from "@src/shared/utils";
 import { useNavigate } from "react-router-dom";
+import { AnimatePresence } from "framer-motion";
 
 trackEvent("Library Loaded");
 
@@ -24,6 +34,9 @@ export default function Library() {
   const [_, setAppState] = useAtom(applicationState);
   const router = useNavigate();
   const utils = trpcReact.useUtils();
+  const [createModalVisible, setCreateModalVisible] = useState<boolean>(false);
+  const [collectionName, setCollectionName] = useState<string>("");
+
   const { mutate: addToLibrary, isLoading: addingToLibrary } =
     trpcReact.library.addToLibrary.useMutation({
       onSuccess: (data) => {
@@ -56,10 +69,29 @@ export default function Library() {
         return v;
       }
     });
+
+    const dismissToolTip = setTimeout(() => {
+      setCreateModalVisible(false);
+    }, 6000);
+
+    return () => {
+      clearTimeout(dismissToolTip);
+    };
   }, [setAppState]);
 
-  const { data: libraryData, isLoading: fetchingLibraryContent } =
+  const { data: library, isLoading: fetchingLibraryContent } =
     trpcReact.library.getLibrary.useQuery();
+  const { mutate: createCollection, isLoading: creating } =
+    trpcReact.library.createCollection.useMutation({
+      onSuccess: (data) => {
+        toast.success(`${data?.data[0].name} Created Successfully`);
+        utils.library.getLibrary.invalidate();
+      },
+    });
+
+  const create = useCallback(() => {
+    createCollection({ name: collectionName });
+  }, [collectionName]);
 
   return (
     <Layout>
@@ -114,23 +146,83 @@ export default function Library() {
               alignItems="center"
               gap={6}
             ></HStack>
-            <Button
-              css={{
-                color: "$white",
-                background: "$gray",
-                padding: "$lg",
-                borderRadius: "$full",
-                "&:hover": {
-                  background: "$secondary",
-                },
-              }}
-              onClick={() => addToLibrary()}
+            <AnimatePresence>
+              {createModalVisible && (
+                <AnimatedBox
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  css={{
+                    background: "transparent",
+                    borderRadius: "$md",
+                    padding: "$md",
+                    backdropFilter: "blur(400px)",
+                    border: "0.3px solid $gray",
+                    position: "absolute",
+                    zIndex: 1,
+                    left: "84%",
+                    top: "17%",
+                  }}
+                >
+                  <Input
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        create();
+                      }
+                    }}
+                    css={{
+                      background: "$gray",
+                      opacity: 0.5,
+                      borderRadius: "$md",
+                      padding: "$md",
+                      color: "$white",
+                    }}
+                    onChange={(e) => setCollectionName(e.currentTarget.value)}
+                    placeholder="Collection Name"
+                  />
+                </AnimatedBox>
+              )}
+            </AnimatePresence>
+            <HStack
+              alignContent="center"
+              alignItems="center"
+              justifyContent="flex-end"
+              gap={5}
             >
-              <HStack gap={5} alignContent="center" alignItems="center">
-                <Text>Add To Library</Text>
-                <Plus size={10} />
-              </HStack>
-            </Button>
+              <Button
+                css={{
+                  color: "$white",
+                  background: "$gray",
+                  padding: "$lg",
+                  borderRadius: "$full",
+                  "&:hover": {
+                    background: "$secondary",
+                  },
+                }}
+                onClick={() => setCreateModalVisible(true)}
+              >
+                <HStack alignContent="center" alignItems="center" gap={5}>
+                  <Text>Create Collection</Text>
+                </HStack>
+              </Button>
+              <AnimatedButton
+                css={{
+                  color: "$white",
+                  background: "$gray",
+                  padding: "$lg",
+                  borderRadius: "$full",
+                  "&:hover": {
+                    background: "$secondary",
+                  },
+                }}
+                onClick={() => addToLibrary()}
+              >
+                <HStack gap={5} alignContent="center" alignItems="center">
+                  <Text>Add To Library</Text>
+                  <Plus size={10} />
+                </HStack>
+              </AnimatedButton>
+            </HStack>
           </HStack>
         </VStack>
         {/* body */}
@@ -185,8 +277,11 @@ export default function Library() {
                 </Skeleton>
               );
             })}
-          {libraryData?.issues.map((v) => {
+          {library?.issues.map((v) => {
             return <IssueCard issue={v} key={v.id} />;
+          })}
+          {library?.collections.map((v) => {
+            return <CollectionCard key={v.id} collection={v} />;
           })}
         </Box>
       </Box>

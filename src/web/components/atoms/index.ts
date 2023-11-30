@@ -9,3 +9,4 @@ export * from "./NavLink";
 export * from "./Select";
 export * from "./Text";
 export * from "./Image";
+export * from "./Input";

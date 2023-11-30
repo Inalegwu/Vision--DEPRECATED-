@@ -1,5 +1,5 @@
 import { config } from "../web/stitches.config";
-import { issues, pages } from "./schema";
+import { collections, issues, pages } from "./schema";
 import * as Stitches from "@stitches/react";
 
 export enum Reasons {
@@ -15,6 +15,7 @@ export type InsertPage = typeof pages.$inferInsert;
 export type InsertIssue = typeof issues.$inferInsert;
 export type Issue = typeof issues.$inferSelect;
 export type Page = typeof pages.$inferSelect;
+export type Collection = typeof collections.$inferSelect;
 
 export type ReaderLayout = "SinglePage" | "DoublePage";
 

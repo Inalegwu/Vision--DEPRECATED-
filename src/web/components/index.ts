@@ -6,8 +6,10 @@ import Spinner from "./Spinner";
 import VStack from "./VStack";
 import ContextMenu, { ContextMenuRefProps } from "./ContextMenu";
 import { DoublePage, SinglePage } from "./ReaderLayouts";
+import CollectionCard from "./CollectionCard";
 
 export {
+  CollectionCard,
   ContextMenu,
   ContextMenuRefProps,
   DoublePage,

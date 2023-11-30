@@ -1,3 +1,4 @@
+import z from "zod";
 import { v4 } from "uuid";
 import { dialog } from "electron";
 import { Reasons } from "@shared/types";
@@ -5,8 +6,8 @@ import { TRPCError } from "@trpc/server";
 import { trackEvent } from "@aptabase/electron/main";
 import { UnrarError } from "node-unrar-js";
 import { SqliteError } from "better-sqlite3";
-import { DrizzleError } from "drizzle-orm";
-import { issues, pages } from "@shared/schema";
+import { DrizzleError, eq } from "drizzle-orm";
+import { collections, issues, pages } from "@shared/schema";
 import { convertToImageUrl } from "@shared/utils";
 import { publicProcedure, router } from "@src/trpc";
 import { RarExtractor } from "@shared/extractors";
@@ -117,8 +118,19 @@ export const libraryRouter = router({
         orderBy: (issues, { asc }) => asc(issues.name),
       });
 
+      const collections = await ctx.db.query.collections.findMany({
+        with: {
+          issues: true,
+        },
+      });
+
+      const merged = issues.filter(
+        (k) => !collections.find((l) => l.issues.find((m) => m.id === k.id))
+      );
+
       return {
-        issues,
+        issues: merged,
+        collections,
       };
     } catch (e) {
       if (e instanceof DrizzleError) {
@@ -150,4 +162,101 @@ export const libraryRouter = router({
       }
     }
   }),
+  createCollection: publicProcedure
+    .input(
+      z.object({
+        name: z.string().refine((v) => v.trim),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      try {
+        const created = await ctx.db
+          .insert(collections)
+          .values({
+            id: v4(),
+            name: input.name,
+          })
+          .returning({ name: collections.name, id: collections.id });
+
+        return {
+          status: true,
+          data: created,
+        };
+      } catch (e) {
+        if (e instanceof DrizzleError) {
+          throw new TRPCError({
+            code: "PARSE_ERROR",
+            message: "Couldn't Create Collection",
+            cause: e.message,
+          });
+        }
+      }
+    }),
+  getCollectionById: publicProcedure
+    .input(
+      z.object({
+        collectionId: z.string(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const collection = await ctx.db.query.collections.findFirst({
+        where: (collections, { eq }) => eq(collections.id, input.collectionId),
+        with: {
+          issues: true,
+        },
+      });
+
+      return {
+        collection,
+      };
+    }),
+  addIssueToCollection: publicProcedure
+    .input(
+      z.object({
+        issueId: z.string().refine((v) => v.trim),
+        collectionId: z.string().refine((v) => v.trim),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      try {
+        const collection = await ctx.db.query.collections.findFirst({
+          where: (collections, { eq }) =>
+            eq(collections.id, input.collectionId),
+        });
+
+        if (!collection) {
+          throw new TRPCError({
+            code: "NOT_FOUND",
+            message: "Couldn't Find That Collection",
+          });
+        }
+
+        await ctx.db
+          .update(issues)
+          .set({
+            collectionId: collection.id,
+          })
+          .where(eq(issues.id, input.issueId));
+      } catch (e) {
+        if (e instanceof DrizzleError) {
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Couldn't Add Issue to Collection",
+            cause: e.message,
+          });
+        } else if (e instanceof SqliteError) {
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Couldn't Add Issue To Collection",
+            cause: e.message,
+          });
+        } else {
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Unexpected Error",
+            cause: e,
+          });
+        }
+      }
+    }),
 });
