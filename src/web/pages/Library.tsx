@@ -162,12 +162,14 @@ export default function Library() {
         <Box
           css={{
             display: "flex",
+            alignContent: "center",
+            alignItems: "center",
+            justifyContent: "center",
+            flexWrap: "wrap",
+            overflowY: "scroll",
             gap: "$xxxl",
             padding: "$lg",
-            overflowX: "hidden",
-            overflowY: "scroll",
-            overflowWrap: "anywhere",
-            marginTop: "$xl",
+            width: "100%",
           }}
         >
           {libraryData?.issues.map((v) => {

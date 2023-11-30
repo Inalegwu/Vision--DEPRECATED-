@@ -7,7 +7,7 @@ import { UnrarError } from "node-unrar-js";
 import { SqliteError } from "better-sqlite3";
 import { DrizzleError } from "drizzle-orm";
 import { issues, pages } from "@shared/schema";
-import { convertToImageUrl } from "@shared/utils";
+import { convertToImageUrl, sortIssues } from "@shared/utils";
 import { publicProcedure, router } from "@src/trpc";
 import { RarExtractor } from "@shared/extractors";
 
@@ -169,7 +169,9 @@ export const libraryRouter = router({
     try {
       trackEvent("Load Library");
 
-      const issues = await ctx.db.query.issues.findMany({});
+      const issues = await ctx.db.query.issues.findMany({
+        orderBy: (issues, { asc }) => asc(issues.name),
+      });
 
       return {
         issues,
