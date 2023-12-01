@@ -1,6 +1,5 @@
-import { useNavigate } from "react-router-dom";
 import { LayoutProps } from "@src/shared/types";
-import { AnimatedBox, AnimatedImage, Box } from "@components/atoms";
+import { AnimatedBox, AnimatedImage } from "@components/atoms";
 import { useState } from "react";
 
 function SinglePage({ pages, activeIndex }: LayoutProps) {
