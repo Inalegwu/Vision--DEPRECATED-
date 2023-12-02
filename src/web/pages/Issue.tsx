@@ -15,7 +15,7 @@ import {
 import { useAtom } from "jotai";
 import { layoutAtom } from "@src/web/state";
 import { DoublePage, SinglePage } from "@components/index";
-import { useKeyPress } from "@src/web/hooks";
+import { useKeyPress, useWindow } from "@src/web/hooks";
 
 export default function Issue() {
   const router = useNavigate();
@@ -40,7 +40,7 @@ export default function Issue() {
   const { mutate: maximizeWindow } =
     trpcReact.window.maximizeWindow.useMutation();
 
-  window.addEventListener("mousemove", () => {
+  useWindow("mousemove", () => {
     if (!navigationShowing) {
       setNavigationShowing(true);
     }
