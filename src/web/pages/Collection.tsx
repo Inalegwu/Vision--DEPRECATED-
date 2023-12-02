@@ -129,9 +129,12 @@ export default function Collection() {
           <AnimatePresence>
             {issuesListVisible && (
               <AnimatedBox
-                initial={{ height: 0, opacity: 0 }}
-                animate={{ height: 500, opacity: 1 }}
-                exit={{ height: 0, opacity: 0 }}
+                initial={{ height: 0 }}
+                animate={{ height: 500 }}
+                exit={{ height: 0 }}
+                transition={{
+                  ease: "easeInOut",
+                }}
                 css={{
                   width: 400,
                   borderTopRightRadius: "$xl",
@@ -210,6 +213,7 @@ export default function Collection() {
               transition: "0.5s ease-in-out",
               top: "92%",
               left: "96%",
+              boxShadow: "0px 30px 80px 0px rgba(23,220,156,0.6)",
               "&:hover": {
                 background: "$secondary",
               },

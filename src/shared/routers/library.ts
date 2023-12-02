@@ -1,5 +1,4 @@
 import z from "zod";
-import { v4 } from "uuid";
 import { dialog } from "electron";
 import { Reasons } from "@shared/types";
 import { TRPCError } from "@trpc/server";
@@ -8,7 +7,7 @@ import { UnrarError } from "node-unrar-js";
 import { SqliteError } from "better-sqlite3";
 import { DrizzleError, eq } from "drizzle-orm";
 import { collections, issues, pages } from "@shared/schema";
-import { convertToImageUrl } from "@shared/utils";
+import { convertToImageUrl, generateUUID } from "@shared/utils";
 import { publicProcedure, router } from "@src/trpc";
 import { RarExtractor } from "@shared/extractors";
 
@@ -63,7 +62,7 @@ export const libraryRouter = router({
       const createdIssue = await ctx.db
         .insert(issues)
         .values({
-          id: v4(),
+          id: generateUUID(),
           name,
           thumbnailUrl,
         })
@@ -73,7 +72,7 @@ export const libraryRouter = router({
         const content = convertToImageUrl(v.extraction?.buffer!);
 
         await ctx.db.insert(pages).values({
-          id: v4(),
+          id: generateUUID(),
           name: `${createdIssue[0].name}-${idx}`,
           content,
           issueId: createdIssue[0].id,
@@ -181,7 +180,7 @@ export const libraryRouter = router({
         const created = await ctx.db
           .insert(collections)
           .values({
-            id: v4(),
+            id: generateUUID(),
             name: input.name,
             dateCreated: Date.now(),
           })
@@ -269,6 +268,141 @@ export const libraryRouter = router({
             code: "INTERNAL_SERVER_ERROR",
             message: "Unexpected Error",
             cause: e,
+          });
+        }
+      }
+    }),
+  deleteCollection: publicProcedure
+    .input(
+      z.object({
+        id: z.string().refine((v) => v.trim),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      try {
+        const collection = await ctx.db.query.collections.findFirst({
+          where: (collections, { eq }) => eq(collections.id, input.id),
+        });
+
+        if (!collection) {
+          throw new TRPCError({
+            code: "NOT_FOUND",
+            message: "Couldn't Find That Collection",
+            cause: "Collection not found",
+          });
+        }
+
+        const deletedCollection = await ctx.db
+          .delete(collections)
+          .where(eq(collections.id, collection.id))
+          .returning({ name: collections.name });
+
+        return {
+          status: true,
+          data: deletedCollection[0],
+        };
+      } catch (e) {
+        if (e instanceof DrizzleError) {
+          trackEvent("failed to delete collection-DRIZZLE ERROr", {
+            cause: e.message,
+          });
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Couldn't Delete Collection",
+            cause: e.message,
+          });
+        } else if (e instanceof SqliteError) {
+          trackEvent("failed to delete collection-SQLITE ERROR", {
+            cause: e.message,
+          });
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Couldn't Delete Collection",
+            cause: e.message,
+          });
+        } else if (e instanceof TRPCError) {
+          trackEvent("failed to delete collection-TRPC ERROR", {
+            cause: e.message,
+          });
+          throw new TRPCError({
+            code: e.code,
+            cause: e.cause,
+            message: e.message,
+          });
+        } else {
+          trackEvent("failed to delete collection-UNEXPECTED ERROR", {
+            cause: "unknown",
+          });
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            cause: "Couldn't Delete Collection",
+          });
+        }
+      }
+    }),
+  removeIssueFromCollection: publicProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      try {
+        const issue = await ctx.db.query.issues.findFirst({
+          where: (issues, { eq }) => eq(issues.id, input.id),
+        });
+
+        if (!issue) {
+          throw new TRPCError({
+            code: "NOT_FOUND",
+            message: "Couldn't Find That Issue",
+            cause: "Issue not found",
+          });
+        }
+
+        const removedIssue = await ctx.db
+          .update(issues)
+          .set({ collectionId: null })
+          .where(eq(issues.id, issue.id))
+          .returning({
+            name: issues.name,
+          });
+
+        return {
+          status: true,
+          data: removedIssue[0],
+        };
+      } catch (e) {
+        if (e instanceof DrizzleError) {
+          trackEvent("failed to delete collection-DRIZZLE ERROr", {
+            cause: e.message,
+          });
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Couldn't Delete Collection",
+            cause: e.message,
+          });
+        } else if (e instanceof SqliteError) {
+          trackEvent("failed to delete collection-SQLITE ERROR", {
+            cause: e.message,
+          });
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Couldn't Delete Collection",
+            cause: e.message,
+          });
+        } else if (e instanceof TRPCError) {
+          trackEvent("failed to delete collection-TRPC ERROR", {
+            cause: e.message,
+          });
+          throw new TRPCError({
+            code: e.code,
+            cause: e.cause,
+            message: e.message,
+          });
+        } else {
+          trackEvent("failed to delete collection-UNEXPECTED ERROR", {
+            cause: "unknown",
+          });
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            cause: "Couldn't Delete Collection",
           });
         }
       }
