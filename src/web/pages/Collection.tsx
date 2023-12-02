@@ -1,5 +1,13 @@
 import { useParams } from "react-router-dom";
-import { HStack, IssueCard, Layout, Spinner } from "../components";
+import {
+  HStack,
+  IssueCard,
+  IssueSkeleton,
+  Layout,
+  Skeleton,
+  Spinner,
+  VStack,
+} from "../components";
 import {
   AnimatedBox,
   Box,
@@ -21,7 +29,7 @@ export default function Collection() {
 
   const [issuesListVisible, setIssuesListVisible] = useState<boolean>(false);
 
-  const { data: collection, isLoading: _getting } =
+  const { data: collection, isLoading: getting } =
     trpcReact.library.getCollectionById.useQuery({
       collectionId: collectionId!,
     });
@@ -49,46 +57,40 @@ export default function Collection() {
   return (
     <Layout>
       <Box css={{ width: "100%", height: "100%", padding: "$lg" }}>
-        <HStack
-          alignContent="center"
-          alignItems="center"
-          justifyContent="space-between"
-          style={{ height: "3%" }}
-        >
-          <HStack
-            alignContent="center"
-            alignItems="center"
-            justifyContent="flex-start"
-            gap={5}
-          >
+        <VStack style={{ width: "100%", padding: "$md", gap: "$lg" }}>
+          <HStack>
             <LinkButton
               to="/"
               css={{
-                padding: "$md",
                 background: "$primary",
+                padding: "$lg",
                 borderRadius: "$md",
-                color: "$white",
                 display: "flex",
                 alignContent: "center",
                 alignItems: "center",
                 justifyContent: "center",
+                color: "$white",
               }}
             >
-              <CaretLeft size={17} />
+              <CaretLeft />
             </LinkButton>
-            <Text css={{ fontSize: 30 }}>{collection?.collection!.name}</Text>
           </HStack>
-        </HStack>
+          <Text css={{ fontSize: 30 }}>{collection?.collection?.name}</Text>
+        </VStack>
         <HStack
           alignContent="flex-start"
           alignItems="flex-start"
           justifyContent="flex-start"
           gap={8}
           style={{
-            height: "97%",
+            height: "90%",
             paddingTop: "$xxl",
+            padding: "$lg",
             overflowY: "scroll",
+            display: "flex",
             flexWrap: "wrap",
+            width: "100%",
+            paddingBottom: "$xxxl",
           }}
         >
           {collection?.collection?.issues.length === 0 && (
@@ -133,9 +135,8 @@ export default function Collection() {
                 exit={{ height: 0, opacity: 0 }}
                 css={{
                   width: 400,
-                  borderTopLeftRadius: "$md",
+                  borderTopRightRadius: "$xl",
                   overflowY: "scroll",
-                  borderTopRightRadius: "$md",
                   background: "$blackMuted",
                   backdropFilter: "blur(100px)",
                   position: "absolute",
@@ -147,7 +148,7 @@ export default function Collection() {
                 <Box
                   css={{
                     width: "100%",
-                    padding: "$md",
+                    padding: "$lg",
                     display: "flex",
                     alignContent: "center",
                     alignItems: "center",
@@ -189,6 +190,7 @@ export default function Collection() {
               </AnimatedBox>
             )}
           </AnimatePresence>
+          {getting && Array(10).map((_, idx) => <IssueSkeleton key={idx} />)}
           {collection?.collection?.issues.map((v) => {
             return <IssueCard issue={v} key={v.id} />;
           })}

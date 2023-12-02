@@ -10,8 +10,8 @@ import {
   HStack,
   Spinner,
   IssueCard,
-  Skeleton,
   CollectionCard,
+  IssueSkeleton,
 } from "@components/index";
 import {
   AnimatedBox,
@@ -220,40 +220,7 @@ export default function Library() {
         >
           {/* skeleton loader , ideally , the user won't ever see this */}
           {fetchingLibraryContent &&
-            Array(10).map((_, idx) => {
-              return (
-                <Skeleton
-                  key={idx}
-                  css={{ display: "flex", flexDirection: "column", gap: "$md" }}
-                >
-                  <Box
-                    css={{
-                      borderRadius: "$md",
-                      border: "0.1px solid rgba(255,255,255,0.2)",
-                      height: 260,
-                      width: 175,
-                      background: "$gray",
-                    }}
-                  />
-                  <Box
-                    css={{
-                      padding: "$md",
-                      width: "100%",
-                      borderRadius: "$sm",
-                      background: "$gray",
-                    }}
-                  />
-                  <Box
-                    css={{
-                      padding: "$md",
-                      width: "60%",
-                      borderRadius: "$sm",
-                      background: "$gray",
-                    }}
-                  />
-                </Skeleton>
-              );
-            })}
+            Array(10).map((_, idx) => <IssueSkeleton key={idx} />)}
           {library?.issues.map((v) => {
             return <IssueCard issue={v} key={v.id} />;
           })}

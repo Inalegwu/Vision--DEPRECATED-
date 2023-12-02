@@ -285,7 +285,8 @@ export default function Issue() {
                   gap: "$md",
                   height: "80%",
                   padding: "$sm",
-                  borderRadius: "$md",
+                  borderTopRightRadius: "$md",
+                  borderBottomRightRadius: "$md",
                   overflowY: "scroll",
                   background: "$primary",
                 }}

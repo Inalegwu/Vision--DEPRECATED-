@@ -7,6 +7,7 @@ import VStack from "./VStack";
 import ContextMenu, { ContextMenuRefProps } from "./ContextMenu";
 import { DoublePage, SinglePage } from "./ReaderLayouts";
 import CollectionCard from "./CollectionCard";
+import IssueSkeleton from "./IssueSkeleton";
 
 export {
   CollectionCard,
@@ -21,4 +22,5 @@ export {
   SinglePage,
   Spinner,
   VStack,
+  IssueSkeleton,
 };
