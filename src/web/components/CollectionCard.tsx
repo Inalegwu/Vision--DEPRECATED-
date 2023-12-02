@@ -89,7 +89,7 @@ export default function CollectionCard({ collection }: CollectionCardProps) {
         </>
       )}
       <Box css={{ width: 170 }}>
-        <Text>{collection.name}</Text>
+        <Text css={{ fontSize: 14 }}>{collection.name}</Text>
       </Box>
     </AnimatedBox>
   );

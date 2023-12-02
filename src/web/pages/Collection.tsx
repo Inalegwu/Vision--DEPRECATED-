@@ -62,7 +62,7 @@ export default function Collection() {
               to="/"
               css={{
                 background: "$primary",
-                padding: "$lg",
+                padding: "$md",
                 borderRadius: "$md",
                 display: "flex",
                 alignContent: "center",
@@ -74,7 +74,9 @@ export default function Collection() {
               <CaretLeft />
             </LinkButton>
           </HStack>
-          <Text css={{ fontSize: 30 }}>{collection?.collection?.name}</Text>
+          <Text css={{ fontSize: 27, fontWeight: "bold" }}>
+            {collection?.collection?.name}
+          </Text>
         </VStack>
         <HStack
           alignContent="flex-start"

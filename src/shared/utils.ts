@@ -44,6 +44,6 @@ export function clamp(num: number, min: number, max: number): number {
 
 // TODO implement a debounce function
 // for events
-export function debounce(event: any) {
-  setTimeout(() => {}, 4000);
+export function debounce<K, T>(args: K, callback: (args: K) => T) {
+  setTimeout(() => callback(args), 4000);
 }

@@ -22,6 +22,7 @@ import {
   Text,
 } from "@components/atoms";
 import { AnimatePresence } from "framer-motion";
+import { useKeyPress } from "../hooks";
 
 trackEvent("Library Loaded");
 
@@ -61,6 +62,7 @@ export default function Library() {
 
   const { data: library, isLoading: fetchingLibraryContent } =
     trpcReact.library.getLibrary.useQuery();
+
   const { mutate: createCollection, isLoading: _creating } =
     trpcReact.library.createCollection.useMutation({
       onSuccess: (data) => {
@@ -72,6 +74,45 @@ export default function Library() {
   const create = useCallback(() => {
     createCollection({ name: collectionName });
   }, [collectionName]);
+
+  // use this to listen for commands to create a collection
+  // or add to library
+  useKeyPress((e) => {
+    if (e.key === "+" && e.ctrlKey) {
+      addToLibrary();
+    }
+  });
+
+  if (fetchingLibraryContent) {
+    return (
+      <Layout>
+        <Box
+          css={{
+            width: "100%",
+            height: "100%",
+            display: "flex",
+            alignContent: "center",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Box
+            css={{
+              display: "flex",
+              flexDirection: "column",
+              alignContent: "center",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "$xl",
+            }}
+          >
+            <Spinner size={20} />
+            <Text css={{ fontSize: 15 }}>Putting Things Together...</Text>
+          </Box>
+        </Box>
+      </Layout>
+    );
+  }
 
   return (
     <Layout>
@@ -113,7 +154,7 @@ export default function Library() {
         </AnimatedBox>
         {/* header */}
         <VStack gap={6} style={{ padding: "$lg" }}>
-          <Text css={{ fontSize: 35, fontWeight: "bold" }}>My Library</Text>
+          <Text css={{ fontSize: 27, fontWeight: "bold" }}>My Library</Text>
           <HStack
             width="100%"
             justifyContent="space-between"
@@ -176,7 +217,7 @@ export default function Library() {
                 css={{
                   color: "$white",
                   background: "$gray",
-                  padding: "$lg",
+                  padding: "$md",
                   borderRadius: "$full",
                   "&:hover": {
                     background: "$primary",
@@ -185,15 +226,16 @@ export default function Library() {
                 onClick={() => setCreateModalVisible(true)}
               >
                 <HStack alignContent="center" alignItems="center" gap={5}>
-                  <Text>Create Collection</Text>
+                  <Text css={{ fontSize: 12 }}>Create Collection</Text>
                 </HStack>
               </Button>
               <AnimatedButton
                 css={{
                   color: "$white",
                   background: "$gray",
-                  padding: "$lg",
+                  padding: "$md",
                   borderRadius: "$full",
+                  transition: "0.5s ease-in-out",
                   "&:hover": {
                     background: "$primary",
                   },
@@ -201,8 +243,8 @@ export default function Library() {
                 onClick={() => addToLibrary()}
               >
                 <HStack gap={5} alignContent="center" alignItems="center">
-                  <Text>Add To Library</Text>
-                  <Plus size={10} />
+                  <Text css={{ fontSize: 12 }}>Add To Library</Text>
+                  <Plus size={11} />
                 </HStack>
               </AnimatedButton>
             </HStack>
@@ -224,9 +266,6 @@ export default function Library() {
             paddingBottom: "$hg",
           }}
         >
-          {/* skeleton loader , ideally , the user won't ever see this */}
-          {fetchingLibraryContent &&
-            Array(10).map((_, idx) => <IssueSkeleton key={idx} />)}
           {library?.collections.map((v) => {
             return <CollectionCard key={v.id} collection={v} />;
           })}

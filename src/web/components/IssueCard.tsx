@@ -60,7 +60,7 @@ export default function IssueCard(props: Props) {
         />
       </Box>
       <Box css={{ width: 170 }}>
-        <Text>{props.issue.name}</Text>
+        <Text css={{ fontSize: 13 }}>{props.issue.name}</Text>
       </Box>
     </AnimatedBox>
   );

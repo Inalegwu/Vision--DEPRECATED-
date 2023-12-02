@@ -340,7 +340,7 @@ export const libraryRouter = router({
         }
       }
     }),
-  removeIssueFromCollection: publicProcedure
+  removeIssuesFromCollection: publicProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
       try {

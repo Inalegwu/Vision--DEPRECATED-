@@ -60,9 +60,6 @@ export default function Issue() {
 
   const handleRightClick = useCallback(() => {
     if (activeIndex === issue?.issue.pages.length! - 1) {
-      toast.success(`You've reached the end of ${issue?.issue?.name} 🎉`, {
-        position: "top-right",
-      });
       return;
     }
     setActiveIndex(activeIndex + 1);
@@ -76,7 +73,7 @@ export default function Issue() {
   }, [activeIndex, setActiveIndex]);
 
   useKeyPress((e) => {
-    console.log(e.key);
+    console.log(e);
     if (e.key === "[" || e.key === "ArrowRight") {
       handleLeftClick();
     } else if (e.key === "]" || e.key === "ArrowRight") {
@@ -118,8 +115,8 @@ export default function Issue() {
               justifyContent: "center",
             }}
           >
-            <Spinner />
-            <Text>Getting Panels Ready</Text>
+            <Spinner size={20} />
+            <Text css={{ fontSize: 15 }}>Getting Panels Ready</Text>
           </Box>
         </Box>
       )}
@@ -165,7 +162,7 @@ export default function Issue() {
               onMouseLeave={() => setMouseOver(false)}
               to="/"
               css={{
-                padding: "$lg",
+                padding: "$md",
                 background: "$primary",
                 color: "$white",
                 borderRadius: "$md",
@@ -177,7 +174,7 @@ export default function Issue() {
             >
               <CaretLeft size={20} />
             </LinkButton>
-            <Text css={{ color: "$white", fontSize: 20 }}>
+            <Text css={{ color: "$white", fontSize: 15 }}>
               {issue?.issue?.name}
             </Text>
             {/* keep the window draggable */}
@@ -205,7 +202,7 @@ export default function Issue() {
                 onClick={() => maximizeWindow()}
                 css={{
                   color: "$gray",
-                  padding: "$xxxl",
+                  padding: "$lg",
                   display: "flex",
                   alignContent: "center",
                   alignItems: "center",
@@ -244,7 +241,7 @@ export default function Issue() {
                 alignItems: "center",
                 justifyContent: "center",
                 color: "$white",
-                padding: "$md",
+                padding: "$sm",
                 height: "100%",
                 width: "5%",
                 background: "$blackMuted",
@@ -301,7 +298,7 @@ export default function Issue() {
                 alignItems: "center",
                 justifyContent: "center",
                 color: "$white",
-                padding: "$md",
+                padding: "$sm",
                 background: "$blackMuted",
                 backdropFilter: "blur(400px)",
                 left: "95%",
