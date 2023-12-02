@@ -3,4 +3,6 @@ export default function useWindow<K extends keyof WindowEventMap>(
   listener: (this: Window, ev: WindowEventMap[K]) => any
 ) {
   window.addEventListener(eventType, listener);
+
+  return window.removeEventListener(eventType, listener);
 }
