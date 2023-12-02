@@ -28,6 +28,7 @@ trackEvent("Library Loaded");
 export default function Library() {
   const utils = trpcReact.useUtils();
   const [createModalVisible, setCreateModalVisible] = useState<boolean>(false);
+  const [mouseOver, setMouseOver] = useState<boolean>(false);
   const [collectionName, setCollectionName] = useState<string>("");
 
   const { mutate: addToLibrary, isLoading: addingToLibrary } =
@@ -48,7 +49,9 @@ export default function Library() {
 
   useEffect(() => {
     const dismissToolTip = setTimeout(() => {
-      setCreateModalVisible(false);
+      if (!mouseOver) {
+        setCreateModalVisible(false);
+      }
     }, 6000);
 
     return () => {
@@ -142,11 +145,14 @@ export default function Library() {
                   }}
                 >
                   <Input
+                    onMouseOver={() => setMouseOver(true)}
                     onKeyDown={(e) => {
                       if (e.key === "Enter") {
                         create();
                       }
                     }}
+                    onFocus={() => setMouseOver(true)}
+                    onBlur={() => setMouseOver(false)}
                     css={{
                       background: "$gray",
                       opacity: 0.5,
@@ -221,11 +227,11 @@ export default function Library() {
           {/* skeleton loader , ideally , the user won't ever see this */}
           {fetchingLibraryContent &&
             Array(10).map((_, idx) => <IssueSkeleton key={idx} />)}
-          {library?.issues.map((v) => {
-            return <IssueCard issue={v} key={v.id} />;
-          })}
           {library?.collections.map((v) => {
             return <CollectionCard key={v.id} collection={v} />;
+          })}
+          {library?.issues.map((v) => {
+            return <IssueCard issue={v} key={v.id} />;
           })}
         </Box>
       </Box>
