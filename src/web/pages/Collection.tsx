@@ -4,7 +4,6 @@ import {
   IssueCard,
   IssueSkeleton,
   Layout,
-  Skeleton,
   Spinner,
   VStack,
 } from "../components";
