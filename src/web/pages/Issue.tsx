@@ -1,4 +1,3 @@
-import toast from "react-hot-toast";
 import { Spinner } from "../components";
 import { trpcReact } from "@shared/config";
 import { useNavigate, useParams } from "react-router-dom";
@@ -201,7 +200,7 @@ export default function Issue() {
                 onMouseLeave={() => setMouseOver(false)}
                 onClick={() => maximizeWindow()}
                 css={{
-                  color: "$gray",
+                  color: "$primary",
                   padding: "$lg",
                   display: "flex",
                   alignContent: "center",

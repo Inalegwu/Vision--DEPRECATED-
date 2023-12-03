@@ -46,3 +46,8 @@ export type ApplicationState = {
   firstLaunch: boolean;
   applicationId: string | undefined;
 };
+
+export type Point = {
+  x: number;
+  y: number;
+};

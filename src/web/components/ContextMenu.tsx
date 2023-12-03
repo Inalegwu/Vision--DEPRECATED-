@@ -5,7 +5,7 @@ import React, {
   useState,
 } from "react";
 import { AnimatedBox } from "./atoms";
-import { ThemeCSS } from "../../shared/types";
+import { ThemeCSS } from "@shared/types";
 
 export type ContextMenuProps = {
   children?: React.ReactNode;
@@ -56,7 +56,7 @@ const ContextMenu = React.forwardRef<ContextMenuRefProps, ContextMenuProps>(
           opacity: isVisible ? 1 : 0,
           display: "block",
         }}
-        css={props.style}
+        css={{ ...props.style }}
         onMouseEnter={() => {
           setMouseOver(true);
         }}

@@ -11,7 +11,6 @@ import {
   Spinner,
   IssueCard,
   CollectionCard,
-  IssueSkeleton,
 } from "@components/index";
 import {
   AnimatedBox,
@@ -99,7 +98,7 @@ export default function Library() {
             }}
           >
             <Spinner size={20} />
-            <Text css={{ fontSize: 15 }}>{LOADING_PHRASES[31]}...</Text>
+            <Text css={{ fontSize: 15 }}>{LOADING_PHRASES[6]}...</Text>
           </Box>
         </Box>
       </Layout>

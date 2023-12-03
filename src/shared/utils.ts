@@ -81,5 +81,5 @@ export const LOADING_PHRASES = [
   "Balanced as All Things Should Be",
   "Excelsior",
   "Alfred is the Real Batman , Trust Me",
-  "The League of Assassins are probably Better Parents TBF",
+  "Fending off Para-Demons",
 ];

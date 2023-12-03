@@ -1,6 +1,8 @@
-import { Issue } from "../../shared/types";
-import { useCallback } from "react";
-import { AnimatedBox, Box, Image, Text } from "./atoms";
+import { Issue, Point } from "@shared/types";
+import { useCallback, useRef, useState } from "react";
+import { AnimatedBox, Box, Button, Image, LinkButton, Text } from "./atoms";
+import ContextMenu, { ContextMenuRefProps } from "./ContextMenu";
+import { trpcReact } from "@src/shared/config";
 import { useNavigate } from "react-router-dom";
 
 type Props = {
@@ -9,9 +11,11 @@ type Props = {
 
 export default function IssueCard(props: Props) {
   const router = useNavigate();
-
   const handleClick = useCallback(
     (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+      if (e.ctrlKey) {
+        return;
+      }
       router(`/${props.issue.id}`);
     },
     [props.issue]
@@ -60,7 +64,7 @@ export default function IssueCard(props: Props) {
         />
       </Box>
       <Box css={{ width: 170 }}>
-        <Text css={{ fontSize: 13 }}>{props.issue.name}</Text>
+        <Text css={{ fontSize: 13, color: "$white" }}>{props.issue.name}</Text>
       </Box>
     </AnimatedBox>
   );
