@@ -340,7 +340,7 @@ export const libraryRouter = router({
         }
       }
     }),
-  removeIssuesFromCollection: publicProcedure
+  removeIssueFromCollection: publicProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
       try {
@@ -367,6 +367,78 @@ export const libraryRouter = router({
         return {
           status: true,
           data: removedIssue[0],
+        };
+      } catch (e) {
+        if (e instanceof DrizzleError) {
+          trackEvent("failed to delete collection-DRIZZLE ERROr", {
+            cause: e.message,
+          });
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Couldn't Delete Collection",
+            cause: e.message,
+          });
+        } else if (e instanceof SqliteError) {
+          trackEvent("failed to delete collection-SQLITE ERROR", {
+            cause: e.message,
+          });
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Couldn't Delete Collection",
+            cause: e.message,
+          });
+        } else if (e instanceof TRPCError) {
+          trackEvent("failed to delete collection-TRPC ERROR", {
+            cause: e.message,
+          });
+          throw new TRPCError({
+            code: e.code,
+            cause: e.cause,
+            message: e.message,
+          });
+        } else {
+          trackEvent("failed to delete collection-UNEXPECTED ERROR", {
+            cause: "unknown",
+          });
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            cause: "Couldn't Delete Collection",
+          });
+        }
+      }
+    }),
+  changeIssueName: publicProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        newName: z.string().refine((v) => v.trim()),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      try {
+        const collection = await ctx.db.query.collections.findFirst({
+          where: (collections, { eq }) => eq(collections.id, input.id),
+        });
+
+        if (!collection) {
+          throw new TRPCError({
+            code: "NOT_FOUND",
+            message: "Couldn't Find That Collection",
+            cause: "collection not found",
+          });
+        }
+
+        const newCollectionName = await ctx.db
+          .update(collections)
+          .set({
+            name: input.newName,
+          })
+          .where(eq(collections.id, collection.id))
+          .returning({ name: collections.name });
+
+        return {
+          status: true,
+          data: newCollectionName[0],
         };
       } catch (e) {
         if (e instanceof DrizzleError) {

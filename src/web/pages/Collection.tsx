@@ -1,22 +1,16 @@
 import { useParams } from "react-router-dom";
-import {
-  HStack,
-  IssueCard,
-  IssueSkeleton,
-  Layout,
-  Spinner,
-  VStack,
-} from "../components";
+import { HStack, IssueCard, Layout, Spinner, VStack } from "@components/index";
 import {
   AnimatedBox,
   Box,
   Button,
   Image,
+  Input,
   LinkButton,
   Text,
-} from "../components/atoms";
+} from "@components/atoms";
 import { CollectionParams } from "@src/shared/types";
-import { CaretLeft, Plus, X } from "@phosphor-icons/react";
+import { CaretLeft, PencilCircle, Plus, X } from "@phosphor-icons/react";
 import { trpcReact } from "@src/shared/config";
 import { useCallback, useState } from "react";
 import { AnimatePresence } from "framer-motion";
@@ -27,11 +21,20 @@ export default function Collection() {
   const { collectionId } = useParams<CollectionParams>();
 
   const [issuesListVisible, setIssuesListVisible] = useState<boolean>(false);
+  const [editingName, setEditingName] = useState<boolean>(false);
+  const [name, setName] = useState<string>("");
 
-  const { data: collection, isLoading: getting } =
-    trpcReact.library.getCollectionById.useQuery({
-      collectionId: collectionId!,
-    });
+  const { data: collection, isLoading: _getting } =
+    trpcReact.library.getCollectionById.useQuery(
+      {
+        collectionId: collectionId!,
+      },
+      {
+        onSuccess: (d) => {
+          setName(d?.collection?.name!);
+        },
+      }
+    );
 
   const { data: issues, isLoading: gettingIssues } =
     trpcReact.library.getLibrary.useQuery();
@@ -46,12 +49,24 @@ export default function Collection() {
       },
     });
 
+  const { mutate: changeName, isLoading: changingName } =
+    trpcReact.library.changeIssueName.useMutation({
+      onSuccess: () => {
+        utils.library.invalidate();
+        setEditingName(false);
+      },
+    });
+
   const addToLibrary = useCallback(
     (v: string) => {
       addIssueToLibrary({ issueId: v, collectionId: collectionId! });
     },
     [collectionId]
   );
+
+  const updateName = useCallback(() => {
+    changeName({ id: collectionId!, newName: name });
+  }, [name, collectionId]);
 
   return (
     <Layout>
@@ -74,9 +89,60 @@ export default function Collection() {
               <CaretLeft />
             </LinkButton>
           </HStack>
-          <Text css={{ fontSize: 27, fontWeight: "bold" }}>
-            {collection?.collection?.name}
-          </Text>
+          <HStack
+            alignContent="center"
+            alignItems="center"
+            justifyContent="space-between"
+            style={{ width: "100%" }}
+          >
+            {editingName ? (
+              <>
+                <Input
+                  css={{
+                    padding: "$md",
+                    border: "0.2px solid $gray",
+                    color: "$white",
+                    borderRadius: "$md",
+                    background: "$background",
+                    fontSize: 27,
+                    flex: 0.7,
+                  }}
+                  disabled={changingName}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      updateName();
+                    }
+                  }}
+                  value={name}
+                  onChange={(e) => setName(e.currentTarget.value)}
+                />
+              </>
+            ) : (
+              <>
+                <Text css={{ fontSize: 27, fontWeight: "bold" }}>{name}</Text>
+              </>
+            )}
+            <Button
+              css={{
+                color: "$secondary",
+                padding: "$lg",
+                borderRadius: "$full",
+                background: "$gray",
+                display: "flex",
+                alignContent: "center",
+                alignItems: "center",
+                justifyContent: "center",
+                transition: "0.5s ease-in-out",
+                "&:hover": {
+                  background: "$secondary",
+                  color: "$white",
+                },
+              }}
+              onClick={() => setEditingName((v) => !v)}
+            >
+              <PencilCircle size={15} />
+            </Button>
+          </HStack>
         </VStack>
         <HStack
           alignContent="flex-start"
@@ -91,6 +157,7 @@ export default function Collection() {
             display: "flex",
             flexWrap: "wrap",
             width: "100%",
+            gap: "$xxxl",
             paddingBottom: "$xxxl",
           }}
         >
@@ -194,7 +261,6 @@ export default function Collection() {
               </AnimatedBox>
             )}
           </AnimatePresence>
-          {getting && Array(10).map((_, idx) => <IssueSkeleton key={idx} />)}
           {collection?.collection?.issues.map((v) => {
             return <IssueCard issue={v} key={v.id} />;
           })}
@@ -205,6 +271,7 @@ export default function Collection() {
               zIndex: 1,
               padding: "$xxl",
               background: "$gray",
+              backdropFilter: "blur(200px)",
               display: "flex",
               alignContent: "center",
               alignItems: "center",

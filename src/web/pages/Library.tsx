@@ -22,7 +22,7 @@ import {
   Text,
 } from "@components/atoms";
 import { AnimatePresence } from "framer-motion";
-import { useKeyPress } from "../hooks";
+import { LOADING_PHRASES } from "@src/shared/utils";
 
 trackEvent("Library Loaded");
 
@@ -75,14 +75,6 @@ export default function Library() {
     createCollection({ name: collectionName });
   }, [collectionName]);
 
-  // use this to listen for commands to create a collection
-  // or add to library
-  useKeyPress((e) => {
-    if (e.key === "+" && e.ctrlKey) {
-      addToLibrary();
-    }
-  });
-
   if (fetchingLibraryContent) {
     return (
       <Layout>
@@ -107,7 +99,7 @@ export default function Library() {
             }}
           >
             <Spinner size={20} />
-            <Text css={{ fontSize: 15 }}>Putting Things Together...</Text>
+            <Text css={{ fontSize: 15 }}>{LOADING_PHRASES[31]}...</Text>
           </Box>
         </Box>
       </Layout>
