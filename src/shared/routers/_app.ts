@@ -1,8 +1,8 @@
-import { publicProcedure, router } from "../../trpc";
-import { issueRouter } from "./issue";
-import { libraryRouter } from "./library";
-import { windowRouter } from "./window";
 import pkg from "../../../package.json";
+import { issueRouter } from "@shared/routers/issue";
+import { windowRouter } from "@shared/routers/window";
+import { libraryRouter } from "@shared/routers/library";
+import { publicProcedure, router } from "@src/trpc";
 
 export const appRouter = router({
   window: windowRouter,

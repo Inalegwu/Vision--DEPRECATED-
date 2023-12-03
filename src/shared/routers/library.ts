@@ -5,11 +5,11 @@ import { TRPCError } from "@trpc/server";
 import { trackEvent } from "@aptabase/electron/main";
 import { UnrarError } from "node-unrar-js";
 import { SqliteError } from "better-sqlite3";
+import { RarExtractor } from "@shared/extractors";
 import { DrizzleError, eq } from "drizzle-orm";
 import { collections, issues, pages } from "@shared/schema";
 import { convertToImageUrl, generateUUID } from "@shared/utils";
 import { publicProcedure, router } from "@src/trpc";
-import { RarExtractor } from "@shared/extractors";
 
 export const libraryRouter = router({
   addToLibrary: publicProcedure.mutation(async ({ ctx }) => {
@@ -28,13 +28,13 @@ export const libraryRouter = router({
           reason: Reasons.CANCELLED,
         };
       }
-      const { metaDataFile: _md, sortedFiles } = await RarExtractor(
+      const { metaDataFile: md, sortedFiles } = await RarExtractor(
         filePaths[0]
       );
 
       const text = new TextDecoder("utf-8");
 
-      const decodedMeta = text.decode(_md?.extraction?.buffer);
+      const decodedMeta = text.decode(md?.extraction?.buffer);
 
       console.log(decodedMeta);
 

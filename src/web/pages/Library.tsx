@@ -22,6 +22,7 @@ import {
 } from "@components/atoms";
 import { AnimatePresence } from "framer-motion";
 import { LOADING_PHRASES } from "@src/shared/utils";
+import { logger } from "@shared/logger";
 
 trackEvent("Library Loaded");
 
