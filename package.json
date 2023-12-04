@@ -17,7 +17,7 @@
     "db:generate": "drizzle-kit generate:sqlite",
     "db:push": "drizzle-kit push:sqlite",
     "postinstall": "electron-rebuild",
-    "package": "pnpm exec electron-builder"
+    "package": "rimraf dist && pnpm build && pnpm exec electron-builder"
   },
   "build": {
     "appId": "com.vision.app",
@@ -31,7 +31,6 @@
       "output": "release"
     },
     "win": {
-      "target": "msi",
       "icon": "assets/icon.png"
     }
   },
