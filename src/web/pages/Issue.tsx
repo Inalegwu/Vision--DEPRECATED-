@@ -15,6 +15,7 @@ import { useAtom } from "jotai";
 import { layoutAtom } from "@src/web/state";
 import { DoublePage, SinglePage } from "@components/index";
 import { useKeyPress, useWindow } from "@src/web/hooks";
+import { LOADING_PHRASES, getRandomIndex } from "@shared/utils";
 
 export default function Issue() {
   const router = useNavigate();
@@ -115,7 +116,9 @@ export default function Issue() {
             }}
           >
             <Spinner size={20} />
-            <Text css={{ fontSize: 15 }}>Getting Panels Ready</Text>
+            <Text css={{ fontSize: 15 }}>
+              {LOADING_PHRASES[getRandomIndex(0, LOADING_PHRASES.length - 1)]}
+            </Text>
           </Box>
         </Box>
       )}

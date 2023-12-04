@@ -20,7 +20,7 @@ import {
   Text,
 } from "@components/atoms";
 import { AnimatePresence } from "framer-motion";
-import { LOADING_PHRASES } from "@src/shared/utils";
+import { LOADING_PHRASES, getRandomIndex } from "@src/shared/utils";
 
 export default function Library() {
   const utils = trpcReact.useUtils();
@@ -95,7 +95,10 @@ export default function Library() {
             }}
           >
             <Spinner size={20} />
-            <Text css={{ fontSize: 15 }}>{LOADING_PHRASES[6]}...</Text>
+            <Text css={{ fontSize: 15 }}>
+              {LOADING_PHRASES[getRandomIndex(0, LOADING_PHRASES.length - 1)]}
+              ...
+            </Text>
           </Box>
         </Box>
       </Layout>

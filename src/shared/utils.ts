@@ -83,3 +83,9 @@ export const LOADING_PHRASES = [
   "Alfred is the Real Batman , Trust Me",
   "Fending off Para-Demons",
 ];
+
+export function getRandomIndex(min: number, max: number): number {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
