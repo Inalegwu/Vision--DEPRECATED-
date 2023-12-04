@@ -13,6 +13,9 @@ const common: Configuration = {
     filename: "[name].js",
     assetModuleFilename: "assets/[name][ext]",
   },
+  optimization: {
+    realContentHash: true,
+  },
   resolve: {
     extensions: [".js", ".ts", ".jsx", ".tsx", ".json"],
     alias: {

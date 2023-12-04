@@ -15,4 +15,3 @@ createRoot(document.getElementById("root") as Element).render(
     </trpcReact.Provider>
   </React.StrictMode>
 );
-

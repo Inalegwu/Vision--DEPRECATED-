@@ -1,4 +1,6 @@
-class Logger {
+// this is exported so custom loggers
+// can be made
+export class Logger {
   prefix: string = "Logger";
 
   constructor(prefix?: string) {

@@ -4,15 +4,12 @@ import Layout from "./Layout";
 import Skeleton, { SkeletonProps } from "./Skeleton";
 import Spinner from "./Spinner";
 import VStack from "./VStack";
-import ContextMenu, { ContextMenuRefProps } from "./ContextMenu";
 import { DoublePage, SinglePage } from "./ReaderLayouts";
 import CollectionCard from "./CollectionCard";
 import IssueSkeleton from "./IssueSkeleton";
 
 export {
   CollectionCard,
-  ContextMenu,
-  ContextMenuRefProps,
   DoublePage,
   HStack,
   IssueCard,

@@ -1,4 +1,4 @@
-import { Spinner } from "../components";
+import { Spinner } from "@components/index";
 import { trpcReact } from "@shared/config";
 import { useNavigate, useParams } from "react-router-dom";
 import { IssueParams } from "@shared/types";

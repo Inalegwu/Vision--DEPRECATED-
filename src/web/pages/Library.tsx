@@ -1,6 +1,5 @@
 import toast from "react-hot-toast";
 import { useCallback, useEffect, useState } from "react";
-import { trackEvent } from "@aptabase/electron/renderer";
 import { trpcReact } from "@shared/config";
 import { Plus } from "@phosphor-icons/react";
 import { Reasons } from "@shared/types";
@@ -22,9 +21,6 @@ import {
 } from "@components/atoms";
 import { AnimatePresence } from "framer-motion";
 import { LOADING_PHRASES } from "@src/shared/utils";
-import { logger } from "@shared/logger";
-
-trackEvent("Library Loaded");
 
 export default function Library() {
   const utils = trpcReact.useUtils();

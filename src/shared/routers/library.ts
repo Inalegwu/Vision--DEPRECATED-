@@ -28,6 +28,7 @@ export const libraryRouter = router({
           reason: Reasons.CANCELLED,
         };
       }
+
       const { metaDataFile: md, sortedFiles } = await RarExtractor(
         filePaths[0]
       );
