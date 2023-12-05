@@ -24,6 +24,7 @@
     "productName": "Vision",
     "artifactName": "${productName}-${version}-${platform}-${arch}.${ext}",
     "buildDependenciesFromSource": true,
+    "oneClick": false,
     "files": [
       "dist/**/*"
     ],
@@ -31,6 +32,7 @@
       "output": "release"
     },
     "win": {
+      "target": "msi",
       "icon": "assets/icon.png"
     }
   },
