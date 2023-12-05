@@ -51,7 +51,6 @@ export function debounce<K, T>(args: K, callback: (args: K) => T) {
 export const LOADING_PHRASES = [
   "Fighting Darkseid",
   "Making sure Joker hasn't escaped again",
-  "Changing Jonathans' Diaper",
   "Changing Jarvis' Batteries",
   "Saying the Green Latern Oath",
   "Starching The Capes",
@@ -61,7 +60,7 @@ export const LOADING_PHRASES = [
   "Investigating Vandal Savage",
   "What is a Batman who Laughs ???",
   "Making sure the writers aren't bullying Peter",
-  "Listening to JJJ",
+  "Listening to JJJ's Podcast",
   "Swingin' Through Town",
   "Help!!!",
   "Rebooting the Multiverse",

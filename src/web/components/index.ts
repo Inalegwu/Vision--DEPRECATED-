@@ -7,6 +7,7 @@ import VStack from "./VStack";
 import { DoublePage, SinglePage } from "./ReaderLayouts";
 import CollectionCard from "./CollectionCard";
 import IssueSkeleton from "./IssueSkeleton";
+import Pulse from "./Pulse";
 
 export {
   CollectionCard,
@@ -20,4 +21,5 @@ export {
   Spinner,
   VStack,
   IssueSkeleton,
+  Pulse,
 };

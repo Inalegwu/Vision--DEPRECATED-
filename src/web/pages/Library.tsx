@@ -14,6 +14,7 @@ import {
 import {
   AnimatedBox,
   AnimatedButton,
+  AnimatedText,
   Box,
   Button,
   Input,
@@ -27,6 +28,9 @@ export default function Library() {
   const [createModalVisible, setCreateModalVisible] = useState<boolean>(false);
   const [mouseOver, setMouseOver] = useState<boolean>(false);
   const [collectionName, setCollectionName] = useState<string>("");
+  const [phraseIndex, setPhraseIndex] = useState<number>(
+    getRandomIndex(0, LOADING_PHRASES.length - 1)
+  );
 
   const { mutate: addToLibrary, isLoading: addingToLibrary } =
     trpcReact.library.addToLibrary.useMutation({
@@ -51,8 +55,13 @@ export default function Library() {
       }
     }, 6000);
 
+    const changeLoadingPhrase = setTimeout(() => {
+      setPhraseIndex(getRandomIndex(0, LOADING_PHRASES.length - 1));
+    }, 7000);
+
     return () => {
       clearTimeout(dismissToolTip);
+      clearTimeout(changeLoadingPhrase);
     };
   }, []);
 
@@ -96,7 +105,7 @@ export default function Library() {
           >
             <Spinner size={20} />
             <Text css={{ fontSize: 15 }}>
-              {LOADING_PHRASES[getRandomIndex(0, LOADING_PHRASES.length - 1)]}
+              {LOADING_PHRASES[phraseIndex]}
               ...
             </Text>
           </Box>
@@ -140,7 +149,16 @@ export default function Library() {
             }}
           >
             <Spinner />
-            <Text>Sit back , This might take a while 😉 ...</Text>
+            <AnimatePresence>
+              <AnimatedText
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ ease: "anticipate" }}
+              >
+                {LOADING_PHRASES[phraseIndex]}
+              </AnimatedText>
+            </AnimatePresence>
           </Box>
         </AnimatedBox>
         {/* header */}
