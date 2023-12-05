@@ -24,7 +24,6 @@
     "productName": "Vision",
     "artifactName": "${productName}-${version}-${platform}-${arch}.${ext}",
     "buildDependenciesFromSource": true,
-    "oneClick": false,
     "files": [
       "dist/**/*"
     ],
