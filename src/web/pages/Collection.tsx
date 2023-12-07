@@ -430,7 +430,7 @@ export default function Collection() {
               transition: "0.5s ease-in-out",
               top: "92%",
               left: "96%",
-              boxShadow: "0px 30px 80px 0px rgba(23,220,156,0.6)",
+              boxShadow: "0px 30px 80px 0px #4617c8",
               "&:hover": {
                 background: "$secondary",
               },

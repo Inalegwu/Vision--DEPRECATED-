@@ -1,4 +1,4 @@
-import { Spinner } from "@components/index";
+import { Spinner, VStack } from "@components/index";
 import { trpcReact } from "@shared/config";
 import { useNavigate, useParams } from "react-router-dom";
 import { IssueParams } from "@shared/types";
@@ -221,102 +221,109 @@ export default function Issue() {
               </Button>
             </Box>
           </Box>
-          {/* track view view */}
-          <Box
-            onMouseOver={() => setMouseOver(true)}
-            onMouseDown={() => setMouseOver(false)}
-            css={{
-              background: "$blackMuted",
-              backdropFilter: "blur(50px)",
-              borderRadius: "$md",
-              width: "100%",
-              display: "flex",
-              alignContent: "center",
-              alignItems: "center",
-              lineHeight: 80,
-              overflowY: "hidden",
-            }}
-          >
-            <Button
-              css={{
-                display: "flex",
-                alignContent: "center",
-                alignItems: "center",
-                justifyContent: "center",
-                color: "$white",
-                padding: "$sm",
-                height: "100%",
-                width: "5%",
-                background: "$blackMuted",
-                backdropFilter: "blur(400px)",
-                borderTopLeftRadius: "$md",
-                borderBottomLeftRadius: "$md",
-              }}
-              onClick={handleLeftClick}
-              disabled={activeIndex === 0}
-            >
-              <CaretLeft />
-            </Button>
+          {/* track view */}
+          <VStack style={{ width: "100%" }} gap={6}>
+            <Text css={{ fontSize: 15, color: "$gray" }}>
+              {activeIndex} / {issue?.issue.pages.length! - 1}
+            </Text>
             <Box
+              onMouseOver={() => setMouseOver(true)}
+              onMouseDown={() => setMouseOver(false)}
               css={{
-                width: "90%",
-                height: "100%",
+                background: "$blackMuted",
+                backdropFilter: "blur(50px)",
+                borderRadius: "$md",
+                width: "100%",
                 display: "flex",
                 alignContent: "center",
                 alignItems: "center",
+                lineHeight: 80,
+                overflowY: "hidden",
               }}
             >
-              <AnimatedBox
-                initial={{
-                  width: 0,
-                }}
-                transition={{
-                  duration: 0.3,
-                  bounce: true,
-                  ease: "easeOut",
-                }}
-                animate={{
-                  width: `${(activeIndex / issue?.issue.pages.length!) * 100}%`,
-                }}
-                ref={scrubRef}
+              <Button
                 css={{
                   display: "flex",
                   alignContent: "center",
                   alignItems: "center",
-                  gap: "$md",
-                  height: "80%",
+                  justifyContent: "center",
+                  color: "$white",
                   padding: "$sm",
+                  height: "100%",
+                  width: "5%",
+                  background: "$blackMuted",
+                  backdropFilter: "blur(400px)",
+                  borderTopLeftRadius: "$md",
+                  borderBottomLeftRadius: "$md",
+                }}
+                onClick={handleLeftClick}
+                disabled={activeIndex === 0}
+              >
+                <CaretLeft />
+              </Button>
+              <Box
+                css={{
+                  width: "90%",
+                  height: "100%",
+                  display: "flex",
+                  alignContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <AnimatedBox
+                  initial={{
+                    width: 0,
+                  }}
+                  transition={{
+                    duration: 0.3,
+                    bounce: true,
+                    ease: "easeOut",
+                  }}
+                  animate={{
+                    width: `${
+                      (activeIndex / issue?.issue.pages.length!) * 100
+                    }%`,
+                  }}
+                  ref={scrubRef}
+                  css={{
+                    display: "flex",
+                    alignContent: "center",
+                    alignItems: "center",
+                    gap: "$md",
+                    height: "80%",
+                    padding: "$sm",
+                    borderTopRightRadius: "$md",
+                    borderBottomRightRadius: "$md",
+                    overflowY: "scroll",
+                    background: "$primary",
+                  }}
+                />
+              </Box>
+              <Button
+                onMouseOver={() => setMouseOver(true)}
+                onMouseLeave={() => setMouseOver(false)}
+                css={{
+                  display: "flex",
+                  alignContent: "center",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  color: "$white",
+                  padding: "$sm",
+                  background: "$blackMuted",
+                  backdropFilter: "blur(400px)",
+                  left: "95%",
+                  height: "100%",
+                  width: "5%",
                   borderTopRightRadius: "$md",
                   borderBottomRightRadius: "$md",
-                  overflowY: "scroll",
-                  background: "$primary",
                 }}
-              />
+                disabled={activeIndex === issue?.issue.pages.length! - 1}
+                onClick={handleRightClick}
+              >
+                <CaretRight />
+              </Button>
             </Box>
-            <Button
-              onMouseOver={() => setMouseOver(true)}
-              onMouseLeave={() => setMouseOver(false)}
-              css={{
-                display: "flex",
-                alignContent: "center",
-                alignItems: "center",
-                justifyContent: "center",
-                color: "$white",
-                padding: "$sm",
-                background: "$blackMuted",
-                backdropFilter: "blur(400px)",
-                left: "95%",
-                height: "100%",
-                width: "5%",
-                borderTopRightRadius: "$md",
-                borderBottomRightRadius: "$md",
-              }}
-              disabled={activeIndex === issue?.issue.pages.length! - 1}
-              onClick={handleRightClick}
-            >
-              <CaretRight />
-            </Button>
-          </Box>
+          </VStack>
         </AnimatedBox>
       )}
       {/* Panel View */}

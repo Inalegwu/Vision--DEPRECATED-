@@ -9,7 +9,7 @@ import { DrizzleError, eq } from "drizzle-orm";
 import { publicProcedure, router } from "@src/trpc";
 import { RarExtractor, ZipExtractor } from "@shared/extractors";
 import { collections, issues, pages } from "@shared/schema";
-import { convertToImageUrl, decodeMetaData, generateUUID } from "@shared/utils";
+import { convertToImageUrl, generateUUID } from "@shared/utils";
 
 export const libraryRouter = router({
   addToLibrary: publicProcedure.mutation(async ({ ctx }) => {
