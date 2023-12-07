@@ -50,7 +50,7 @@ const common: Configuration = {
     new CopyPlugin({
       patterns: [
         {
-          from: "node_modules/better-sqlite3/",
+          from: "root/node_modules/better-sqlite3/",
           to: "out/node_modules/better-sqlite3/",
         },
       ],
