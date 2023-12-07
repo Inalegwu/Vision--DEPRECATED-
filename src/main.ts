@@ -32,6 +32,8 @@ const createWindow = () => {
 
   mainWindow.webContents.on("did-finish-load", () => {
     mainWindow.show();
+    mainWindow.webContents.setZoomFactor(1);
+    mainWindow.webContents.setVisualZoomLevelLimits(1, 1);
   });
 
   // mainWindow.webContents.openDevTools({ mode: "right" });

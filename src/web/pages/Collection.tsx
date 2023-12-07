@@ -1,4 +1,4 @@
-import { useLinkClickHandler, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { HStack, IssueCard, Layout, Spinner, VStack } from "@components/index";
 import {
   AnimatedBox,

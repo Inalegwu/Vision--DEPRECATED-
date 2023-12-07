@@ -1,3 +1,4 @@
+import { IZipEntry } from "adm-zip";
 import { ArcFile } from "node-unrar-js";
 import { v4 } from "uuid";
 
@@ -36,6 +37,25 @@ export function sortPages(a: ArcFile<Uint8Array>, b: ArcFile<Uint8Array>) {
   }
 
   return a.fileHeader.name > b.fileHeader.name ? 1 : -1;
+}
+
+export function sortZipPages(a: IZipEntry, b: IZipEntry) {
+  const aName = a.name.replace(/\.[^/.]+$/, "");
+  const bName = b.name.replace(/\.[^/.]+$/, "");
+
+  const aMatch = aName.match(/(\d+)$/g);
+  const bMatch = bName.match(/(\d+)$/g);
+
+  if (aMatch && aMatch.length === 1 && bMatch && bMatch.length === 1) {
+    const aPrefix = aName.substring(0, aName.length - aMatch[0].length);
+    const bPrefix = aName.substring(0, bName.length - bMatch[0].length);
+
+    if (aPrefix.toLocaleLowerCase() === bPrefix.toLocaleLowerCase()) {
+      return parseInt(aMatch[0], 10) > parseInt(bMatch[0], 10) ? 1 : -1;
+    }
+  }
+
+  return a > b ? 1 : -1;
 }
 
 export function clamp(num: number, min: number, max: number): number {
@@ -87,4 +107,11 @@ export function getRandomIndex(min: number, max: number): number {
   min = Math.ceil(min);
   max = Math.floor(max);
   return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+export function decodeMetaData(data: ArrayBufferLike) {
+  const text = new TextDecoder("utf-8");
+  const decodedMeta = text.decode(data);
+
+  return decodedMeta;
 }
