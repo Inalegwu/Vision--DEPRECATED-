@@ -8,7 +8,7 @@ const isDev = process.env.NODE_ENV === "development";
 
 const common: Configuration = {
   mode: isDev ? "development" : "production",
-  externals: ["fsevents", "better-sqlite3"],
+  externals: ["fsevents"],
   output: {
     publicPath: "./",
     filename: "[name].js",
@@ -51,7 +51,7 @@ const common: Configuration = {
       patterns: [
         {
           from: "node_modules/better-sqlite3/",
-          to: "out/node_modules/better-sqlite3/",
+          to: "node_modules/better-sqlite3/",
         },
       ],
     }),
