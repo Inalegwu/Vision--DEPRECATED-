@@ -59,7 +59,12 @@ export default function Layout(props: LayoutProps) {
             cursor: "grab",
           }}
         />
-        <HStack gap={10}>
+        <HStack
+          gap={10}
+          alignContent="center"
+          alignItems="center"
+          justifyContent="flex-end"
+        >
           <Button
             css={{ color: "$white", "&:hover": { color: "$lightGray" } }}
             onClick={() => minimizeWindow()}

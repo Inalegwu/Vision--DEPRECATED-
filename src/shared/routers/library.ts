@@ -32,13 +32,9 @@ export const libraryRouter = router({
 
       // handle zip files
       if (filePaths[0].includes("cbz")) {
-        const { sortedFiles, metaDataFile: md } = await ZipExtractor(
+        const { sortedFiles, metaDataFile: _md } = await ZipExtractor(
           filePaths[0]
         );
-
-        const decodedMeta = decodeMetaData(md?.data!);
-
-        console.log(decodedMeta);
 
         const thumbnailUrl = convertToImageUrl(sortedFiles[0].data.buffer);
 
@@ -89,17 +85,19 @@ export const libraryRouter = router({
       }
       // handle rar files
       else {
-        console.log(filePaths);
-        const { metaDataFile: md, sortedFiles } = await RarExtractor(
+        const { metaDataFile: _md, sortedFiles } = await RarExtractor(
           filePaths[0]
         );
 
-        const decodedMeta = decodeMetaData(md?.extraction?.buffer!);
+        console.log(sortedFiles.length);
 
-        console.log(decodedMeta);
-
+        // in the event the first item is a folder
+        // the buffer will be undefined , so we can move on
+        // to the next item , this will be the first image file
+        // in that folder
         const thumbnailUrl = convertToImageUrl(
-          sortedFiles[0]?.extraction?.buffer!
+          sortedFiles[0]?.extraction?.buffer ||
+            sortedFiles[1]?.extraction?.buffer!
         );
 
         const name = sortedFiles[0]?.fileHeader.name

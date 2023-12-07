@@ -1,11 +1,19 @@
 import { Issue } from "@shared/types";
-import { AnimatedBox, Box, Image, LinkButton, Text } from "./atoms";
+import { AnimatedBox, Box, Image, Text } from "./atoms";
+import { useNavigate } from "react-router-dom";
+import { useCallback } from "react";
 
 type Props = {
   issue: Issue;
 };
 
 export default function IssueCard(props: Props) {
+  const router = useNavigate();
+
+  const handleClick = useCallback(() => {
+    router(`/${props.issue.id}`);
+  }, [props.issue]);
+
   return (
     <AnimatedBox
       initial={{
@@ -26,6 +34,7 @@ export default function IssueCard(props: Props) {
           cursor: "pointer",
         },
       }}
+      onClick={handleClick}
     >
       <Box
         css={{
@@ -48,11 +57,7 @@ export default function IssueCard(props: Props) {
         />
       </Box>
       <Box css={{ width: 170 }}>
-        <LinkButton to={`/${props.issue.id}`}>
-          <Text css={{ fontSize: 13, color: "$white" }}>
-            {props.issue.name}
-          </Text>
-        </LinkButton>
+        <Text css={{ fontSize: 13, color: "$white" }}>{props.issue.name}</Text>
       </Box>
     </AnimatedBox>
   );

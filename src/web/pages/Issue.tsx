@@ -4,18 +4,13 @@ import { useNavigate, useParams } from "react-router-dom";
 import { IssueParams } from "@shared/types";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { CaretLeft, CaretRight, CornersOut } from "@phosphor-icons/react";
-import {
-  Box,
-  LinkButton,
-  Text,
-  AnimatedBox,
-  Button,
-} from "../components/atoms";
+import { Box, LinkButton, Text, AnimatedBox, Button } from "@components/atoms";
 import { useAtom } from "jotai";
 import { layoutAtom } from "@src/web/state";
 import { DoublePage, SinglePage } from "@components/index";
 import { useKeyPress, useWindow } from "@src/web/hooks";
 import { LOADING_PHRASES, getRandomIndex } from "@shared/utils";
+import toast from "react-hot-toast";
 
 export default function Issue() {
   const router = useNavigate();
@@ -33,9 +28,16 @@ export default function Issue() {
   const [readerLayout] = useAtom(layoutAtom);
 
   const { data: issue, isLoading: loadingIssue } =
-    trpcReact.issue.getIssue.useQuery({
-      id: issueId,
-    });
+    trpcReact.issue.getIssue.useQuery(
+      {
+        id: issueId,
+      },
+      {
+        onError: (err) => {
+          toast.error(err.message);
+        },
+      }
+    );
 
   const { mutate: maximizeWindow } =
     trpcReact.window.maximizeWindow.useMutation();
