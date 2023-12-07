@@ -5,11 +5,11 @@ import { TRPCError } from "@trpc/server";
 import { trackEvent } from "@aptabase/electron/main";
 import { UnrarError } from "node-unrar-js";
 import { SqliteError } from "better-sqlite3";
-import { RarExtractor, ZipExtractor } from "@shared/extractors";
 import { DrizzleError, eq } from "drizzle-orm";
+import { publicProcedure, router } from "@src/trpc";
+import { RarExtractor, ZipExtractor } from "@shared/extractors";
 import { collections, issues, pages } from "@shared/schema";
 import { convertToImageUrl, decodeMetaData, generateUUID } from "@shared/utils";
-import { publicProcedure, router } from "@src/trpc";
 
 export const libraryRouter = router({
   addToLibrary: publicProcedure.mutation(async ({ ctx }) => {
@@ -72,7 +72,7 @@ export const libraryRouter = router({
           });
 
         sortedFiles.forEach(async (v, idx) => {
-          const content = await convertToImageUrl(v.data.buffer);
+          const content = convertToImageUrl(v.data.buffer);
 
           await ctx.db.insert(pages).values({
             id: generateUUID(),
