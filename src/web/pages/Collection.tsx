@@ -1,5 +1,12 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { HStack, IssueCard, Layout, Spinner, VStack } from "@components/index";
+import {
+  HStack,
+  IssueCard,
+  IssueSkeleton,
+  Layout,
+  Spinner,
+  VStack,
+} from "@components/index";
 import {
   AnimatedBox,
   Box,
@@ -15,6 +22,7 @@ import { trpcReact } from "@src/shared/config";
 import { useCallback, useState } from "react";
 import { AnimatePresence } from "framer-motion";
 import toast from "react-hot-toast";
+import { FALSE_ARRAY } from "@shared/utils";
 
 export default function Collection() {
   const router = useNavigate();
@@ -26,7 +34,7 @@ export default function Collection() {
   const [deleteModalVisible, setDeleteModalVisible] = useState<boolean>(false);
   const [name, setName] = useState<string>("");
 
-  const { data: collection, isLoading: _getting } =
+  const { data: collection, isLoading: getting } =
     trpcReact.library.getCollectionById.useQuery(
       {
         collectionId: collectionId!,
@@ -403,6 +411,7 @@ export default function Collection() {
           {collection?.collection?.issues.map((v) => {
             return <IssueCard issue={v} key={v.id} />;
           })}
+          {getting && FALSE_ARRAY.map((v) => <IssueSkeleton key={v} />)}
           <Button
             onClick={() => setIssuesListVisible(true)}
             css={{

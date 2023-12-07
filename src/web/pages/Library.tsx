@@ -10,6 +10,7 @@ import {
   Spinner,
   IssueCard,
   CollectionCard,
+  IssueSkeleton,
 } from "@components/index";
 import {
   AnimatedBox,
@@ -21,7 +22,11 @@ import {
   Text,
 } from "@components/atoms";
 import { AnimatePresence } from "framer-motion";
-import { LOADING_PHRASES, getRandomIndex } from "@src/shared/utils";
+import {
+  FALSE_ARRAY,
+  LOADING_PHRASES,
+  getRandomIndex,
+} from "@src/shared/utils";
 
 export default function Library() {
   const utils = trpcReact.useUtils();
@@ -79,40 +84,6 @@ export default function Library() {
   const create = useCallback(() => {
     createCollection({ name: collectionName });
   }, [collectionName]);
-
-  if (fetchingLibraryContent) {
-    return (
-      <Layout>
-        <Box
-          css={{
-            width: "100%",
-            height: "100%",
-            display: "flex",
-            alignContent: "center",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <Box
-            css={{
-              display: "flex",
-              flexDirection: "column",
-              alignContent: "center",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: "$xl",
-            }}
-          >
-            <Spinner size={20} />
-            <Text css={{ fontSize: 15 }}>
-              {LOADING_PHRASES[phraseIndex]}
-              ...
-            </Text>
-          </Box>
-        </Box>
-      </Layout>
-    );
-  }
 
   return (
     <Layout>
@@ -281,6 +252,10 @@ export default function Library() {
           {library?.issues.map((v) => {
             return <IssueCard issue={v} key={v.id} />;
           })}
+          {fetchingLibraryContent &&
+            FALSE_ARRAY.map((v) => {
+              return <IssueSkeleton key={v} />;
+            })}
         </Box>
       </Box>
     </Layout>

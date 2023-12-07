@@ -20,6 +20,7 @@ export const libraryRouter = router({
         defaultPath: ctx.app.getPath("downloads"),
         buttonLabel: "Add To Library",
         properties: ["openFile"],
+        filters: [{ name: "Comic Book Archive", extensions: ["cbz", "cbr"] }],
       });
 
       if (canceled) {

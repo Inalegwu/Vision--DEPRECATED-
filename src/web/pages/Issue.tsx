@@ -73,7 +73,6 @@ export default function Issue() {
   }, [activeIndex, setActiveIndex]);
 
   useKeyPress((e) => {
-    console.log(e);
     if (e.key === "[" || e.key === "ArrowRight") {
       handleLeftClick();
     } else if (e.key === "]" || e.key === "ArrowRight") {

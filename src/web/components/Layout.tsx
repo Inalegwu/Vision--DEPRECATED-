@@ -31,7 +31,7 @@ export default function Layout(props: LayoutProps) {
           width: "100%",
           height: "4%",
           display: "flex",
-          padding: "$lg",
+          padding: "$xl",
           alignContent: "center",
           alignItems: "center",
           justifyContent: "space-between",
