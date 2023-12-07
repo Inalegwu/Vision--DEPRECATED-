@@ -1,13 +1,14 @@
 import { Configuration } from "webpack";
 import HtmlWebpackPlugin from "html-webpack-plugin";
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
+import CopyPlugin from "copy-webpack-plugin";
 import path from "path";
 
 const isDev = process.env.NODE_ENV === "development";
 
 const common: Configuration = {
   mode: isDev ? "development" : "production",
-  externals: ["fsevents"],
+  externals: ["fsevents", "better-sqlite3"],
   output: {
     publicPath: "./",
     filename: "[name].js",
@@ -45,6 +46,16 @@ const common: Configuration = {
   },
   watch: isDev,
   devtool: isDev ? "source-map" : undefined,
+  plugins: [
+    new CopyPlugin({
+      patterns: [
+        {
+          from: "node_modules/better-sqlite3/",
+          to: "out/node_modules/better-sqlite3/",
+        },
+      ],
+    }),
+  ],
 };
 
 const main: Configuration = {
