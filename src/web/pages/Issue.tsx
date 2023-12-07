@@ -252,6 +252,7 @@ export default function Issue() {
                 borderBottomLeftRadius: "$md",
               }}
               onClick={handleLeftClick}
+              disabled={activeIndex === 0}
             >
               <CaretLeft />
             </Button>
@@ -309,6 +310,7 @@ export default function Issue() {
                 borderTopRightRadius: "$md",
                 borderBottomRightRadius: "$md",
               }}
+              disabled={activeIndex === issue?.issue.pages.length! - 1}
               onClick={handleRightClick}
             >
               <CaretRight />

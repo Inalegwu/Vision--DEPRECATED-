@@ -109,7 +109,7 @@ export function getRandomIndex(min: number, max: number): number {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-export function decodeMetaData(data: ArrayBufferLike) {
+export function decodeMetaData(data: ArrayBufferLike | Buffer) {
   const text = new TextDecoder("utf-8");
   const decodedMeta = text.decode(data);
 

@@ -39,9 +39,9 @@ function SinglePage({ pages, activeIndex }: LayoutProps) {
         src={pages[activeIndex].content}
         alt={pages[activeIndex].name}
         css={{
-          width: "50%",
+          width: "60%",
           height: "100%",
-          aspectRatio: 16 / 9,
+          aspectRatio: 1,
           borderRight: "1px solid $gray",
           borderLeft: "0.3px solid $gray",
         }}

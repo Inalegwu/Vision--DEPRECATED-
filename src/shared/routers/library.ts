@@ -29,8 +29,8 @@ export const libraryRouter = router({
         };
       }
 
+      // handle zip files
       if (filePaths[0].includes("cbz")) {
-        console.log("Continuing With Zip....");
         const { sortedFiles, metaDataFile: md } = await ZipExtractor(
           filePaths[0]
         );
@@ -85,7 +85,9 @@ export const libraryRouter = router({
           status: true,
           reason: Reasons.NONE,
         };
-      } else {
+      }
+      // handle rar files
+      else {
         console.log(filePaths);
         const { metaDataFile: md, sortedFiles } = await RarExtractor(
           filePaths[0]
