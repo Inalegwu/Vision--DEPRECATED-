@@ -2,9 +2,9 @@ import z from "zod";
 import { TRPCError } from "@trpc/server";
 import { trackEvent } from "@aptabase/electron/main";
 import { SqliteError } from "better-sqlite3";
-import { issues, pages } from "../schema";
+import { issues, pages } from "@shared/schema";
 import { DrizzleError, eq } from "drizzle-orm";
-import { publicProcedure, router } from "../../trpc";
+import { publicProcedure, router } from "@src/trpc";
 
 export const issueRouter = router({
   getIssue: publicProcedure
