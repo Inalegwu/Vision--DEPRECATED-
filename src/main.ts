@@ -2,7 +2,7 @@ import path from "path";
 import { appRouter } from "./shared/routers/_app";
 import { createContext } from "./shared/context";
 import { createIPCHandler } from "electron-trpc/main";
-import { initialize, trackEvent } from "@aptabase/electron/main";
+import { initialize } from "@aptabase/electron/main";
 import { BrowserWindow, app, screen } from "electron";
 
 initialize("A-EU-0154526847");
@@ -30,19 +30,12 @@ const createWindow = () => {
 
   mainWindow.loadFile("dist/index.html");
 
-  mainWindow.webContents.on("did-finish-load", () => {
-    mainWindow.show();
-    mainWindow.webContents.setZoomFactor(1);
-    mainWindow.webContents.setVisualZoomLevelLimits(1, 1);
-  });
-
-  // mainWindow.webContents.openDevTools({ mode: "right" });
+  mainWindow.webContents.openDevTools({ mode: "right" });
 };
 
 app.setName("Vision");
 
 app.whenReady().then(() => {
-  trackEvent("Window Created");
   createWindow();
 });
 

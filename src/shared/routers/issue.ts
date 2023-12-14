@@ -39,7 +39,7 @@ export const issueRouter = router({
       try {
         ctx.db.transaction(async (tx) => {
           trackEvent("Issue deleted", {
-            id: input.id,
+            deletedIssueId: input.id,
           });
           await tx.delete(pages).where(eq(pages.issueId, input.id));
           await tx.delete(issues).where(eq(issues.id, input.id));

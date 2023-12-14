@@ -1,8 +1,8 @@
-// handles extraction of .cbz files
 import { sortZipPages } from "@shared/utils";
 import Zip from "adm-zip";
 import * as fs from "fs";
 
+// handles extraction of .cbz files
 export default async function ZipExtractor(filePath: string) {
   const file = fs.readFileSync(filePath);
   const zip = new Zip(file);

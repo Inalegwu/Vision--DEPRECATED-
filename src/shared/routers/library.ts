@@ -89,8 +89,6 @@ export const libraryRouter = router({
           filePaths[0]
         );
 
-        console.log(sortedFiles.length);
-
         // in the event the first item is a folder
         // the buffer will be undefined , so we can move on
         // to the next item , this will be the first image file

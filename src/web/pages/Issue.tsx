@@ -223,9 +223,11 @@ export default function Issue() {
           </Box>
           {/* track view */}
           <VStack style={{ width: "100%" }} gap={6}>
-            <Text css={{ fontSize: 15, color: "$gray" }}>
-              {activeIndex} / {issue?.issue.pages.length! - 1}
-            </Text>
+            {!loadingIssue && (
+              <Text css={{ fontSize: 15, color: "$gray" }}>
+                {activeIndex} / {issue?.issue.pages.length! - 1}
+              </Text>
+            )}
             <Box
               onMouseOver={() => setMouseOver(true)}
               onMouseDown={() => setMouseOver(false)}

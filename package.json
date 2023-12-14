@@ -22,17 +22,29 @@
   "build": {
     "appId": "com.vision.app",
     "productName": "Vision",
-    "artifactName": "${productName}-${version}-${platform}-${arch}.${ext}",
+    "artifactName": "${productName}_${version}_${platform}_${arch}.${ext}",
     "buildDependenciesFromSource": true,
     "files": [
       "dist/**/*"
     ],
     "directories": {
-      "output": "release"
+      "output": "release/${version}"
     },
     "win": {
-      "target": "msi",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
       "icon": "assets/icon.png"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "deleteAppDataOnUninstall": true
     }
   },
   "electronmon": {
