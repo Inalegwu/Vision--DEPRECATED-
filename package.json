@@ -24,11 +24,18 @@
     "productName": "Vision",
     "artifactName": "${productName}_${version}_${platform}_${arch}.${ext}",
     "buildDependenciesFromSource": true,
+    "icon": "assets/icon.png",
     "files": [
       "dist/**/*"
     ],
     "directories": {
       "output": "release/${version}"
+    },
+    "mac": {
+      "target": [
+        "dmg",
+        "zip"
+      ]
     },
     "win": {
       "target": [
@@ -38,8 +45,13 @@
             "x64"
           ]
         }
-      ],
-      "icon": "assets/icon.png"
+      ]
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ]
     },
     "nsis": {
       "oneClick": false,

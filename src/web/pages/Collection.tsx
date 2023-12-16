@@ -29,6 +29,11 @@ export default function Collection() {
   const utils = trpcReact.useUtils();
   const { collectionId } = useParams<CollectionParams>();
 
+  if (!collectionId) {
+    router("/");
+    return;
+  }
+
   const [issuesListVisible, setIssuesListVisible] = useState<boolean>(false);
   const [editingName, setEditingName] = useState<boolean>(false);
   const [deleteModalVisible, setDeleteModalVisible] = useState<boolean>(false);

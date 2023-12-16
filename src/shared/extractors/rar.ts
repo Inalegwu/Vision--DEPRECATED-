@@ -24,7 +24,9 @@ export default async function RarExtractor(filePath: string) {
 
     const extractedFiles = [...extracted.files];
 
-    const sortedFiles = extractedFiles.sort(sortPages);
+    const sortedFiles = extractedFiles.sort((a, b) =>
+      sortPages(a.fileHeader.name, b.fileHeader.name)
+    );
 
     const metaDataFile = sortedFiles.find((v) =>
       v.fileHeader.name.includes("xml")

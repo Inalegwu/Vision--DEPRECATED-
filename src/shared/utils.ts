@@ -15,34 +15,11 @@ export function convertToImageUrl(buffer: ArrayBufferLike): string {
   return dataUrl;
 }
 
-// implemented based on
-// https://github.com/codedread/kthoom/blob/master/code/comics/comic-book-page-sorter.js
-// I'll have to try and understand this regex on my own , so I'll be able to extend this code if
-// necessary
-export function sortPages(a: ArcFile<Uint8Array>, b: ArcFile<Uint8Array>) {
+export function sortPages(a: string, b: string) {
   // Strip off file extension.
-  const aName = a.fileHeader.name.replace(/\.[^/.]+$/, "");
-  const bName = b.fileHeader.name.replace(/\.[^/.]+$/, "");
+  const aName = a.replace(/\.[^/.]+$/, "");
+  const bName = b.replace(/\.[^/.]+$/, "");
   // If we found numbers at the end of the filenames ...
-  const aMatch = aName.match(/(\d+)$/g);
-  const bMatch = bName.match(/(\d+)$/g);
-
-  if (aMatch && aMatch.length === 1 && bMatch && bMatch.length === 1) {
-    const aPrefix = aName.substring(0, aName.length - aMatch[0].length);
-    const bPrefix = aName.substring(0, bName.length - bMatch[0].length);
-
-    if (aPrefix.toLocaleLowerCase() === bPrefix.toLocaleLowerCase()) {
-      return parseInt(aMatch[0], 10) > parseInt(bMatch[0], 10) ? 1 : -1;
-    }
-  }
-
-  return a.fileHeader.name > b.fileHeader.name ? 1 : -1;
-}
-
-export function sortZipPages(a: IZipEntry, b: IZipEntry) {
-  const aName = a.name.replace(/\.[^/.]+$/, "");
-  const bName = b.name.replace(/\.[^/.]+$/, "");
-
   const aMatch = aName.match(/(\d+)$/g);
   const bMatch = bName.match(/(\d+)$/g);
 
@@ -68,6 +45,7 @@ export function debounce<K, T>(callback: (args: K) => T, args: K) {
   setTimeout(() => callback(args), 4000);
 }
 
+// loading screen phrases
 export const LOADING_PHRASES = [
   "Fighting Darkseid",
   "Making sure Joker hasn't escaped again",
