@@ -1,9 +1,16 @@
-import { HashRouter, Routes, Route } from "react-router-dom";
-import { Collection, EditIssue, FirstLaunch, Issue, Library } from "./pages";
-import { Toaster } from "react-hot-toast";
 import { enableReactTracking } from "@legendapp/state/config/enableReactTracking";
+import { configureObservablePersistence } from '@legendapp/state/persist';
+import { ObservablePersistLocalStorage } from '@legendapp/state/persist-plugins/local-storage';
+import { Toaster } from "react-hot-toast";
+import { HashRouter, Route, Routes } from "react-router-dom";
+import { Collection, EditIssue, FirstLaunch, Issue, Library } from "./pages";
+
 
 enableReactTracking({ auto: true });
+
+configureObservablePersistence({
+  pluginLocal:ObservablePersistLocalStorage
+})
 
 export const App = () => {
   return (

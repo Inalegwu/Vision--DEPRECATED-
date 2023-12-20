@@ -40,7 +40,9 @@ export default function Library() {
     getRandomIndex(0, LOADING_PHRASES.length - 1)
   );
 
-  const firstLaunchState = globalState$.get();
+  const state = globalState$.get();
+
+  console.log(state);
 
   const { mutate: addToLibrary, isLoading: addingToLibrary } =
     trpcReact.library.addToLibrary.useMutation({
@@ -60,7 +62,7 @@ export default function Library() {
 
   useEffect(() => {
      // is the the users first launch of the app ???
-    if (!firstLaunchState.appState.firstLaunch) {
+    if (state.appState.firstLaunch) {
       // go to the first launch page if the application firstLaunch is false
       // which is the default
       router("/first_launch", {
