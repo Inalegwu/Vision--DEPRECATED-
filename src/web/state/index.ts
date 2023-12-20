@@ -1,2 +1,2 @@
 export * from "./readerLayout";
-export * from "./application";
+export * from "./global";

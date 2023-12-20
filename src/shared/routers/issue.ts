@@ -1,10 +1,10 @@
-import z from "zod";
-import { TRPCError } from "@trpc/server";
 import { trackEvent } from "@aptabase/electron/main";
-import { SqliteError } from "better-sqlite3";
 import { issues, pages } from "@shared/schema";
-import { DrizzleError, eq } from "drizzle-orm";
 import { publicProcedure, router } from "@src/trpc";
+import { TRPCError } from "@trpc/server";
+import { SqliteError } from "better-sqlite3";
+import { DrizzleError, eq } from "drizzle-orm";
+import z from "zod";
 
 export const issueRouter = router({
   getIssue: publicProcedure
@@ -32,7 +32,7 @@ export const issueRouter = router({
         },
       };
     }),
-  deleteIssue: publicProcedure
+  removeIssue: publicProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
       trackEvent("Delete Issue");
@@ -48,12 +48,18 @@ export const issueRouter = router({
         return true;
       } catch (e) {
         if (e instanceof DrizzleError) {
+          trackEvent("issue remove failed", {
+            error: e.message,
+          });
           throw new TRPCError({
             code: "INTERNAL_SERVER_ERROR",
             message: "Couldn't Delete Issue",
             cause: e.cause,
           });
         } else {
+          trackEvent("issue remove failed", {
+            error: "unknown",
+          });
           throw new TRPCError({
             code: "INTERNAL_SERVER_ERROR",
             message: "Couldn't Delete Issue",

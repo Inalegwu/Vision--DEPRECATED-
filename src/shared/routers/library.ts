@@ -1,15 +1,15 @@
-import z from "zod";
-import { dialog } from "electron";
-import { Reasons } from "@shared/types";
-import { TRPCError } from "@trpc/server";
 import { trackEvent } from "@aptabase/electron/main";
-import { UnrarError } from "node-unrar-js";
-import { SqliteError } from "better-sqlite3";
-import { DrizzleError, eq } from "drizzle-orm";
-import { publicProcedure, router } from "@src/trpc";
 import { RarExtractor, ZipExtractor } from "@shared/extractors";
 import { collections, issues, pages } from "@shared/schema";
+import { Reasons } from "@shared/types";
 import { convertToImageUrl, generateUUID } from "@shared/utils";
+import { publicProcedure, router } from "@src/trpc";
+import { TRPCError } from "@trpc/server";
+import { SqliteError } from "better-sqlite3";
+import { DrizzleError, eq } from "drizzle-orm";
+import { dialog } from "electron";
+import { UnrarError } from "node-unrar-js";
+import z from "zod";
 
 export const libraryRouter = router({
   addToLibrary: publicProcedure.mutation(async ({ ctx }) => {
@@ -36,12 +36,22 @@ export const libraryRouter = router({
           filePaths[0]
         );
 
-        const thumbnailUrl = convertToImageUrl(sortedFiles[0].data.buffer);
+        const thumbnailUrl = convertToImageUrl(
+          sortedFiles[0]?.data?.buffer || sortedFiles[1]?.data?.buffer!
+        );
+
+        console.log(sortedFiles[0]?.name,sortedFiles[1]?.name)
+
+
+        console.log();
 
         const name = sortedFiles[0]?.name
           .replace(/\.[^/.]+$/, "")
           .replace(/(\d+)$/g, "")
-          .replace("-", "");
+          .replace("-", "") || filePaths[0].replace(/^.*[\\\/]/, '').replace(/\.[^/.]+$/, "").replace(/(\d+)$/g, "")
+          .replace("-", "")
+
+        console.log(name)
 
         const issueExists = await ctx.db.query.issues.findFirst({
           where: (issues, { eq }) => eq(issues.name, name),
@@ -101,6 +111,7 @@ export const libraryRouter = router({
         const name = sortedFiles[0]?.fileHeader.name
           .replace(/\.[^/.]+$/, "")
           .replace(/(\d+)$/g, "")
+          .replace("-", "") || filePaths[0].replace(/^.*[\\\/]/, '').replace(/\.[^/.]+$/, "").replace(/(\d+)$/g, "")
           .replace("-", "");
 
         const issueExists = await ctx.db.query.issues.findFirst({
@@ -178,16 +189,20 @@ export const libraryRouter = router({
     try {
       trackEvent("Load Library");
 
+      // find all the users saved issues
       const issues = await ctx.db.query.issues.findMany({
         orderBy: (issues, { asc }) => asc(issues.name),
       });
 
+      // get all the users collections from storage
       const collections = await ctx.db.query.collections.findMany({
         with: {
           issues: true,
         },
       });
 
+      // filter out all issues that are already included
+      // within collections
       const merged = issues.filter(
         (k) => !collections.find((l) => l.issues.find((m) => m.id === k.id))
       );

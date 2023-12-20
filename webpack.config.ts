@@ -8,7 +8,7 @@ const isDev = process.env.NODE_ENV === "development";
 
 const common: Configuration = {
   mode: isDev ? "development" : "production",
-  externals: ["fsevents", "better-sqlite3"],
+  externals: ["fsevents"],
   output: {
     publicPath: "./",
     filename: "[name].js",
@@ -20,7 +20,6 @@ const common: Configuration = {
   resolve: {
     extensions: [".js", ".ts", ".jsx", ".tsx", ".json"],
     alias: {
-      "@/": path.resolve(__dirname),
       "@src": path.resolve(__dirname, "src/"),
       "@shared": path.resolve(__dirname, "src/shared/"),
       "@components": path.resolve(__dirname, "src/web/components/"),

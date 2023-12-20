@@ -1,6 +1,9 @@
 import { HashRouter, Routes, Route } from "react-router-dom";
-import { Collection, EditIssue, Issue, Library } from "./pages";
+import { Collection, EditIssue, FirstLaunch, Issue, Library } from "./pages";
 import { Toaster } from "react-hot-toast";
+import { enableReactTracking } from "@legendapp/state/config/enableReactTracking";
+
+enableReactTracking({ auto: true });
 
 export const App = () => {
   return (
@@ -10,6 +13,7 @@ export const App = () => {
         <Route path="/:issueId" element={<Issue />} />
         <Route path="/editIssue/:issueId" element={<EditIssue />} />
         <Route path="/collections/:collectionId" element={<Collection />} />
+        <Route path="/first_launch" element={<FirstLaunch />} />
       </Routes>
       <Toaster
         position="bottom-center"

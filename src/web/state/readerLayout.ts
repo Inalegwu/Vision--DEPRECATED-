@@ -1,7 +1,10 @@
-import { atomWithStorage } from "jotai/utils";
-import { ReaderLayout } from "../../shared/types";
+import { ReaderLayout } from "@shared/types";
+import { observable } from "@legendapp/state";
 
-export const layoutAtom = atomWithStorage<ReaderLayout>(
-  "reader__layout",
-  "SinglePage"
-);
+type ReaderLayoutState = {
+  layout: ReaderLayout;
+};
+
+export const readerLayout = observable<ReaderLayoutState>({
+  layout: "SinglePage",
+});

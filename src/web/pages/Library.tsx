@@ -1,17 +1,3 @@
-import toast from "react-hot-toast";
-import { useCallback, useEffect, useState } from "react";
-import { trpcReact } from "@shared/config";
-import { Plus } from "@phosphor-icons/react";
-import { Reasons } from "@shared/types";
-import {
-  Layout,
-  VStack,
-  HStack,
-  Spinner,
-  IssueCard,
-  CollectionCard,
-  IssueSkeleton,
-} from "@components/index";
 import {
   AnimatedBox,
   AnimatedButton,
@@ -21,21 +7,40 @@ import {
   Input,
   Text,
 } from "@components/atoms";
-import { AnimatePresence } from "framer-motion";
+import {
+  CollectionCard,
+  HStack,
+  IssueCard,
+  IssueSkeleton,
+  Layout,
+  Spinner,
+  VStack,
+} from "@components/index";
+import { Plus } from "@phosphor-icons/react";
+import { trpcReact } from "@shared/config";
+import { Reasons } from "@shared/types";
 import {
   FALSE_ARRAY,
   LOADING_PHRASES,
   getRandomIndex,
 } from "@src/shared/utils";
+import { globalState$ } from "@src/web/state";
+import { AnimatePresence } from "framer-motion";
+import { useCallback, useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 export default function Library() {
   const utils = trpcReact.useUtils();
+  const router = useNavigate();
   const [createModalVisible, setCreateModalVisible] = useState<boolean>(false);
   const [mouseOver, setMouseOver] = useState<boolean>(false);
   const [collectionName, setCollectionName] = useState<string>("");
   const [phraseIndex, setPhraseIndex] = useState<number>(
     getRandomIndex(0, LOADING_PHRASES.length - 1)
   );
+
+  const firstLaunchState = globalState$.get();
 
   const { mutate: addToLibrary, isLoading: addingToLibrary } =
     trpcReact.library.addToLibrary.useMutation({
@@ -54,6 +59,16 @@ export default function Library() {
     });
 
   useEffect(() => {
+     // is the the users first launch of the app ???
+    if (!firstLaunchState.appState.firstLaunch) {
+      // go to the first launch page if the application firstLaunch is false
+      // which is the default
+      router("/first_launch", {
+        preventScrollReset: true,
+        replace: true,
+      });
+    }
+    
     const dismissToolTip = setTimeout(() => {
       if (!mouseOver) {
         setCreateModalVisible(false);

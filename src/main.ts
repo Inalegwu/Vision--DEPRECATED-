@@ -1,9 +1,9 @@
-import path from "path";
-import { appRouter } from "./shared/routers/_app";
-import { createContext } from "./shared/context";
-import { createIPCHandler } from "electron-trpc/main";
 import { initialize } from "@aptabase/electron/main";
 import { BrowserWindow, app, screen } from "electron";
+import { createIPCHandler } from "electron-trpc/main";
+import path from "path";
+import { createContext } from "./shared/context";
+import { appRouter } from "./shared/routers/_app";
 
 initialize("A-EU-0154526847");
 
@@ -20,7 +20,6 @@ const createWindow = () => {
     },
   });
 
-  mainWindow.hide();
 
   createIPCHandler({
     router: appRouter,
@@ -30,7 +29,7 @@ const createWindow = () => {
 
   mainWindow.loadFile("dist/index.html");
 
-  mainWindow.webContents.openDevTools({ mode: "right" });
+  // mainWindow.webContents.openDevTools({ mode: "right" });
 };
 
 app.setName("Vision");

@@ -1,3 +1,4 @@
+import toast from "react-hot-toast";
 import { Spinner, VStack } from "@components/index";
 import { trpcReact } from "@shared/config";
 import { useNavigate, useParams } from "react-router-dom";
@@ -5,12 +6,10 @@ import { IssueParams } from "@shared/types";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { CaretLeft, CaretRight, CornersOut } from "@phosphor-icons/react";
 import { Box, LinkButton, Text, AnimatedBox, Button } from "@components/atoms";
-import { useAtom } from "jotai";
-import { layoutAtom } from "@src/web/state";
 import { DoublePage, SinglePage } from "@components/index";
 import { useKeyPress, useWindow } from "@src/web/hooks";
 import { LOADING_PHRASES, getRandomIndex } from "@shared/utils";
-import toast from "react-hot-toast";
+import { readerLayout } from "@src/web/state";
 
 export default function Issue() {
   const router = useNavigate();
@@ -22,10 +21,12 @@ export default function Issue() {
     return;
   }
 
+  // internal state
   const [activeIndex, setActiveIndex] = useState<number>(0);
   const [mouseOver, setMouseOver] = useState<boolean>(false);
   const [navigationShowing, setNavigationShowing] = useState<boolean>(true);
-  const [readerLayout] = useAtom(layoutAtom);
+
+  const activeLayout = readerLayout.get();
 
   const { data: issue, isLoading: loadingIssue } =
     trpcReact.issue.getIssue.useQuery(
@@ -42,9 +43,21 @@ export default function Issue() {
   const { mutate: maximizeWindow } =
     trpcReact.window.maximizeWindow.useMutation();
 
+  // show or hide the overlay navigation when the mouse moves
   useWindow("mousemove", () => {
     if (!navigationShowing) {
       setNavigationShowing(true);
+    }
+  });
+
+  // go forward or backward a page
+  useKeyPress((e) => {
+    if (e.key === "[" || e.key === "ArrowRight") {
+      handleLeftClick();
+    } else if (e.key === "]" || e.key === "ArrowRight") {
+      handleRightClick();
+    } else {
+      return;
     }
   });
 
@@ -73,16 +86,6 @@ export default function Issue() {
     }
     setActiveIndex(activeIndex - 1);
   }, [activeIndex, setActiveIndex]);
-
-  useKeyPress((e) => {
-    if (e.key === "[" || e.key === "ArrowRight") {
-      handleLeftClick();
-    } else if (e.key === "]" || e.key === "ArrowRight") {
-      handleRightClick();
-    } else {
-      return;
-    }
-  });
 
   return (
     <Box
@@ -329,7 +332,7 @@ export default function Issue() {
         </AnimatedBox>
       )}
       {/* Panel View */}
-      {readerLayout === "SinglePage" ? (
+      {activeLayout.layout === "SinglePage" ? (
         <SinglePage pages={issue?.issue.pages} activeIndex={activeIndex} />
       ) : (
         <DoublePage pages={issue?.issue.pages} activeIndex={activeIndex} />

@@ -47,7 +47,17 @@ export type ApplicationState = {
   applicationId: string | undefined;
 };
 
+// INCOMING
+export type UIState = {};
+
 export type Point = {
   x: number;
   y: number;
+};
+
+// global state , separate from the
+// reader layout
+export type GlobalState = {
+  appState: ApplicationState;
+  uiState: UIState;
 };

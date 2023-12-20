@@ -2,6 +2,7 @@ import { Box, Button, Text } from "./atoms";
 import { X, Minus, CornersOut } from "@phosphor-icons/react";
 import { trpcReact } from "../../shared/config";
 import HStack from "./HStack";
+import { useKeyPress } from "@src/web/hooks";
 
 type LayoutProps = {
   children: React.ReactNode;
@@ -15,6 +16,13 @@ export default function Layout(props: LayoutProps) {
     trpcReact.window.minimizeWindow.useMutation();
 
   const { data: appVer } = trpcReact.version.useQuery();
+
+  // use ctrl/cmd key + q for quitting the app
+  useKeyPress((e) => {
+    if (e.ctrlKey && e.key === "q") {
+      closeWindow();
+    }
+  });
 
   return (
     <Box
