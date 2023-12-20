@@ -55,8 +55,6 @@ export const libraryRouter = router({
             .replace(/(\d+)$/g, "")
             .replace("-", "");
 
-        console.log(name);
-
         const issueExists = await ctx.db.query.issues.findFirst({
           where: (issues, { eq }) => eq(issues.name, name),
         });

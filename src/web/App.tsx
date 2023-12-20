@@ -1,14 +1,13 @@
 import { enableReactTracking } from "@legendapp/state/config/enableReactTracking";
 import { configureObservablePersistence } from "@legendapp/state/persist";
-import { ObservablePersistLocalStorage } from "@legendapp/state/persist-plugins/local-storage";
+import { ObservablePersistIndexedDB } from '@legendapp/state/persist-plugins/indexeddb';
 import { Toaster } from "react-hot-toast";
 import { HashRouter, Route, Routes } from "react-router-dom";
 import { Collection, EditIssue, FirstLaunch, Issue, Library } from "./pages";
 
 enableReactTracking({ auto: true });
-
 configureObservablePersistence({
-  pluginLocal: ObservablePersistLocalStorage,
+  pluginLocal: ObservablePersistIndexedDB,
 });
 
 export const App = () => {
