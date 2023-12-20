@@ -78,6 +78,12 @@ export const libraryRouter = router({
           });
 
         sortedFiles.forEach(async (v, idx) => {
+
+          // skip any directories in the lists
+          if(v.isDir){
+            return
+          }
+
           const content = convertToImageUrl(v.data.buffer);
 
           await ctx.db.insert(pages).values({
@@ -136,6 +142,12 @@ export const libraryRouter = router({
           .returning({ id: issues.id, name: issues.name });
 
         sortedFiles.forEach(async (v, idx) => {
+
+          // skip any directories in the list
+          if(v.fileHeader.flags.directory){
+            return
+          }
+
           const content = convertToImageUrl(v.extraction?.buffer!);
 
           await ctx.db.insert(pages).values({

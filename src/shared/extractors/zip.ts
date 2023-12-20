@@ -12,7 +12,7 @@ export default async function ZipExtractor(filePath: string) {
 
     const sortedEntries = entries
       .sort((a, b) => sortPages(a.name, b.name))
-      .map((v) => ({ name: v.name, data: v.getData() }));
+      .map((v) => ({ name: v.name, data: v.getData() ,isDir:v.isDirectory}));
 
     const metaDataFile = sortedEntries.find((v) => v.name.includes("xml"));
     const sortedFilesWithoutMetaData = sortedEntries.filter(
