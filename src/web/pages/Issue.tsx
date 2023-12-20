@@ -36,7 +36,7 @@ export default function Issue() {
         onError: (err) => {
           toast.error(err.message);
         },
-      }
+      },
     );
 
   const { mutate: maximizeWindow } =

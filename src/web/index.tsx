@@ -13,5 +13,5 @@ createRoot(document.getElementById("root") as Element).render(
         <App />
       </QueryClientProvider>
     </trpcReact.Provider>
-  </React.StrictMode>
+  </React.StrictMode>,
 );

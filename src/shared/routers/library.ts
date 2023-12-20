@@ -33,25 +33,29 @@ export const libraryRouter = router({
       // handle zip files
       if (filePaths[0].includes("cbz")) {
         const { sortedFiles, metaDataFile: _md } = await ZipExtractor(
-          filePaths[0]
+          filePaths[0],
         );
 
         const thumbnailUrl = convertToImageUrl(
-          sortedFiles[0]?.data?.buffer || sortedFiles[1]?.data?.buffer!
+          sortedFiles[0]?.data?.buffer || sortedFiles[1]?.data?.buffer!,
         );
 
-        console.log(sortedFiles[0]?.name,sortedFiles[1]?.name)
-
+        console.log(sortedFiles[0]?.name, sortedFiles[1]?.name);
 
         console.log();
 
-        const name = sortedFiles[0]?.name
-          .replace(/\.[^/.]+$/, "")
-          .replace(/(\d+)$/g, "")
-          .replace("-", "") || filePaths[0].replace(/^.*[\\\/]/, '').replace(/\.[^/.]+$/, "").replace(/(\d+)$/g, "")
-          .replace("-", "")
+        const name =
+          sortedFiles[0]?.name
+            .replace(/\.[^/.]+$/, "")
+            .replace(/(\d+)$/g, "")
+            .replace("-", "") ||
+          filePaths[0]
+            .replace(/^.*[\\\/]/, "")
+            .replace(/\.[^/.]+$/, "")
+            .replace(/(\d+)$/g, "")
+            .replace("-", "");
 
-        console.log(name)
+        console.log(name);
 
         const issueExists = await ctx.db.query.issues.findFirst({
           where: (issues, { eq }) => eq(issues.name, name),
@@ -78,10 +82,9 @@ export const libraryRouter = router({
           });
 
         sortedFiles.forEach(async (v, idx) => {
-
           // skip any directories in the lists
-          if(v.isDir){
-            return
+          if (v.isDir) {
+            return;
           }
 
           const content = convertToImageUrl(v.data.buffer);
@@ -102,7 +105,7 @@ export const libraryRouter = router({
       // handle rar files
       else {
         const { metaDataFile: _md, sortedFiles } = await RarExtractor(
-          filePaths[0]
+          filePaths[0],
         );
 
         // in the event the first item is a folder
@@ -111,14 +114,19 @@ export const libraryRouter = router({
         // in that folder
         const thumbnailUrl = convertToImageUrl(
           sortedFiles[0]?.extraction?.buffer ||
-            sortedFiles[1]?.extraction?.buffer!
+            sortedFiles[1]?.extraction?.buffer!,
         );
 
-        const name = sortedFiles[0]?.fileHeader.name
-          .replace(/\.[^/.]+$/, "")
-          .replace(/(\d+)$/g, "")
-          .replace("-", "") || filePaths[0].replace(/^.*[\\\/]/, '').replace(/\.[^/.]+$/, "").replace(/(\d+)$/g, "")
-          .replace("-", "");
+        const name =
+          sortedFiles[0]?.fileHeader.name
+            .replace(/\.[^/.]+$/, "")
+            .replace(/(\d+)$/g, "")
+            .replace("-", "") ||
+          filePaths[0]
+            .replace(/^.*[\\\/]/, "")
+            .replace(/\.[^/.]+$/, "")
+            .replace(/(\d+)$/g, "")
+            .replace("-", "");
 
         const issueExists = await ctx.db.query.issues.findFirst({
           where: (issues, { eq }) => eq(issues.name, name),
@@ -142,10 +150,9 @@ export const libraryRouter = router({
           .returning({ id: issues.id, name: issues.name });
 
         sortedFiles.forEach(async (v, idx) => {
-
           // skip any directories in the list
-          if(v.fileHeader.flags.directory){
-            return
+          if (v.fileHeader.flags.directory) {
+            return;
           }
 
           const content = convertToImageUrl(v.extraction?.buffer!);
@@ -216,7 +223,7 @@ export const libraryRouter = router({
       // filter out all issues that are already included
       // within collections
       const merged = issues.filter(
-        (k) => !collections.find((l) => l.issues.find((m) => m.id === k.id))
+        (k) => !collections.find((l) => l.issues.find((m) => m.id === k.id)),
       );
 
       return {
@@ -257,7 +264,7 @@ export const libraryRouter = router({
     .input(
       z.object({
         name: z.string().refine((v) => v.trim),
-      })
+      }),
     )
     .mutation(async ({ ctx, input }) => {
       try {
@@ -288,7 +295,7 @@ export const libraryRouter = router({
     .input(
       z.object({
         collectionId: z.string(),
-      })
+      }),
     )
     .query(async ({ ctx, input }) => {
       const collection = await ctx.db.query.collections.findFirst({
@@ -307,7 +314,7 @@ export const libraryRouter = router({
       z.object({
         issueId: z.string().refine((v) => v.trim),
         collectionId: z.string().refine((v) => v.trim),
-      })
+      }),
     )
     .mutation(async ({ ctx, input }) => {
       try {
@@ -360,7 +367,7 @@ export const libraryRouter = router({
     .input(
       z.object({
         id: z.string().refine((v) => v.trim),
-      })
+      }),
     )
     .mutation(async ({ ctx, input }) => {
       try {
@@ -496,7 +503,7 @@ export const libraryRouter = router({
       z.object({
         id: z.string(),
         newName: z.string().refine((v) => v.trim()),
-      })
+      }),
     )
     .mutation(async ({ ctx, input }) => {
       try {

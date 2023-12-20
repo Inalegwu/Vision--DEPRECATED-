@@ -9,4 +9,3 @@ export const Option = styled("option", {
   border: "none",
   outline: "none",
 });
-

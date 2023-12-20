@@ -6,4 +6,3 @@ export const AnimatedButton = styled(motion.button, {
   border: "none",
   background: "none",
 });
-

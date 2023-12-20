@@ -15,7 +15,11 @@
 		}
 	},
 	"formatter":{
-		"indentStyle": "tab",
-		"indentSize": 6
+		"indentStyle": "space",
+		"lineWidth": 80,
+		"enabled": true,
+		"lineEnding": "crlf",
+		"formatWithErrors": true,
+		"indentWidth": 2
 	}
 }

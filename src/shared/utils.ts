@@ -77,7 +77,7 @@ export const LOADING_PHRASES = [
   "Excelsior",
   "Alfred is the Real Batman , Trust Me",
   "Fending off Para-Demons",
-  "You can Tell I was Built by a DC Fan , Can't You ?"
+  "You can Tell I was Built by a DC Fan , Can't You ?",
 ];
 
 export function getRandomIndex(min: number, max: number): number {

@@ -6,7 +6,7 @@ import { sortPages } from "../utils";
 export default async function RarExtractor(filePath: string) {
   try {
     const wasmBinary = fs.readFileSync(
-      "node_modules/node-unrar-js/dist/js/unrar.wasm"
+      "node_modules/node-unrar-js/dist/js/unrar.wasm",
     );
 
     const data = Uint8Array.from(fs.readFileSync(filePath)).buffer;
@@ -25,15 +25,15 @@ export default async function RarExtractor(filePath: string) {
     const extractedFiles = [...extracted.files];
 
     const sortedFiles = extractedFiles.sort((a, b) =>
-      sortPages(a.fileHeader.name, b.fileHeader.name)
+      sortPages(a.fileHeader.name, b.fileHeader.name),
     );
 
     const metaDataFile = sortedFiles.find((v) =>
-      v.fileHeader.name.includes("xml")
+      v.fileHeader.name.includes("xml"),
     );
 
     const sortedFilesWithoutMetaData = sortedFiles.filter(
-      (v) => !v.fileHeader.name.includes("xml")
+      (v) => !v.fileHeader.name.includes("xml"),
     );
 
     return {

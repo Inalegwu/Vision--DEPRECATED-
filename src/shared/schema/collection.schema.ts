@@ -16,7 +16,7 @@ export const collections = sqliteTable(
   },
   (table) => ({
     idIdx: uniqueIndex("collection_id_idx").on(table.id),
-  })
+  }),
 );
 
 export const collectionIssues = relations(collections, ({ many }) => ({

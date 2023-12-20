@@ -8,4 +8,3 @@ export const globalState$ = observable<GlobalState>({
   },
   uiState: {},
 });
-

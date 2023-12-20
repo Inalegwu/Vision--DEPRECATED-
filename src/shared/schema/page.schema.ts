@@ -22,7 +22,7 @@ export const pages = sqliteTable(
       idIdx: uniqueIndex("id_idx").on(table.id),
       issueIdIdx: index("page_issue_id_idx").on(table.issueId),
     };
-  }
+  },
 );
 
 export const issuePageRelation = relations(pages, ({ one }) => ({

@@ -48,7 +48,7 @@ export default function Collection() {
         onSuccess: (d) => {
           setName(d?.collection?.name!);
         },
-      }
+      },
     );
 
   const { data: issues, isLoading: gettingIssues } =
@@ -87,7 +87,7 @@ export default function Collection() {
     (v: string) => {
       addIssueToLibrary({ issueId: v, collectionId: collectionId! });
     },
-    [collectionId]
+    [collectionId],
   );
 
   const updateName = useCallback(() => {

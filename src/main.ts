@@ -20,7 +20,6 @@ const createWindow = () => {
     },
   });
 
-
   createIPCHandler({
     router: appRouter,
     windows: [mainWindow],

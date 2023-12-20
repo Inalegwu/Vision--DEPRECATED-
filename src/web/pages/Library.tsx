@@ -37,7 +37,7 @@ export default function Library() {
   const [mouseOver, setMouseOver] = useState<boolean>(false);
   const [collectionName, setCollectionName] = useState<string>("");
   const [phraseIndex, setPhraseIndex] = useState<number>(
-    getRandomIndex(0, LOADING_PHRASES.length - 1)
+    getRandomIndex(0, LOADING_PHRASES.length - 1),
   );
 
   const state = globalState$.get();
@@ -61,7 +61,7 @@ export default function Library() {
     });
 
   useEffect(() => {
-     // is the the users first launch of the app ???
+    // is the the users first launch of the app ???
     if (state.appState.firstLaunch) {
       // go to the first launch page if the application firstLaunch is false
       // which is the default
@@ -70,7 +70,7 @@ export default function Library() {
         replace: true,
       });
     }
-    
+
     const dismissToolTip = setTimeout(() => {
       if (!mouseOver) {
         setCreateModalVisible(false);

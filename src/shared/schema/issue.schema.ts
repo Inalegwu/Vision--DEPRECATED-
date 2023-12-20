@@ -21,7 +21,7 @@ export const issues = sqliteTable(
     return {
       idIdx: uniqueIndex("issue_id_idx").on(table.id),
     };
-  }
+  },
 );
 
 export const pageIssueRelation = relations(issues, ({ many }) => ({
