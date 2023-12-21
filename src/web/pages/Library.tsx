@@ -42,8 +42,7 @@ export default function Library() {
 
   const state = globalState$.get();
 
-  console.log(state);
-
+  
   const { mutate: addToLibrary, isLoading: addingToLibrary } =
     trpcReact.library.addToLibrary.useMutation({
       onSuccess: (data) => {
@@ -150,7 +149,7 @@ export default function Library() {
           </Box>
         </AnimatedBox>
         {/* header */}
-        <VStack gap={6} style={{ padding: "$lg" }}>
+        <VStack gap={6} style={{ padding: "$xxxl" }}>
           <Text css={{ fontSize: 27, fontWeight: "bold" }}>My Library</Text>
           <HStack
             width="100%"
@@ -171,10 +170,10 @@ export default function Library() {
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   css={{
-                    background: "transparent",
+                    background: "$secondary",
                     borderRadius: "$md",
                     padding: "$md",
-                    backdropFilter: "blur(400px)",
+                    backdropFilter: "blur(500px)",
                     border: "0.3px solid $gray",
                     position: "absolute",
                     zIndex: 1,
@@ -214,35 +213,41 @@ export default function Library() {
                 css={{
                   color: "$white",
                   background: "$gray",
-                  padding: "$md",
+                  padding:"$lg",
                   borderRadius: "$full",
+                  display:"flex",
+                  alignContent:"center",
+                  alignItems:"center",
+                  justifyContent:"center",
                   "&:hover": {
                     background: "$primary",
                   },
                 }}
                 onClick={() => setCreateModalVisible(true)}
               >
-                <HStack alignContent="center" alignItems="center" gap={5}>
-                  <Text css={{ fontSize: 12 }}>Create Collection</Text>
-                </HStack>
+                  <Text css={{ fontSize: 12 }}>Create Collection</Text> 
               </Button>
               <AnimatedButton
                 css={{
                   color: "$white",
                   background: "$gray",
-                  padding: "$md",
+                  padding: "$lg",
                   borderRadius: "$full",
                   transition: "0.5s ease-in-out",
+                    display:"flex",
+                  alignContent:"center",
+                  alignItems:"center",
+                  justifyContent:"center",
+                  gap:"$sm",
                   "&:hover": {
                     background: "$primary",
                   },
                 }}
                 onClick={() => addToLibrary()}
               >
-                <HStack gap={5} alignContent="center" alignItems="center">
+               
                   <Text css={{ fontSize: 12 }}>Add To Library</Text>
                   <Plus size={11} />
-                </HStack>
               </AnimatedButton>
             </HStack>
           </HStack>
@@ -257,7 +262,7 @@ export default function Library() {
             flexWrap: "wrap",
             overflowY: "scroll",
             gap: "$xxxl",
-            padding: "$lg",
+            padding: "$xxxl",
             width: "100%",
             height: "90%",
             paddingBottom: "$hg",

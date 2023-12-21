@@ -13,21 +13,21 @@ const AnimatedButton = styled(motion.button, {
 });
 
 export default function FirstLaunch() {
-  const state = globalState$.get();
   const router = useNavigate();
 
-  console.log(state);
-
   useEffect(() => {
-    // set first launch to false once this page is loaded
-    console.log("First Launch");
-  }, [state]);
+     globalState$.set({
+      appState:{
+        applicationId:v4(),
+        firstLaunch:false,
+      },
+      uiState:globalState$.get().uiState
+     })
+  }, [globalState$]);
 
   const handleClick = useCallback(() => {
-    state.appState.applicationId = v4();
-    state.appState.firstLaunch = false;
     router("/");
-  }, []);
+  },[])
 
   return (
     <Layout>

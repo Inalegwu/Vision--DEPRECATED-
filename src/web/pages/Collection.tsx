@@ -1,12 +1,3 @@
-import { useNavigate, useParams } from "react-router-dom";
-import {
-  HStack,
-  IssueCard,
-  IssueSkeleton,
-  Layout,
-  Spinner,
-  VStack,
-} from "@components/index";
 import {
   AnimatedBox,
   Box,
@@ -16,13 +7,23 @@ import {
   LinkButton,
   Text,
 } from "@components/atoms";
-import { CollectionParams } from "@src/shared/types";
+import {
+  HStack,
+  IssueCard,
+  IssueSkeleton,
+  Layout,
+  Spinner,
+  VStack,
+} from "@components/index";
 import { CaretLeft, PencilCircle, Plus, Trash, X } from "@phosphor-icons/react";
-import { trpcReact } from "@src/shared/config";
-import { useCallback, useState } from "react";
-import { AnimatePresence } from "framer-motion";
-import toast from "react-hot-toast";
 import { FALSE_ARRAY } from "@shared/utils";
+import { trpcReact } from "@src/shared/config";
+import { CollectionParams } from "@src/shared/types";
+import { AnimatePresence } from "framer-motion";
+import moment from "moment";
+import { useCallback, useState } from "react";
+import toast from "react-hot-toast";
+import { useNavigate, useParams } from "react-router-dom";
 
 export default function Collection() {
   const router = useNavigate();
@@ -40,9 +41,9 @@ export default function Collection() {
   const [name, setName] = useState<string>("");
 
   const { data: collection, isLoading: getting } =
-    trpcReact.library.getCollectionById.useQuery(
+    trpcReact.collection.getIssuesInCollection.useQuery(
       {
-        collectionId: collectionId!,
+        id: collectionId!,
       },
       {
         onSuccess: (d) => {
@@ -52,13 +53,17 @@ export default function Collection() {
     );
 
   const { data: issues, isLoading: gettingIssues } =
-    trpcReact.library.getLibrary.useQuery();
+    trpcReact.library.getLibrary.useQuery(undefined,{
+      onSuccess:(d)=>{
+        console.log(d);
+      }
+    });
 
   const { mutate: addIssueToLibrary, isLoading: saving } =
     trpcReact.library.addIssueToCollection.useMutation({
       onSuccess: (data) => {
         toast.success(`${data.result[0].name} Added To Library`);
-        utils.library.getCollectionById.invalidate();
+        utils.collection.getIssuesInCollection.invalidate();
         utils.library.invalidate();
         setIssuesListVisible(false);
       },
@@ -350,22 +355,24 @@ export default function Collection() {
           <AnimatePresence>
             {issuesListVisible && (
               <AnimatedBox
-                initial={{ height: 0 }}
-                animate={{ height: 500 }}
-                exit={{ height: 0 }}
+                initial={{top:500,opacity:0}}
+                animate={{ top:218 ,opacity:1}}
+                exit={{top:500 ,opacity:0}}
                 transition={{
                   ease: "easeInOut",
                 }}
                 css={{
-                  width: 400,
+                  width: 500,
+                  height:500,
                   borderTopRightRadius: "$xl",
                   overflowY: "scroll",
                   background: "$blackMuted",
-                  backdropFilter: "blur(100px)",
+                  backdropFilter: "blur(200px)",
                   position: "absolute",
                   zIndex: 1,
                   left: 0,
                   top: "50%",
+                  border:"0.1px solid $lightGray"
                 }}
               >
                 <Box
@@ -382,7 +389,7 @@ export default function Collection() {
                     css={{ color: "$danger" }}
                     onClick={() => setIssuesListVisible(false)}
                   >
-                    <X />
+                    <X size={16}/>
                   </Button>
                 </Box>
                 {gettingIssues && <Spinner size={20} />}
@@ -393,20 +400,27 @@ export default function Collection() {
                       onClick={() => addToLibrary(v.id)}
                       css={{
                         display: "flex",
-                        alignContent: "center",
-                        alignItems: "center",
+                        alignContent: "flex-end",
+                        alignItems: "flex-end",
                         justifyContent: "flex-start",
                         padding: "$lg",
-                        gap: 5,
+                        gap: "$xl",
                         width: "100%",
                         borderBottom: "0.1px solid rgba(255,255,255,0.3)",
+                        transition:"0.3s ease-in-out",
+                        "&:hover":{
+                          background:"$secondary"
+                        }
                       }}
                     >
                       <Image
                         src={v.thumbnailUrl}
-                        css={{ width: 17, height: 17, borderRadius: "$md" }}
+                        css={{ width: 35, height: 45, borderRadius: "$md" }}
                       />
-                      <Text css={{ fontSize: 13 }}>{v.name}</Text>
+                      <VStack alignContent="flex-start" alignItems="flex-start" justifyContent="center" gap={4}>
+                        <Text css={{ fontSize: 16,color:"$white" }}>{v.name}</Text>
+                        <Text css={{fontSize:12,color:"$gray"}}>{moment(v.dateCreated).fromNow()}</Text>
+                      </VStack>
                     </Box>
                   );
                 })}
@@ -435,7 +449,7 @@ export default function Collection() {
               transition: "0.5s ease-in-out",
               top: "92%",
               left: "96%",
-              boxShadow: "0px 30px 80px 0px #4617c8",
+              boxShadow: "0px 30px 80px 0px $gray",
               "&:hover": {
                 background: "$secondary",
               },

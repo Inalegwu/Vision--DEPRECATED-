@@ -90,6 +90,8 @@ export function decodeMetaData(data: ArrayBufferLike | Buffer) {
   const text = new TextDecoder("utf-8");
   const decodedMeta = text.decode(data);
 
+  // TODO xml serialization
+
   return decodedMeta;
 }
 

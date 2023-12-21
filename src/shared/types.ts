@@ -1,6 +1,6 @@
+import * as Stitches from "@stitches/react";
 import { config } from "../web/stitches.config";
 import { collections, issues, pages } from "./schema";
-import * as Stitches from "@stitches/react";
 
 export enum Reasons {
   CANCELLED = "100",
@@ -17,7 +17,7 @@ export type Issue = typeof issues.$inferSelect;
 export type Page = typeof pages.$inferSelect;
 export type Collection = typeof collections.$inferSelect;
 
-export type ReaderLayout = "SinglePage" | "DoublePage";
+export type ReaderLayout = "SinglePage" | "DoublePage" | "Manga";
 
 export type CollectionParams = {
   collectionId: string;

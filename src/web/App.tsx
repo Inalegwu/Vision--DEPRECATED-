@@ -1,18 +1,20 @@
 import { enableReactTracking } from "@legendapp/state/config/enableReactTracking";
 import { configureObservablePersistence } from "@legendapp/state/persist";
-import { ObservablePersistIndexedDB } from '@legendapp/state/persist-plugins/indexeddb';
+import { ObservablePersistLocalStorage } from "@legendapp/state/persist-plugins/local-storage";
 import { Toaster } from "react-hot-toast";
-import { HashRouter, Route, Routes } from "react-router-dom";
+import { Route, HashRouter as Router, Routes } from "react-router-dom";
 import { Collection, EditIssue, FirstLaunch, Issue, Library } from "./pages";
 
-enableReactTracking({ auto: true });
+enableReactTracking({ auto: true,warnUnobserved:true });
+
 configureObservablePersistence({
-  pluginLocal: ObservablePersistIndexedDB,
+  pluginLocal: ObservablePersistLocalStorage,
 });
+
 
 export const App = () => {
   return (
-    <HashRouter>
+    <Router>
       <Routes>
         <Route path="/" element={<Library />} />
         <Route path="/:issueId" element={<Issue />} />
@@ -35,6 +37,6 @@ export const App = () => {
           },
         }}
       />
-    </HashRouter>
+    </Router>
   );
 };

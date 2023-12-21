@@ -8,17 +8,24 @@
 		"rules": {
 			"recommended": true,
 			"correctness":{
-				"noUnusedLabels":"warn",
+				"noUnusedLabels":"error",
 				"noUnusedVariables":"error",
 				"noUnreachable":"error"
+			},
+			"complexity":{
+				"noUselessCatch":"warn"
+			},
+			"style":{
+				"noUselessElse":"warn",
+				"noNonNullAssertion":"warn"
 			}
 		}
 	},
 	"formatter":{
+		"enabled": true,
 		"indentStyle": "space",
 		"lineWidth": 80,
-		"enabled": true,
-		"lineEnding": "crlf",
+		"lineEnding": "lf",
 		"formatWithErrors": true,
 		"indentWidth": 2
 	}

@@ -167,7 +167,7 @@ export default function Issue() {
               onMouseLeave={() => setMouseOver(false)}
               to="/"
               css={{
-                padding: "$md",
+                padding: "$lg",
                 background: "$primary",
                 color: "$white",
                 borderRadius: "$md",
@@ -177,7 +177,7 @@ export default function Issue() {
                 justifyContent: "center",
               }}
             >
-              <CaretLeft size={20} />
+              <CaretLeft size={16} />
             </LinkButton>
             <Text css={{ color: "$white", fontSize: 15 }}>
               {issue?.issue?.name}
@@ -188,6 +188,7 @@ export default function Issue() {
                 flex: 1,
                 padding: "$md",
                 height: 50,
+                cursor:"grabbing"
               }}
               id="drag-region"
             />
@@ -198,7 +199,7 @@ export default function Issue() {
                 alignItems: "center",
                 background: "$blackMuted",
                 backdropFilter: "blur(400px)",
-                borderRadius: "$lg",
+                borderRadius: "$md",
               }}
             >
               <Button

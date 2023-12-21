@@ -2,7 +2,7 @@ import { trackEvent } from "@aptabase/electron/main";
 import { RarExtractor, ZipExtractor } from "@shared/extractors";
 import { collections, issues, pages } from "@shared/schema";
 import { Reasons } from "@shared/types";
-import { convertToImageUrl, generateUUID } from "@shared/utils";
+import { convertToImageUrl, decodeMetaData, generateUUID } from "@shared/utils";
 import { publicProcedure, router } from "@src/trpc";
 import { TRPCError } from "@trpc/server";
 import { SqliteError } from "better-sqlite3";
@@ -105,6 +105,12 @@ export const libraryRouter = router({
         const { metaDataFile: _md, sortedFiles } = await RarExtractor(
           filePaths[0],
         );
+        
+        if(_md){
+          const decodedMeta=decodeMetaData(_md.extraction?.buffer!);
+          const splitMeta=decodedMeta.split("\n");
+          console.log(splitMeta);
+        }
 
         // in the event the first item is a folder
         // the buffer will be undefined , so we can move on
@@ -288,24 +294,6 @@ export const libraryRouter = router({
           });
         }
       }
-    }),
-  getCollectionById: publicProcedure
-    .input(
-      z.object({
-        collectionId: z.string(),
-      }),
-    )
-    .query(async ({ ctx, input }) => {
-      const collection = await ctx.db.query.collections.findFirst({
-        where: (collections, { eq }) => eq(collections.id, input.collectionId),
-        with: {
-          issues: true,
-        },
-      });
-
-      return {
-        collection,
-      };
     }),
   addIssueToCollection: publicProcedure
     .input(

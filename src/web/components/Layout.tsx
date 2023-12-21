@@ -1,8 +1,8 @@
-import { Box, Button, Text } from "./atoms";
-import { X, Minus, CornersOut } from "@phosphor-icons/react";
+import { CornersOut, Minus, X } from "@phosphor-icons/react";
+import { useKeyPress } from "@src/web/hooks";
 import { trpcReact } from "../../shared/config";
 import HStack from "./HStack";
-import { useKeyPress } from "@src/web/hooks";
+import { Box, Button, Text } from "./atoms";
 
 type LayoutProps = {
   children: React.ReactNode;
@@ -14,8 +14,6 @@ export default function Layout(props: LayoutProps) {
     trpcReact.window.maximizeWindow.useMutation();
   const { mutate: minimizeWindow } =
     trpcReact.window.minimizeWindow.useMutation();
-
-  const { data: appVer } = trpcReact.version.useQuery();
 
   // use ctrl/cmd key + q for quitting the app
   useKeyPress((e) => {
@@ -33,7 +31,11 @@ export default function Layout(props: LayoutProps) {
         background: "$background",
       }}
     >
-      {/* titlebar */}
+      {/* pulse orb */}
+      <Box css={{width:600,height:600,background:"$primary",borderRadius:"$full",position:"absolute",zIndex:0}}/>
+      {/* overlay */}
+     <Box css={{width:"100%",height:"100%",position:"absolute",zIndex:1,background:"transparent",backdropFilter:"blur(400px)"}}>
+       {/* titlebar */}
       <Box
         css={{
           width: "100%",
@@ -55,7 +57,6 @@ export default function Layout(props: LayoutProps) {
           }}
         >
           <Text>Vision</Text>
-          <Text css={{ fontSize: 12, color: "$gray" }}>{appVer}</Text>
         </Box>
         <Box
           id="drag-region"
@@ -74,19 +75,19 @@ export default function Layout(props: LayoutProps) {
           justifyContent="flex-end"
         >
           <Button
-            css={{ color: "$white", "&:hover": { color: "$lightGray" } }}
+            css={{ color: "$lightGray", "&:hover": { color: "$white" },display:"flex",alignContent:"center",alignItems:"center",justifyContent:"center" }}
             onClick={() => minimizeWindow()}
           >
             <Minus />
           </Button>
           <Button
-            css={{ color: "$white", "&:hover": { color: "$lightGray" } }}
+           css={{ color: "$lightGray", "&:hover": { color: "$white" },display:"flex",alignContent:"center",alignItems:"center",justifyContent:"center" }}
             onClick={() => maximizeWindow()}
           >
             <CornersOut />
           </Button>
           <Button
-            css={{ color: "$white", "&:hover": { color: "$danger" } }}
+            css={{ color: "$lightGray", "&:hover": { color: "$danger" },display:"flex",alignContent:"center",alignItems:"center",justifyContent:"center" }}
             onClick={() => closeWindow()}
           >
             <X />
@@ -94,6 +95,7 @@ export default function Layout(props: LayoutProps) {
         </HStack>
       </Box>
       <Box css={{ width: "100%", height: "96%" }}>{props.children}</Box>
+     </Box>
     </Box>
   );
 }

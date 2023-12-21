@@ -3,15 +3,15 @@ import { createStitches } from "@stitches/react";
 export const { styled, css, config } = createStitches({
   theme: {
     colors: {
-      primary: "#4617c8",
+      primary: "rgba(20,200,290,0.5)",
       background: "#000000",
-      secondary: "#7d5fcf",
-      gray: "rgba(210,210,205,0.2)",
-      lightGray: "#ecececa4",
-      blackMuted: "#1d1d1d79",
-      deepBlack: "#1C1C1C",
-      white: "#FFFFFF",
-      danger: "#ff0000",
+      secondary: "rgba(20,200,290,0.4)",
+      gray: "rgba(255,255,250,0.2)",
+      lightGray: "rgba(255,255,255,0.4)",
+      blackMuted: "rgba(0,0,0,0.8)",
+      deepBlack: "rgba(0,0,0,0)",
+      white: "rgb(255,255,255)",
+      danger: "rgba(255,90,90,0.9)",
     },
     space: {
       sm: "2px",
