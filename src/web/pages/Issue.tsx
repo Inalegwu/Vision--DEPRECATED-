@@ -4,7 +4,7 @@ import { CaretLeft, CaretRight, CornersOut } from "@phosphor-icons/react";
 import { trpcReact } from "@shared/config";
 import { IssueParams } from "@shared/types";
 import { LOADING_PHRASES, getRandomIndex } from "@shared/utils";
-import { useKeyPress, useWindow } from "@src/web/hooks";
+import { useDebounce, useKeyPress, useWindow } from "@src/web/hooks";
 import { readerLayout } from "@src/web/state";
 import { useCallback, useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
@@ -24,6 +24,17 @@ export default function Issue() {
   const [activeIndex, setActiveIndex] = useState<number>(0);
   const [mouseOver, setMouseOver] = useState<boolean>(false);
   const [navigationShowing, setNavigationShowing] = useState<boolean>(true);
+
+  // debounced click handlers
+  const clickHandler=useDebounce((e:KeyboardEvent)=>{
+    if (e.key === "[" || e.keyCode ===104) {
+      handleLeftClick();
+    } else if (e.key === "]" || e.keyCode === 108) {
+      handleRightClick();
+    } else {
+      return;
+    }
+  },1500)
 
   const activeLayout = readerLayout.get();
 
@@ -50,15 +61,17 @@ export default function Issue() {
   });
 
   // go forward or backward a page
-  useKeyPress((e) => {
-    if (e.key === "[" || e.key === "ArrowRight") {
-      handleLeftClick();
-    } else if (e.key === "]" || e.key === "ArrowRight") {
-      handleRightClick();
-    } else {
-      return;
-    }
-  });
+  // useKeyPress((e) => {
+  //   if (e.key === "[" || e.keyCode ===104) {
+  //     handleLeftClick();
+  //   } else if (e.key === "]" || e.keyCode === 108) {
+  //     handleRightClick();
+  //   } else {
+  //     return;
+  //   }
+  // });
+  // debounced click handler
+  useKeyPress((e)=>clickHandler)
 
   useEffect(() => {
     const navigationTimeout = setTimeout(() => {

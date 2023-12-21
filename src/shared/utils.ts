@@ -1,3 +1,4 @@
+import { setTimeout } from "timers";
 import { v4 } from "uuid";
 
 export function generateUUID() {
@@ -37,10 +38,25 @@ export function clamp(num: number, min: number, max: number): number {
   return Math.max(Math.min(num, max), min);
 }
 
-// TODO implement a debounce function
-// for events
-export function debounce<K, T>(callback: (args: K) => T, args: K) {
-  setTimeout(() => callback(args), 4000);
+export function debounce<A=any[],R=void>(fn:(args:A)=>R,ms:number):[(args:A)=>Promise<R>,()=>void]{ 
+  let timer:NodeJS.Timeout;
+
+  const debouncedFn=(args:A):Promise<R> => new Promise((resolve)=>{
+      if(timer){
+        clearTimeout(timer);
+      }
+
+      timer=setTimeout(()=>{
+        resolve(fn(args))
+      },ms)
+    
+    });
+  
+
+
+  const tearDown=()=>clearTimeout(timer);
+
+  return [debouncedFn,tearDown]
 }
 
 // loading screen phrases
