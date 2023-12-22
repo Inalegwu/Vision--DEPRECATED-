@@ -25,16 +25,16 @@ export default function Issue() {
   const [mouseOver, setMouseOver] = useState<boolean>(false);
   const [navigationShowing, setNavigationShowing] = useState<boolean>(true);
 
-  const keyPress=useDebounce((e:KeyboardEvent)=>{
+  const keyPress = useDebounce((e: KeyboardEvent) => {
     console.log(e.key);
-    if(e.key==="["||e.keyCode===104){
+    if (e.key === "[" || e.keyCode === 104) {
       handleLeftClick();
-    }else if(e.key==="]"||e.keyCode===108){
+    } else if (e.key === "]" || e.keyCode === 108) {
       handleRightClick();
-    }else{
+    } else {
       return;
     }
-  },50)
+  }, 50);
 
   const activeLayout = readerLayout.get();
 
@@ -62,8 +62,7 @@ export default function Issue() {
 
   // go forward or backward a page
   // TODO
-  useKeyPress((e) => keyPress);
-
+  useKeyPress((e) => keyPress(e));
 
   useEffect(() => {
     const navigationTimeout = setTimeout(() => {
@@ -75,21 +74,21 @@ export default function Issue() {
     return () => {
       clearTimeout(navigationTimeout);
     };
-  }, [navigationShowing, setNavigationShowing, mouseOver]);
+  }, [navigationShowing, mouseOver]);
 
   const handleRightClick = useCallback(() => {
     if (activeIndex === issue?.issue.pages.length! - 1) {
       return;
     }
     setActiveIndex(activeIndex + 1);
-  }, [activeIndex, setActiveIndex, issue]);
+  }, [activeIndex, issue]);
 
   const handleLeftClick = useCallback(() => {
     if (activeIndex === 0) {
       return;
     }
     setActiveIndex(activeIndex - 1);
-  }, [activeIndex, setActiveIndex]);
+  }, [activeIndex]);
 
   return (
     <Box
@@ -193,7 +192,7 @@ export default function Issue() {
                 flex: 1,
                 padding: "$md",
                 height: 50,
-                cursor:"grabbing"
+                cursor: "grabbing",
               }}
               id="drag-region"
             />

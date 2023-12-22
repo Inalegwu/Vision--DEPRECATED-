@@ -53,10 +53,10 @@ export default function Collection() {
     );
 
   const { data: issues, isLoading: gettingIssues } =
-    trpcReact.library.getLibrary.useQuery(undefined,{
-      onSuccess:(d)=>{
+    trpcReact.library.getLibrary.useQuery(undefined, {
+      onSuccess: (d) => {
         console.log(d);
-      }
+      },
     });
 
   const { mutate: addIssueToLibrary, isLoading: saving } =
@@ -92,17 +92,17 @@ export default function Collection() {
     (v: string) => {
       addIssueToLibrary({ issueId: v, collectionId: collectionId! });
     },
-    [collectionId],
+    [collectionId, addIssueToLibrary],
   );
 
   const updateName = useCallback(() => {
     changeName({ id: collectionId!, newName: name });
-  }, [name, collectionId]);
+  }, [name, collectionId, changeName]);
 
   const deleteCollection = useCallback(() => {
     if (!collection) return;
     deleteCollectionFromDB({ id: collection?.collection?.id! });
-  }, [collection]);
+  }, [collection, deleteCollectionFromDB]);
 
   return (
     <Layout>
@@ -355,15 +355,15 @@ export default function Collection() {
           <AnimatePresence>
             {issuesListVisible && (
               <AnimatedBox
-                initial={{top:500,opacity:0}}
-                animate={{ top:218 ,opacity:1}}
-                exit={{top:500 ,opacity:0}}
+                initial={{ top: 500, opacity: 0 }}
+                animate={{ top: 218, opacity: 1 }}
+                exit={{ top: 500, opacity: 0 }}
                 transition={{
                   ease: "easeInOut",
                 }}
                 css={{
                   width: 500,
-                  height:500,
+                  height: 500,
                   borderTopRightRadius: "$xl",
                   overflowY: "scroll",
                   background: "$blackMuted",
@@ -372,7 +372,7 @@ export default function Collection() {
                   zIndex: 1,
                   left: 0,
                   top: "50%",
-                  border:"0.1px solid $lightGray"
+                  border: "0.1px solid $lightGray",
                 }}
               >
                 <Box
@@ -389,7 +389,7 @@ export default function Collection() {
                     css={{ color: "$danger" }}
                     onClick={() => setIssuesListVisible(false)}
                   >
-                    <X size={16}/>
+                    <X size={16} />
                   </Button>
                 </Box>
                 {gettingIssues && <Spinner size={20} />}
@@ -407,19 +407,28 @@ export default function Collection() {
                         gap: "$xl",
                         width: "100%",
                         borderBottom: "0.1px solid rgba(255,255,255,0.3)",
-                        transition:"0.3s ease-in-out",
-                        "&:hover":{
-                          background:"$secondary"
-                        }
+                        transition: "0.3s ease-in-out",
+                        "&:hover": {
+                          background: "$secondary",
+                        },
                       }}
                     >
                       <Image
                         src={v.thumbnailUrl}
                         css={{ width: 35, height: 45, borderRadius: "$md" }}
                       />
-                      <VStack alignContent="flex-start" alignItems="flex-start" justifyContent="center" gap={4}>
-                        <Text css={{ fontSize: 16,color:"$white" }}>{v.name}</Text>
-                        <Text css={{fontSize:12,color:"$gray"}}>{moment(v.dateCreated).fromNow()}</Text>
+                      <VStack
+                        alignContent="flex-start"
+                        alignItems="flex-start"
+                        justifyContent="center"
+                        gap={4}
+                      >
+                        <Text css={{ fontSize: 16, color: "$white" }}>
+                          {v.name}
+                        </Text>
+                        <Text css={{ fontSize: 12, color: "$gray" }}>
+                          {moment(v.dateCreated).fromNow()}
+                        </Text>
                       </VStack>
                     </Box>
                   );

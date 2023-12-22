@@ -42,7 +42,6 @@ export default function Library() {
 
   const state = globalState$.get();
 
-  
   const { mutate: addToLibrary, isLoading: addingToLibrary } =
     trpcReact.library.addToLibrary.useMutation({
       onSuccess: (data) => {
@@ -162,7 +161,7 @@ export default function Library() {
               alignContent="center"
               alignItems="center"
               gap={6}
-            ></HStack>
+            />
             <AnimatePresence>
               {createModalVisible && (
                 <AnimatedBox
@@ -213,19 +212,19 @@ export default function Library() {
                 css={{
                   color: "$white",
                   background: "$gray",
-                  padding:"$lg",
+                  padding: "$lg",
                   borderRadius: "$full",
-                  display:"flex",
-                  alignContent:"center",
-                  alignItems:"center",
-                  justifyContent:"center",
+                  display: "flex",
+                  alignContent: "center",
+                  alignItems: "center",
+                  justifyContent: "center",
                   "&:hover": {
                     background: "$primary",
                   },
                 }}
                 onClick={() => setCreateModalVisible(true)}
               >
-                  <Text css={{ fontSize: 12 }}>Create Collection</Text> 
+                <Text css={{ fontSize: 12 }}>Create Collection</Text>
               </Button>
               <AnimatedButton
                 css={{
@@ -234,20 +233,19 @@ export default function Library() {
                   padding: "$lg",
                   borderRadius: "$full",
                   transition: "0.5s ease-in-out",
-                    display:"flex",
-                  alignContent:"center",
-                  alignItems:"center",
-                  justifyContent:"center",
-                  gap:"$sm",
+                  display: "flex",
+                  alignContent: "center",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: "$sm",
                   "&:hover": {
                     background: "$primary",
                   },
                 }}
                 onClick={() => addToLibrary()}
               >
-               
-                  <Text css={{ fontSize: 12 }}>Add To Library</Text>
-                  <Plus size={11} />
+                <Text css={{ fontSize: 12 }}>Add To Library</Text>
+                <Plus size={11} />
               </AnimatedButton>
             </HStack>
           </HStack>
