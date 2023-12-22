@@ -35,13 +35,13 @@ function SinglePage({ pages, activeIndex }: LayoutProps) {
         overflow: "hidden",
       }}
     >
-      <Image src={pages[activeIndex].content} alt={pages[activeIndex].name} css={{width:"100%",height:"100%",position:"absolute",zIndex:0}}/>
+      <Image src={pages[activeIndex].content} alt={pages[activeIndex].name} css={{width:"100%",height:"100%",position:"absolute",zIndex:0,opacity:0.6}}/>
      <Box css={{width:"100%",height:"100%",background:"transparent",backdropFilter:"blur(100px)",position:"absolute",zIndex:1,display:"flex",alignContent:"center",alignItems:"center",justifyContent:"center"}}>
        <AnimatedImage
         src={pages[activeIndex].content}
         alt={pages[activeIndex].name}
         css={{
-          width: "44%",
+          width: "42%",
           height: "100%",
           aspectRatio: 16/9,
           borderLeft:"0.1px solid $gray",

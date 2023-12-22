@@ -8,7 +8,9 @@ export const globalState$ = observable<GlobalState>({
     firstLaunch: true,
     applicationId: undefined,
   },
-  uiState: {},
+  uiState: {
+    distractionFreeMode:false
+  },
 });
 
 

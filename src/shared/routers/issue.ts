@@ -2,8 +2,7 @@ import { trackEvent } from "@aptabase/electron/main";
 import { issues, pages } from "@shared/schema";
 import { publicProcedure, router } from "@src/trpc";
 import { TRPCError } from "@trpc/server";
-import { SqliteError } from "better-sqlite3";
-import { DrizzleError, eq } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import z from "zod";
 
 export const issueRouter = router({
@@ -47,24 +46,15 @@ export const issueRouter = router({
 
         return true;
       } catch (e) {
-        if (e instanceof DrizzleError) {
-          trackEvent("issue remove failed", {
-            error: e.message,
-          });
-          throw new TRPCError({
-            code: "INTERNAL_SERVER_ERROR",
-            message: "Couldn't Delete Issue",
-            cause: e.cause,
-          });
-        } else {
-          trackEvent("issue remove failed", {
-            error: "unknown",
-          });
-          throw new TRPCError({
-            code: "INTERNAL_SERVER_ERROR",
-            message: "Couldn't Delete Issue",
-          });
-        }
+        trackEvent("error_occured", {
+          router: "collection",
+          function: "addToLibrary",
+        });
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          cause: e,
+          message: "Error occured",
+        });
       }
     }),
   getIssueData: publicProcedure
@@ -110,31 +100,15 @@ export const issueRouter = router({
           })
           .where(eq(issues.id, input.id));
       } catch (e) {
-        if (e instanceof DrizzleError) {
-          console.log(e);
-          trackEvent("Couldn't Update Issue", {
-            cause: e.message,
-          });
-          throw new TRPCError({
-            code: "INTERNAL_SERVER_ERROR",
-            message: "Couldn't Update Issue",
-          });
-        } else if (e instanceof SqliteError) {
-          console.log(e);
-          trackEvent("Update Issue Sqlite Error", {
-            cause: e.message,
-          });
-          throw new TRPCError({
-            code: "INTERNAL_SERVER_ERROR",
-            message: "Couldn't Update Issue",
-          });
-        } else {
-          trackEvent("Unknown Error while updating issue");
-          throw new TRPCError({
-            code: "INTERNAL_SERVER_ERROR",
-            message: "Couldn't Update Issue",
-          });
-        }
+        trackEvent("error_occured", {
+          router: "collection",
+          function: "addToLibrary",
+        });
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          cause: e,
+          message: "Error occured",
+        });
       }
     }),
 });

@@ -5,10 +5,8 @@ import { Reasons } from "@shared/types";
 import { convertToImageUrl, decodeMetaData, generateUUID } from "@shared/utils";
 import { publicProcedure, router } from "@src/trpc";
 import { TRPCError } from "@trpc/server";
-import { SqliteError } from "better-sqlite3";
 import { DrizzleError, eq } from "drizzle-orm";
 import { dialog } from "electron";
-import { UnrarError } from "node-unrar-js";
 import z from "zod";
 
 export const libraryRouter = router({
@@ -79,21 +77,20 @@ export const libraryRouter = router({
             name: issues.name,
           });
 
-        sortedFiles.forEach(async (v, idx) => {
-          // skip any directories in the lists
-          if (v.isDir) {
+        for (const file of sortedFiles) {
+          if (file.isDir) {
             return;
           }
 
-          const content = convertToImageUrl(v.data.buffer);
+          const content = convertToImageUrl(file.data.buffer);
 
           await ctx.db.insert(pages).values({
             id: generateUUID(),
             issueId: createdIssue[0].id,
             content,
-            name: `${createdIssue[0].name}-${idx}`,
+            name: `${createdIssue[0].name}-${file.name}`,
           });
-        });
+        }
 
         return {
           status: true,
@@ -105,10 +102,10 @@ export const libraryRouter = router({
         const { metaDataFile: _md, sortedFiles } = await RarExtractor(
           filePaths[0],
         );
-        
-        if(_md){
-          const decodedMeta=decodeMetaData(_md.extraction?.buffer!);
-          const splitMeta=decodedMeta.split("\n");
+
+        if (_md) {
+          const decodedMeta = decodeMetaData(_md.extraction?.buffer!);
+          const splitMeta = decodedMeta.split("\n");
           console.log(splitMeta);
         }
 
@@ -153,21 +150,20 @@ export const libraryRouter = router({
           })
           .returning({ id: issues.id, name: issues.name });
 
-        sortedFiles.forEach(async (v, idx) => {
-          // skip any directories in the list
-          if (v.fileHeader.flags.directory) {
+        for (const file of sortedFiles) {
+          if (file.fileHeader.flags.directory) {
             return;
           }
 
-          const content = convertToImageUrl(v.extraction?.buffer!);
+          const content = convertToImageUrl(file.extraction?.buffer!);
 
           await ctx.db.insert(pages).values({
             id: generateUUID(),
-            name: `${createdIssue[0].name}-${idx}`,
+            name: `${createdIssue[0].name}-${file.fileHeader.name}`,
             content,
             issueId: createdIssue[0].id,
           });
-        });
+        }
 
         return {
           status: true,
@@ -175,37 +171,15 @@ export const libraryRouter = router({
         };
       }
     } catch (e) {
-      if (e instanceof UnrarError) {
-        trackEvent("Zip Parse Failed", {
-          cause: e.message,
-        });
-        throw new TRPCError({
-          code: "UNPROCESSABLE_CONTENT",
-          message: "Couldn't Add To Library , Unsupported file type",
-          cause: e.file,
-        });
-      }
-      if (e instanceof DrizzleError) {
-        trackEvent("Drizzle Failed to Save File", {
-          cause: e.message,
-        });
-        console.log(e);
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "Couldn't Save Issue",
-          cause: e.cause,
-        });
-      }
-      if (e instanceof TRPCError) {
-        trackEvent("Generic Error Event", {
-          cause: e.cause?.message!,
-        });
-        throw new TRPCError({
-          code: e.code,
-          message: e.message,
-          cause: e.cause,
-        });
-      }
+      trackEvent("error_occured", {
+        router: "collection",
+        function: "addToLibrary",
+      });
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        cause: e,
+        message: "Error occured",
+      });
     }
   }),
   getLibrary: publicProcedure.query(async ({ ctx }) => {
@@ -235,33 +209,15 @@ export const libraryRouter = router({
         collections,
       };
     } catch (e) {
-      if (e instanceof DrizzleError) {
-        trackEvent("Drizzle Query Error", {
-          cause: e.message,
-        });
-        throw new TRPCError({
-          message: "Couldn't Get Your Library",
-          code: "INTERNAL_SERVER_ERROR",
-          cause: e.cause,
-        });
-      } else if (e instanceof SqliteError) {
-        trackEvent("SQLite Query Error", {
-          cause: e.message,
-        });
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          cause: e.cause,
-          message: "Couldn't Get Your Library",
-        });
-      } else if (e instanceof TRPCError) {
-        trackEvent("Generic Error Occurred", {
-          cause: e.message,
-        });
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "Unexpected Error While trying to load your library",
-        });
-      }
+      trackEvent("error_occured", {
+        router: "collection",
+        function: "addToLibrary",
+      });
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        cause: e,
+        message: "Error occured",
+      });
     }
   }),
   createCollection: publicProcedure
@@ -328,25 +284,15 @@ export const libraryRouter = router({
           result,
         };
       } catch (e) {
-        if (e instanceof DrizzleError) {
-          throw new TRPCError({
-            code: "INTERNAL_SERVER_ERROR",
-            message: "Couldn't Add Issue to Collection",
-            cause: e.message,
-          });
-        } else if (e instanceof SqliteError) {
-          throw new TRPCError({
-            code: "INTERNAL_SERVER_ERROR",
-            message: "Couldn't Add Issue To Collection",
-            cause: e.message,
-          });
-        } else {
-          throw new TRPCError({
-            code: "INTERNAL_SERVER_ERROR",
-            message: "Unexpected Error",
-            cause: e,
-          });
-        }
+        trackEvent("error_occured", {
+          router: "collection",
+          function: "addToLibrary",
+        });
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          cause: e,
+          message: "Error occured",
+        });
       }
     }),
   deleteCollection: publicProcedure
@@ -379,42 +325,15 @@ export const libraryRouter = router({
           data: deletedCollection[0],
         };
       } catch (e) {
-        if (e instanceof DrizzleError) {
-          trackEvent("failed to delete collection-DRIZZLE ERROr", {
-            cause: e.message,
-          });
-          throw new TRPCError({
-            code: "INTERNAL_SERVER_ERROR",
-            message: "Couldn't Delete Collection",
-            cause: e.message,
-          });
-        } else if (e instanceof SqliteError) {
-          trackEvent("failed to delete collection-SQLITE ERROR", {
-            cause: e.message,
-          });
-          throw new TRPCError({
-            code: "INTERNAL_SERVER_ERROR",
-            message: "Couldn't Delete Collection",
-            cause: e.message,
-          });
-        } else if (e instanceof TRPCError) {
-          trackEvent("failed to delete collection-TRPC ERROR", {
-            cause: e.message,
-          });
-          throw new TRPCError({
-            code: e.code,
-            cause: e.cause,
-            message: e.message,
-          });
-        } else {
-          trackEvent("failed to delete collection-UNEXPECTED ERROR", {
-            cause: "unknown",
-          });
-          throw new TRPCError({
-            code: "INTERNAL_SERVER_ERROR",
-            cause: "Couldn't Delete Collection",
-          });
-        }
+        trackEvent("error_occured", {
+          router: "collection",
+          function: "addToLibrary",
+        });
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          cause: e,
+          message: "Error occured",
+        });
       }
     }),
   removeIssueFromCollection: publicProcedure
@@ -446,42 +365,15 @@ export const libraryRouter = router({
           data: removedIssue[0],
         };
       } catch (e) {
-        if (e instanceof DrizzleError) {
-          trackEvent("failed to delete collection-DRIZZLE ERROr", {
-            cause: e.message,
-          });
-          throw new TRPCError({
-            code: "INTERNAL_SERVER_ERROR",
-            message: "Couldn't Delete Collection",
-            cause: e.message,
-          });
-        } else if (e instanceof SqliteError) {
-          trackEvent("failed to delete collection-SQLITE ERROR", {
-            cause: e.message,
-          });
-          throw new TRPCError({
-            code: "INTERNAL_SERVER_ERROR",
-            message: "Couldn't Delete Collection",
-            cause: e.message,
-          });
-        } else if (e instanceof TRPCError) {
-          trackEvent("failed to delete collection-TRPC ERROR", {
-            cause: e.message,
-          });
-          throw new TRPCError({
-            code: e.code,
-            cause: e.cause,
-            message: e.message,
-          });
-        } else {
-          trackEvent("failed to delete collection-UNEXPECTED ERROR", {
-            cause: "unknown",
-          });
-          throw new TRPCError({
-            code: "INTERNAL_SERVER_ERROR",
-            cause: "Couldn't Delete Collection",
-          });
-        }
+        trackEvent("error_occured", {
+          router: "collection",
+          function: "addToLibrary",
+        });
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          cause: e,
+          message: "Error occured",
+        });
       }
     }),
   changeIssueName: publicProcedure
@@ -518,42 +410,15 @@ export const libraryRouter = router({
           data: newCollectionName[0],
         };
       } catch (e) {
-        if (e instanceof DrizzleError) {
-          trackEvent("failed to delete collection-DRIZZLE ERROr", {
-            cause: e.message,
-          });
-          throw new TRPCError({
-            code: "INTERNAL_SERVER_ERROR",
-            message: "Couldn't Delete Collection",
-            cause: e.message,
-          });
-        } else if (e instanceof SqliteError) {
-          trackEvent("failed to delete collection-SQLITE ERROR", {
-            cause: e.message,
-          });
-          throw new TRPCError({
-            code: "INTERNAL_SERVER_ERROR",
-            message: "Couldn't Delete Collection",
-            cause: e.message,
-          });
-        } else if (e instanceof TRPCError) {
-          trackEvent("failed to delete collection-TRPC ERROR", {
-            cause: e.message,
-          });
-          throw new TRPCError({
-            code: e.code,
-            cause: e.cause,
-            message: e.message,
-          });
-        } else {
-          trackEvent("failed to delete collection-UNEXPECTED ERROR", {
-            cause: "unknown",
-          });
-          throw new TRPCError({
-            code: "INTERNAL_SERVER_ERROR",
-            cause: "Couldn't Delete Collection",
-          });
-        }
+        trackEvent("error_occured", {
+          router: "collection",
+          function: "addToLibrary",
+        });
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          cause: e,
+          message: "Error occured",
+        });
       }
     }),
 });

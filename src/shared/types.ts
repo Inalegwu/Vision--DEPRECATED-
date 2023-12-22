@@ -48,7 +48,9 @@ export type ApplicationState = {
 };
 
 // INCOMING
-export type UIState = {};
+export type UIState = {
+  distractionFreeMode:boolean;
+};
 
 export type Point = {
   x: number;

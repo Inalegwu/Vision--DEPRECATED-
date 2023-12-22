@@ -1,4 +1,3 @@
-import { setTimeout } from "timers";
 import { v4 } from "uuid";
 
 export function generateUUID() {
@@ -41,7 +40,8 @@ export function clamp(num: number, min: number, max: number): number {
 export function debounce<A=any[],R=void>(fn:(args:A)=>R,ms:number):[(args:A)=>Promise<R>,()=>void]{ 
   let timer:NodeJS.Timeout;
 
-  const debouncedFn=(args:A):Promise<R> => new Promise((resolve)=>{
+  const debouncedFn=(args:A):Promise<R> => 
+    new Promise((resolve)=>{
       if(timer){
         clearTimeout(timer);
       }

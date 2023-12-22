@@ -25,16 +25,16 @@ export default function Issue() {
   const [mouseOver, setMouseOver] = useState<boolean>(false);
   const [navigationShowing, setNavigationShowing] = useState<boolean>(true);
 
-  // debounced click handlers
-  const clickHandler=useDebounce((e:KeyboardEvent)=>{
-    if (e.key === "[" || e.keyCode ===104) {
+  const keyPress=useDebounce((e:KeyboardEvent)=>{
+    console.log(e.key);
+    if(e.key==="["||e.keyCode===104){
       handleLeftClick();
-    } else if (e.key === "]" || e.keyCode === 108) {
+    }else if(e.key==="]"||e.keyCode===108){
       handleRightClick();
-    } else {
+    }else{
       return;
     }
-  },1500)
+  },50)
 
   const activeLayout = readerLayout.get();
 
@@ -61,17 +61,9 @@ export default function Issue() {
   });
 
   // go forward or backward a page
-  // useKeyPress((e) => {
-  //   if (e.key === "[" || e.keyCode ===104) {
-  //     handleLeftClick();
-  //   } else if (e.key === "]" || e.keyCode === 108) {
-  //     handleRightClick();
-  //   } else {
-  //     return;
-  //   }
-  // });
-  // debounced click handler
-  useKeyPress((e)=>clickHandler)
+  // TODO
+  useKeyPress((e) => keyPress);
+
 
   useEffect(() => {
     const navigationTimeout = setTimeout(() => {

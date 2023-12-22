@@ -1,32 +1,32 @@
 {
-	"$schema": "https://biomejs.dev/schemas/1.4.1/schema.json",
-	"organizeImports": {
-		"enabled": true
-	},
-	"linter": {
-		"enabled": true,
-		"rules": {
-			"recommended": true,
-			"correctness":{
-				"noUnusedLabels":"error",
-				"noUnusedVariables":"error",
-				"noUnreachable":"error"
-			},
-			"complexity":{
-				"noUselessCatch":"warn"
-			},
-			"style":{
-				"noUselessElse":"warn",
-				"noNonNullAssertion":"warn"
-			}
-		}
-	},
-	"formatter":{
-		"enabled": true,
-		"indentStyle": "space",
-		"lineWidth": 80,
-		"lineEnding": "lf",
-		"formatWithErrors": true,
-		"indentWidth": 2
-	}
+  "$schema": "https://biomejs.dev/schemas/1.4.1/schema.json",
+  "organizeImports": {
+    "enabled": true
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true,
+      "correctness": {
+        "noUnusedLabels": "error",
+        "noUnusedVariables": "error",
+        "noUnreachable": "error"
+      },
+      "complexity": {
+        "noUselessCatch": "warn"
+      },
+      "style": {
+        "noUselessElse": "off",
+        "noNonNullAssertion": "error"
+      }
+    }
+  },
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "space",
+    "lineWidth": 80,
+    "lineEnding": "crlf",
+    "formatWithErrors": true,
+    "indentWidth": 2
+  }
 }
