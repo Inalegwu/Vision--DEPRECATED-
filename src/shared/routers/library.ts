@@ -46,12 +46,12 @@ export const libraryRouter = router({
           sortedFiles[0]?.name
             .replace(/\.[^/.]+$/, "")
             .replace(/(\d+)$/g, "")
-            .replace("-", "") ||
+            .replace("-", " ") ||
           filePaths[0]
             .replace(/^.*[\\\/]/, "")
             .replace(/\.[^/.]+$/, "")
             .replace(/(\d+)$/g, "")
-            .replace("-", "");
+            .replace("-", " ");
 
         const issueExists = await ctx.db.query.issues.findFirst({
           where: (issues, { eq }) => eq(issues.name, name),
@@ -121,12 +121,12 @@ export const libraryRouter = router({
         sortedFiles[0]?.fileHeader.name
           .replace(/\.[^/.]+$/, "")
           .replace(/(\d+)$/g, "")
-          .replace("-", "") ||
+          .replace("-", " ") ||
         filePaths[0]
           .replace(/^.*[\\\/]/, "")
           .replace(/\.[^/.]+$/, "")
           .replace(/(\d+)$/g, "")
-          .replace("-", "");
+          .replace("-", " ");
 
       const issueExists = await ctx.db.query.issues.findFirst({
         where: (issues, { eq }) => eq(issues.name, name),

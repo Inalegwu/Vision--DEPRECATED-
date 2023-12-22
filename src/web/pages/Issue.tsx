@@ -10,7 +10,7 @@ import {
 import { trpcReact } from "@shared/config";
 import { IssueParams } from "@shared/types";
 import { LOADING_PHRASES, getRandomIndex } from "@shared/utils";
-import { useDebounce, useKeyPress, useWindow } from "@src/web/hooks";
+import { useDebounce, useWindow } from "@src/web/hooks";
 import { globalState$, readerLayout } from "@src/web/state";
 import { useCallback, useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
@@ -35,14 +35,18 @@ export default function Issue() {
   const activeLayout = readerLayout.get();
 
   const keyPress = useDebounce((e: KeyboardEvent) => {
-    console.log(uiState.distractionFreeMode, e.keyCode);
+    // e.stopImmediatePropagation();
+    // [ or L to scroll left
     if (e.keyCode === 91 || e.keyCode === 104) {
-      console.log(activeIndex);
       handleLeftClick();
-    } else if (e.keyCode === 93 || e.keyCode === 108) {
-      console.log(activeIndex);
+    }
+    // ] or H to scroll right
+    else if (e.keyCode === 93 || e.keyCode === 108) {
       handleRightClick();
-    } else if (e.keyCode === 14) {
+    }
+    // ctrl+j to disable distraction free mode
+    else if (e.keyCode === 10) {
+      toast.success("Distraction free mode deactivated");
       globalState$.uiState.distractionFreeMode.set(false);
     } else {
       return;
@@ -72,8 +76,7 @@ export default function Issue() {
   });
 
   // go forward or backward a page
-  // TODO
-  useKeyPress(keyPress);
+  window.addEventListener("keypress", keyPress);
 
   useEffect(() => {
     const navigationTimeout = setTimeout(() => {
@@ -105,9 +108,7 @@ export default function Issue() {
     toast.success("You're now in distraction free mode", {
       position: "top-right",
     });
-    globalState$.uiState.set({
-      distractionFreeMode: true,
-    });
+    globalState$.uiState.distractionFreeMode.set(true);
   }, []);
 
   return (
@@ -150,7 +151,7 @@ export default function Issue() {
         </Box>
       )}
       {/* navigation overlay */}
-      {navigationShowing && !uiState.distractionFreeMode && (
+      {navigationShowing && (
         <AnimatedBox
           transition={{
             duration: 0.5,
