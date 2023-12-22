@@ -1,10 +1,10 @@
 import { relations } from "drizzle-orm";
 import {
+  index,
   integer,
   sqliteTable,
   text,
   uniqueIndex,
-  index,
 } from "drizzle-orm/sqlite-core";
 import { issues } from "./issue.schema";
 

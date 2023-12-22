@@ -18,12 +18,13 @@ export const windowRouter = router({
       return {
         fullscreen_status: false,
       };
-    } else {
-      ctx.window.maximize();
-      return {
-        fullscreen_status: true,
-      };
     }
+
+    ctx.window.maximize();
+
+    return {
+      fullscreen_status: true,
+    };
   }),
   minimizeWindow: publicProcedure.mutation(({ ctx }) => {
     ctx.window?.minimize();

@@ -1,5 +1,5 @@
-import { initTRPC } from "@trpc/server";
 import { Context } from "@shared/context";
+import { initTRPC } from "@trpc/server";
 
 const t = initTRPC.context<Context>().create({
   isServer: true,

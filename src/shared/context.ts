@@ -1,6 +1,6 @@
+import { inferAsyncReturnType } from "@trpc/server";
 import { BrowserWindow, app } from "electron";
 import { db } from "./storage";
-import { inferAsyncReturnType } from "@trpc/server";
 
 // Returns the context object to
 // to attach to trpc ctx

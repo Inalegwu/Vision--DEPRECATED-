@@ -1,7 +1,7 @@
 // this is exported so custom loggers
 // can be made
 export class Logger {
-  prefix: string = "Logger";
+  prefix = "Logger";
 
   constructor(prefix?: string) {
     if (prefix) this.prefix = prefix;

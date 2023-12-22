@@ -18,6 +18,9 @@
       "style": {
         "noUselessElse": "warn",
         "noNonNullAssertion": "error"
+      },
+      "suspicious": {
+        "noExplicitAny": "warn"
       }
     }
   },

@@ -5,8 +5,8 @@ import {
   text,
   uniqueIndex,
 } from "drizzle-orm/sqlite-core";
-import { pages } from "./page.schema";
 import { collections } from "./collection.schema";
+import { pages } from "./page.schema";
 
 export const issues = sqliteTable(
   "issues",

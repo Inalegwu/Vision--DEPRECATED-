@@ -8,7 +8,7 @@ export function generateUUID() {
 
 export function convertToImageUrl(buffer: ArrayBufferLike): string {
   const b64 = Buffer.from(buffer).toString("base64");
-  const dataUrl = "data:image/png;base64," + b64;
+  const dataUrl = `data:image/png;base64,${b64}`;
 
   return dataUrl;
 }
@@ -37,26 +37,26 @@ export function clamp(num: number, min: number, max: number): number {
   return Math.max(Math.min(num, max), min);
 }
 
-export function debounce<A=any[],R=void>(fn:(args:A)=>R,ms:number):[(args:A)=>Promise<R>,()=>void]{ 
-  let timer:NodeJS.Timeout;
+export function debounce<A = any[], R = void>(
+  fn: (args: A) => R,
+  ms: number,
+): [(args: A) => Promise<R>, () => void] {
+  let timer: NodeJS.Timeout;
 
-  const debouncedFn=(args:A):Promise<R> => 
-    new Promise((resolve)=>{
-      if(timer){
+  const debouncedFn = (args: A): Promise<R> =>
+    new Promise((resolve) => {
+      if (timer) {
         clearTimeout(timer);
       }
 
-      timer=setTimeout(()=>{
-        resolve(fn(args))
-      },ms)
-    
+      timer = setTimeout(() => {
+        resolve(fn(args));
+      }, ms);
     });
-  
 
+  const tearDown = () => clearTimeout(timer);
 
-  const tearDown=()=>clearTimeout(timer);
-
-  return [debouncedFn,tearDown]
+  return [debouncedFn, tearDown];
 }
 
 // loading screen phrases
@@ -97,9 +97,9 @@ export const LOADING_PHRASES = [
 ];
 
 export function getRandomIndex(min: number, max: number): number {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min + 1)) + min;
+  const newMin = Math.ceil(min);
+  const newMax = Math.floor(max);
+  return Math.floor(Math.random() * (newMax - newMin + 1)) + newMin;
 }
 
 export function decodeMetaData(data: ArrayBufferLike | Buffer) {

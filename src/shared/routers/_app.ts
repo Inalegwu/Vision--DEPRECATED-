@@ -9,7 +9,7 @@ export const appRouter = router({
   window: windowRouter,
   library: libraryRouter,
   issue: issueRouter,
-  collection:collectionRouter,
+  collection: collectionRouter,
   version: publicProcedure.query(() => {
     return pkg.version;
   }),
