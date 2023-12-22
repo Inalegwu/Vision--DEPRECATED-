@@ -97,79 +97,77 @@ export const libraryRouter = router({
           reason: Reasons.NONE,
         };
       }
-      // handle rar files
-      else {
-        const { metaDataFile: _md, sortedFiles } = await RarExtractor(
-          filePaths[0],
-        );
 
-        if (_md) {
-          const decodedMeta = decodeMetaData(_md.extraction?.buffer!);
-          const splitMeta = decodedMeta.split("\n");
-          console.log(splitMeta);
-        }
+      const { metaDataFile: _md, sortedFiles } = await RarExtractor(
+        filePaths[0],
+      );
 
-        // in the event the first item is a folder
-        // the buffer will be undefined , so we can move on
-        // to the next item , this will be the first image file
-        // in that folder
-        const thumbnailUrl = convertToImageUrl(
-          sortedFiles[0]?.extraction?.buffer ||
-            sortedFiles[1]?.extraction?.buffer!,
-        );
-
-        const name =
-          sortedFiles[0]?.fileHeader.name
-            .replace(/\.[^/.]+$/, "")
-            .replace(/(\d+)$/g, "")
-            .replace("-", "") ||
-          filePaths[0]
-            .replace(/^.*[\\\/]/, "")
-            .replace(/\.[^/.]+$/, "")
-            .replace(/(\d+)$/g, "")
-            .replace("-", "");
-
-        const issueExists = await ctx.db.query.issues.findFirst({
-          where: (issues, { eq }) => eq(issues.name, name),
-        });
-
-        if (issueExists) {
-          throw new TRPCError({
-            message: `${name} , is already in your library`,
-            code: "CONFLICT",
-            cause: `tried adding issue ${name} again`,
-          });
-        }
-
-        const createdIssue = await ctx.db
-          .insert(issues)
-          .values({
-            id: generateUUID(),
-            name,
-            thumbnailUrl,
-          })
-          .returning({ id: issues.id, name: issues.name });
-
-        for (const file of sortedFiles) {
-          if (file.fileHeader.flags.directory) {
-            return;
-          }
-
-          const content = convertToImageUrl(file.extraction?.buffer!);
-
-          await ctx.db.insert(pages).values({
-            id: generateUUID(),
-            name: `${createdIssue[0].name}-${file.fileHeader.name}`,
-            content,
-            issueId: createdIssue[0].id,
-          });
-        }
-
-        return {
-          status: true,
-          reason: Reasons.NONE,
-        };
+      if (_md) {
+        const decodedMeta = decodeMetaData(_md.extraction?.buffer!);
+        const splitMeta = decodedMeta.split("\n");
+        console.log(splitMeta);
       }
+
+      // in the event the first item is a folder
+      // the buffer will be undefined , so we can move on
+      // to the next item , this will be the first image file
+      // in that folder
+      const thumbnailUrl = convertToImageUrl(
+        sortedFiles[0]?.extraction?.buffer ||
+          sortedFiles[1]?.extraction?.buffer!,
+      );
+
+      const name =
+        sortedFiles[0]?.fileHeader.name
+          .replace(/\.[^/.]+$/, "")
+          .replace(/(\d+)$/g, "")
+          .replace("-", "") ||
+        filePaths[0]
+          .replace(/^.*[\\\/]/, "")
+          .replace(/\.[^/.]+$/, "")
+          .replace(/(\d+)$/g, "")
+          .replace("-", "");
+
+      const issueExists = await ctx.db.query.issues.findFirst({
+        where: (issues, { eq }) => eq(issues.name, name),
+      });
+
+      if (issueExists) {
+        throw new TRPCError({
+          message: `${name} , is already in your library`,
+          code: "CONFLICT",
+          cause: `tried adding issue ${name} again`,
+        });
+      }
+
+      const createdIssue = await ctx.db
+        .insert(issues)
+        .values({
+          id: generateUUID(),
+          name,
+          thumbnailUrl,
+        })
+        .returning({ id: issues.id, name: issues.name });
+
+      for (const file of sortedFiles) {
+        if (file.fileHeader.flags.directory) {
+          return;
+        }
+
+        const content = convertToImageUrl(file.extraction?.buffer!);
+
+        await ctx.db.insert(pages).values({
+          id: generateUUID(),
+          name: `${createdIssue[0].name}-${file.fileHeader.name}`,
+          content,
+          issueId: createdIssue[0].id,
+        });
+      }
+
+      return {
+        status: true,
+        reason: Reasons.NONE,
+      };
     } catch (e) {
       trackEvent("error_occured", {
         router: "collection",

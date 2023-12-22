@@ -16,7 +16,7 @@
         "noUselessCatch": "warn"
       },
       "style": {
-        "noUselessElse": "off",
+        "noUselessElse": "warn",
         "noNonNullAssertion": "error"
       }
     }
