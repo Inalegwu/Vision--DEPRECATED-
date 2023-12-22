@@ -9,12 +9,11 @@ export const globalState$ = observable<GlobalState>({
     applicationId: undefined,
   },
   uiState: {
-    distractionFreeMode:false
+    distractionFreeMode: false,
   },
 });
 
-
-persistObservable(globalState$,{
-  local:"global_state",
-  pluginLocal:ObservablePersistLocalStorage
-})
+persistObservable(globalState$, {
+  local: "global_state",
+  pluginLocal: ObservablePersistLocalStorage,
+});

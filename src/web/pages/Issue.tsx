@@ -1,11 +1,17 @@
 import { AnimatedBox, Box, Button, LinkButton, Text } from "@components/atoms";
 import { DoublePage, SinglePage, Spinner, VStack } from "@components/index";
-import { CaretLeft, CaretRight, CornersOut } from "@phosphor-icons/react";
+import {
+  CaretLeft,
+  CaretRight,
+  CornersOut,
+  Eye,
+  EyeSlash,
+} from "@phosphor-icons/react";
 import { trpcReact } from "@shared/config";
 import { IssueParams } from "@shared/types";
 import { LOADING_PHRASES, getRandomIndex } from "@shared/utils";
 import { useDebounce, useKeyPress, useWindow } from "@src/web/hooks";
-import { readerLayout } from "@src/web/state";
+import { globalState$, readerLayout } from "@src/web/state";
 import { useCallback, useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
@@ -25,18 +31,23 @@ export default function Issue() {
   const [mouseOver, setMouseOver] = useState<boolean>(false);
   const [navigationShowing, setNavigationShowing] = useState<boolean>(true);
 
+  const { uiState } = globalState$.get();
+  const activeLayout = readerLayout.get();
+
   const keyPress = useDebounce((e: KeyboardEvent) => {
-    console.log(e.key);
-    if (e.key === "[" || e.keyCode === 104) {
+    console.log(uiState.distractionFreeMode, e.keyCode);
+    if (e.keyCode === 91 || e.keyCode === 104) {
+      console.log(activeIndex);
       handleLeftClick();
-    } else if (e.key === "]" || e.keyCode === 108) {
+    } else if (e.keyCode === 93 || e.keyCode === 108) {
+      console.log(activeIndex);
       handleRightClick();
+    } else if (e.keyCode === 14) {
+      globalState$.uiState.distractionFreeMode.set(false);
     } else {
       return;
     }
-  }, 50);
-
-  const activeLayout = readerLayout.get();
+  }, 1000);
 
   const { data: issue, isLoading: loadingIssue } =
     trpcReact.issue.getIssue.useQuery(
@@ -62,7 +73,7 @@ export default function Issue() {
 
   // go forward or backward a page
   // TODO
-  useKeyPress((e) => keyPress(e));
+  useKeyPress(keyPress);
 
   useEffect(() => {
     const navigationTimeout = setTimeout(() => {
@@ -89,6 +100,15 @@ export default function Issue() {
     }
     setActiveIndex(activeIndex - 1);
   }, [activeIndex]);
+
+  const toggleDistractionFreeMode = useCallback(() => {
+    toast.success("You're now in distraction free mode", {
+      position: "top-right",
+    });
+    globalState$.uiState.set({
+      distractionFreeMode: true,
+    });
+  }, []);
 
   return (
     <Box
@@ -130,7 +150,7 @@ export default function Issue() {
         </Box>
       )}
       {/* navigation overlay */}
-      {navigationShowing && (
+      {navigationShowing && !uiState.distractionFreeMode && (
         <AnimatedBox
           transition={{
             duration: 0.5,
@@ -196,16 +216,40 @@ export default function Issue() {
               }}
               id="drag-region"
             />
+            {/* actions */}
             <Box
               css={{
                 display: "flex",
                 alignContent: "center",
                 alignItems: "center",
-                background: "$blackMuted",
-                backdropFilter: "blur(400px)",
-                borderRadius: "$md",
+                gap: "$md",
               }}
             >
+              <Button
+                onMouseOver={() => setMouseOver(true)}
+                onMouseLeave={() => setMouseOver(false)}
+                css={{
+                  color: "$primary",
+                  padding: "$lg",
+                  display: "flex",
+                  alignContent: "center",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  borderRadius: "$md",
+                  background: "$blackMuted",
+                  "&:hover": {
+                    background: "$primary",
+                    color: "$white",
+                  },
+                }}
+                onClick={toggleDistractionFreeMode}
+              >
+                {uiState.distractionFreeMode ? (
+                  <EyeSlash size={16} />
+                ) : (
+                  <Eye size={16} />
+                )}
+              </Button>
               <Button
                 onMouseOver={() => setMouseOver(true)}
                 onMouseLeave={() => setMouseOver(false)}
@@ -218,6 +262,7 @@ export default function Issue() {
                   alignItems: "center",
                   justifyContent: "center",
                   borderRadius: "$md",
+                  background: "$blackMuted",
                   "&:hover": {
                     background: "$primary",
                     color: "$white",

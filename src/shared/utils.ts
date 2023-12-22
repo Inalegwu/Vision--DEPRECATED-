@@ -37,7 +37,7 @@ export function clamp(num: number, min: number, max: number): number {
   return Math.max(Math.min(num, max), min);
 }
 
-export function debounce<A = any[], R = void>(
+export function debounce<A = unknown[], R = void>(
   fn: (args: A) => R,
   ms: number,
 ): [(args: A) => Promise<R>, () => void] {

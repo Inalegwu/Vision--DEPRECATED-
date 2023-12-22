@@ -1,8 +1,8 @@
-import { Layout, Spinner } from "../components";
-import { trpcReact } from "../../shared/config";
-import { Box, Text } from "../components/atoms";
-import { IssueParams } from "../../shared/types";
 import { useParams } from "react-router-dom";
+import { trpcReact } from "../../shared/config";
+import { IssueParams } from "../../shared/types";
+import { Layout, Spinner } from "../components";
+import { Box, Text } from "../components/atoms";
 // import { useCallback, useState } from "react";
 
 export default function EditIssue() {
@@ -78,7 +78,7 @@ export default function EditIssue() {
             alignItems: "center",
             justifyContent: "center",
           }}
-        ></Box>
+        />
       </Box>
     </Layout>
   );

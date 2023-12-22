@@ -52,6 +52,10 @@ const common: Configuration = {
           from: "node_modules/better-sqlite3/",
           to: "node_modules/better-sqlite3/",
         },
+        {
+          from: "node_modules/node-unrar-js/",
+          to: "node_modules/node-unrar-js/",
+        },
       ],
     }),
   ],

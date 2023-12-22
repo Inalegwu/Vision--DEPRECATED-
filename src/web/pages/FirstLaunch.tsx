@@ -16,18 +16,18 @@ export default function FirstLaunch() {
   const router = useNavigate();
 
   useEffect(() => {
-     globalState$.set({
-      appState:{
-        applicationId:v4(),
-        firstLaunch:false,
+    globalState$.set({
+      appState: {
+        applicationId: v4(),
+        firstLaunch: false,
       },
-      uiState:globalState$.get().uiState
-     })
-  }, [globalState$]);
+      uiState: globalState$.get().uiState,
+    });
+  }, []);
 
   const handleClick = useCallback(() => {
     router("/");
-  },[])
+  }, [router]);
 
   return (
     <Layout>
