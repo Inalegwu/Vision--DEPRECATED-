@@ -67,7 +67,7 @@ export default function Issue() {
       },
     );
 
-  const { mutate: maximizeWindow } =
+  const { mutate: maximizeWindow ,data:windowStat} =
     trpcReact.window.maximizeWindow.useMutation();
 
   // show or hide the overlay navigation when the mouse moves
@@ -115,7 +115,10 @@ if (!navigationShowing) {
       position: "top-right",
     });
     globalState$.uiState.distractionFreeMode.set(true);
+    if(windowStat?.fullscreen_status) return
+
     maximizeWindow();
+
   }, []);
 
   return (
