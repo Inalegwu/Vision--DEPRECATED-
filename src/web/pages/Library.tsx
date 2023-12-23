@@ -20,9 +20,8 @@ import { Plus } from "@phosphor-icons/react";
 import { trpcReact } from "@shared/config";
 import { Reasons } from "@shared/types";
 import {
-  FALSE_ARRAY,
   LOADING_PHRASES,
-  getRandomIndex,
+  getRandomIndex
 } from "@src/shared/utils";
 import { globalState$ } from "@src/web/state";
 import { AnimatePresence } from "framer-motion";
@@ -89,7 +88,7 @@ export default function Library() {
     trpcReact.library.getLibrary.useQuery();
 
   const { mutate: createCollection, isLoading: _creating } =
-    trpcReact.library.createCollection.useMutation({
+    trpcReact.collection.createCollection.useMutation({
       onSuccess: (data) => {
         toast.success(`${data?.data[0].name} Created Successfully`);
         utils.library.getLibrary.invalidate();
@@ -273,7 +272,7 @@ export default function Library() {
             return <IssueCard issue={v} key={v.id} />;
           })}
           {fetchingLibraryContent &&
-            FALSE_ARRAY.map((v) => {
+            [...Array(10)].map((v) => {
               return <IssueSkeleton key={v} />;
             })}
         </Box>

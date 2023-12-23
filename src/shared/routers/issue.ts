@@ -5,6 +5,8 @@ import { TRPCError } from "@trpc/server";
 import { eq } from "drizzle-orm";
 import z from "zod";
 
+
+// all actions that can be carried out on an issue
 export const issueRouter = router({
   getIssue: publicProcedure
     .input(z.object({ id: z.string() }))

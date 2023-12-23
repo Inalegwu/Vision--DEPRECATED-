@@ -14,7 +14,7 @@ type Props = {
 
 export default function IssueCard(props: Props) {
   const router = useNavigate();
-  const utils=trpcReact.useUtils();
+  const utils = trpcReact.useUtils();
   const contextMenuRef = useRef<ContextMenuRefProps>(null);
   const [points, setPoints] = useState<Point>({
     x: 0,
@@ -23,17 +23,18 @@ export default function IssueCard(props: Props) {
 
   const contextVisible = contextMenuRef.current?.isVisible();
 
-  const {mutate,isLoading:deleting}=trpcReact.issue.removeIssue.useMutation({
-    onError:(err)=>{
-      console.log(err);
-      toast.error("Couldn't Delete That Issue")
-    },
-    onSuccess:()=>{
-      utils.issue.invalidate();
-      utils.library.invalidate();
-      toast.success(`${props.issue.name} Deleted Successfully`);
-    },
-  });
+  const { mutate, isLoading: deleting } =
+    trpcReact.issue.removeIssue.useMutation({
+      onError: (err) => {
+        console.log(err);
+        toast.error("Couldn't Delete That Issue");
+      },
+      onSuccess: () => {
+        utils.issue.invalidate();
+        utils.library.invalidate();
+        toast.success(`${props.issue.name} Deleted Successfully`);
+      },
+    });
 
   console.log(contextVisible);
 
@@ -41,13 +42,16 @@ export default function IssueCard(props: Props) {
     router(`/${props.issue.id}`);
   }, [props.issue]);
 
-  const handleContextMenu=useCallback((e:React.MouseEvent<HTMLDivElement, MouseEvent>)=>{
-setPoints({
-  x:e.pageX,
-  y:e.pageY,
-})
-contextMenuRef.current?.show()
-  },[])
+  const handleContextMenu = useCallback(
+    (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+      setPoints({
+        x: e.pageX,
+        y: e.pageY,
+      });
+      contextMenuRef.current?.show();
+    },
+    [],
+  );
 
   useWindow("click", () => {
     if (contextVisible) {
@@ -55,28 +59,67 @@ contextMenuRef.current?.show()
     }
   });
 
-  const deleteIssue=useCallback(()=>{
+  const deleteIssue = useCallback(() => {
     contextMenuRef.current?.hide();
     console.log(props.issue.id);
     mutate({
-      id:props.issue.id
-    })
+      id: props.issue.id,
+    });
 
-    if(deleting){
+    if (deleting) {
       toast.loading(`Deleting ${props.issue.name}`);
     }
-
-  },[props.issue,deleting])
+  }, [props.issue, deleting]);
 
   return (
     <>
-      <ContextMenu style={{border:"0.12px solid $lightGray",background:"$blackMuted",borderRadius:"$md",backdropFilter:"blur(100px)",display:"flex",flexDirection:"column",alignContent:"center",alignItems:"center",justifyContent:"center"}} ref={contextMenuRef} points={points}>
-        <LinkButton css={{color:"$white",fontSize:14,padding:"$lg",borderBottom:"0.1px solid $lightGray",width:"100%",display:"flex",alignContent:"center",alignItems:"center",justifyContent:"flex-start",gap:"$md"}} to={`/editIssue/${props.issue.id}`}>
-          <Pencil size={14}/>
+      <ContextMenu
+        style={{
+          border: "0.12px solid $lightGray",
+          background: "$blackMuted",
+          borderRadius: "$md",
+          backdropFilter: "blur(100px)",
+          display: "flex",
+          flexDirection: "column",
+          alignContent: "center",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+        ref={contextMenuRef}
+        points={points}
+      >
+        <LinkButton
+          css={{
+            color: "$white",
+            fontSize: 14,
+            padding: "$lg",
+            borderBottom: "0.1px solid $lightGray",
+            width: "100%",
+            display: "flex",
+            alignContent: "center",
+            alignItems: "center",
+            justifyContent: "flex-start",
+            gap: "$md",
+          }}
+          to={`/editIssue/${props.issue.id}`}
+        >
+          <Pencil size={14} />
           <Text>Edit Issue Info</Text>
         </LinkButton>
-        <Button onClick={deleteIssue} css={{color:"$danger",padding:"$lg",width:"100%",display:"flex",alignContent:"center",alignItems:"center",justifyContent:"flex-start",gap:"$md"}}>
-         <Trash size={14}/>
+        <Button
+          onClick={deleteIssue}
+          css={{
+            color: "$danger",
+            padding: "$lg",
+            width: "100%",
+            display: "flex",
+            alignContent: "center",
+            alignItems: "center",
+            justifyContent: "flex-start",
+            gap: "$md",
+          }}
+        >
+          <Trash size={14} />
           <Text>Delete Issue</Text>
         </Button>
       </ContextMenu>
@@ -94,7 +137,7 @@ contextMenuRef.current?.show()
           alignItems: "flex-start",
           gap: "$md",
           color: "$white",
-          opacity:`${deleting?0.5:1}`,
+          opacity: `${deleting ? 0.5 : 1}`,
           transition: "0.3s ease-in-out",
           "&:hover": {
             cursor: "pointer",

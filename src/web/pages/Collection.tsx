@@ -16,7 +16,6 @@ import {
   VStack,
 } from "@components/index";
 import { CaretLeft, PencilCircle, Plus, Trash, X } from "@phosphor-icons/react";
-import { FALSE_ARRAY } from "@shared/utils";
 import { trpcReact } from "@src/shared/config";
 import { CollectionParams } from "@src/shared/types";
 import { AnimatePresence } from "framer-motion";
@@ -43,11 +42,11 @@ export default function Collection() {
   const { data: collection, isLoading: getting } =
     trpcReact.collection.getIssuesInCollection.useQuery(
       {
-        id: collectionId!,
+        id: collectionId || "",
       },
       {
         onSuccess: (d) => {
-          setName(d?.collection?.name!);
+          setName(d?.collection?.name || "");
         },
       },
     );
@@ -56,9 +55,9 @@ export default function Collection() {
     trpcReact.library.getLibrary.useQuery();
 
   const { mutate: addIssueToLibrary, isLoading: saving } =
-    trpcReact.library.addIssueToCollection.useMutation({
+    trpcReact.collection.addIssueToCollection.useMutation({
       onSuccess: (data) => {
-        toast.success(`${data.result[0].name} Added To Library`);
+        toast.success(`${data.result[0].name} Added To Collection`);
         utils.collection.getIssuesInCollection.invalidate();
         utils.library.invalidate();
         setIssuesListVisible(false);
@@ -66,7 +65,7 @@ export default function Collection() {
     });
 
   const { mutate: changeName, isLoading: changingName } =
-    trpcReact.library.changeIssueName.useMutation({
+    trpcReact.issue.changeIssueName.useMutation({
       onSuccess: () => {
         utils.library.invalidate();
         setEditingName(false);
@@ -74,7 +73,7 @@ export default function Collection() {
     });
 
   const { mutate: deleteCollectionFromDB, isLoading: deletingCollection } =
-    trpcReact.library.deleteCollection.useMutation({
+    trpcReact.collection.deleteCollection.useMutation({
       onSuccess: () => {
         utils.library.getLibrary.invalidate();
         router("/");
@@ -86,18 +85,18 @@ export default function Collection() {
 
   const addToLibrary = useCallback(
     (v: string) => {
-      addIssueToLibrary({ issueId: v, collectionId: collectionId! });
+      addIssueToLibrary({ issueId: v, collectionId: collectionId || "" });
     },
     [collectionId, addIssueToLibrary],
   );
 
   const updateName = useCallback(() => {
-    changeName({ id: collectionId!, newName: name });
+    changeName({ id: collectionId || "", newName: name });
   }, [name, collectionId, changeName]);
 
   const deleteCollection = useCallback(() => {
     if (!collection) return;
-    deleteCollectionFromDB({ id: collection?.collection?.id! });
+    deleteCollectionFromDB({ id: collection?.collection?.id || "" });
   }, [collection, deleteCollectionFromDB]);
 
   return (
@@ -351,10 +350,11 @@ export default function Collection() {
           <AnimatePresence>
             {issuesListVisible && (
               <AnimatedBox
-                initial={{ top: 500, opacity: 0 }}
-                animate={{ top: 218, opacity: 1 }}
-                exit={{ top: 500, opacity: 0 }}
+                initial={{ top: "100%" }}
+                animate={{ top: "35%"}}
+                exit={{ top: "100%" }}
                 transition={{
+                  duration:0.3,
                   ease: "easeInOut",
                 }}
                 css={{
@@ -417,6 +417,10 @@ export default function Collection() {
                         alignContent="flex-start"
                         alignItems="flex-start"
                         justifyContent="center"
+                        style={{
+                          width: "100%",
+                          height: 50,
+                        }}
                       >
                         <Text css={{ fontSize: 15, color: "$white" }}>
                           {v.name}
@@ -434,7 +438,7 @@ export default function Collection() {
           {collection?.collection?.issues.map((v) => {
             return <IssueCard issue={v} key={v.id} />;
           })}
-          {getting && FALSE_ARRAY.map((v) => <IssueSkeleton key={v} />)}
+          {getting && [...Array(10)].map((v) => <IssueSkeleton key={v} />)}
           <Button
             onClick={() => setIssuesListVisible(true)}
             css={{
