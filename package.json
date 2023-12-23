@@ -17,7 +17,7 @@
     "db:generate": "drizzle-kit generate:sqlite",
     "db:push": "drizzle-kit push:sqlite",
     "postinstall": "electron-rebuild",
-    "package": "rimraf dist && pnpm build && pnpm exec electron-builder"
+    "package": "rimraf dist && pnpm build && pnpm exec electron-builder && pnpm db:generate"
   },
   "build": {
     "appId": "com.vision.app",

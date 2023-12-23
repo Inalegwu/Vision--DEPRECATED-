@@ -10,7 +10,7 @@ import {
 import { trpcReact } from "@shared/config";
 import { IssueParams } from "@shared/types";
 import { LOADING_PHRASES, getRandomIndex } from "@shared/utils";
-import { useDebounce, useWindow } from "@src/web/hooks";
+import { useDebounce, useKeyPress } from "@src/web/hooks";
 import { globalState$, readerLayout } from "@src/web/state";
 import { useCallback, useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
@@ -46,7 +46,9 @@ export default function Issue() {
     }
     // ctrl+j to disable distraction free mode
     else if (e.keyCode === 10) {
-      toast.success("Distraction free mode deactivated");
+      toast.success("Distraction free mode deactivated",{
+        position:"top-center"
+      });
       globalState$.uiState.distractionFreeMode.set(false);
     } else {
       return;
@@ -69,14 +71,18 @@ export default function Issue() {
     trpcReact.window.maximizeWindow.useMutation();
 
   // show or hide the overlay navigation when the mouse moves
-  useWindow("mousemove", () => {
-    if (!navigationShowing) {
+  // useWindow("mousemove", () => {
+    
+  // });
+
+  window.addEventListener("mousemove",()=>{
+if (!navigationShowing) {
       setNavigationShowing(true);
     }
-  });
+  })
 
   // go forward or backward a page
-  window.addEventListener("keypress", keyPress);
+  useKeyPress(keyPress)
 
   useEffect(() => {
     const navigationTimeout = setTimeout(() => {
@@ -109,6 +115,7 @@ export default function Issue() {
       position: "top-right",
     });
     globalState$.uiState.distractionFreeMode.set(true);
+    maximizeWindow();
   }, []);
 
   return (
@@ -151,235 +158,237 @@ export default function Issue() {
         </Box>
       )}
       {/* navigation overlay */}
-      {navigationShowing && (
-        <AnimatedBox
-          transition={{
-            duration: 0.5,
-            ease: "easeInOut",
-          }}
-          initial={{
-            opacity: 0,
-          }}
-          animate={{
-            opacity: navigationShowing ? 1 : 0,
-          }}
-          css={{
-            width: "100%",
-            height: "100vh",
-            position: "absolute",
-            zIndex: 99999,
-            padding: "$xl",
-            display: "flex",
-            flexDirection: "column",
-            alignContent: "center",
-            alignItems: "center",
-            justifyContent: "space-between",
-            background: "$blackMuted",
-          }}
-        >
-          <Box
+      {navigationShowing && !uiState.distractionFreeMode && (
+        <>
+          <AnimatedBox
+            transition={{
+              duration: 0.5,
+              ease: "easeInOut",
+            }}
+            initial={{
+              opacity: 0,
+            }}
+            animate={{
+              opacity: navigationShowing ? 1 : 0,
+            }}
             css={{
               width: "100%",
+              height: "100vh",
+              position: "absolute",
+              zIndex: 99999,
+              padding: "$xl",
               display: "flex",
+              flexDirection: "column",
               alignContent: "center",
               alignItems: "center",
-              justifyContent: "flex-start",
-              gap: "$xxxl",
+              justifyContent: "space-between",
+              background: "$blackMuted",
             }}
           >
-            <LinkButton
-              onMouseOver={() => setMouseOver(true)}
-              onMouseLeave={() => setMouseOver(false)}
-              to="/"
-              css={{
-                padding: "$lg",
-                background: "$primary",
-                color: "$white",
-                borderRadius: "$md",
-                display: "flex",
-                alignContent: "center",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <CaretLeft size={16} />
-            </LinkButton>
-            <Text css={{ color: "$white", fontSize: 15 }}>
-              {issue?.issue?.name}
-            </Text>
-            {/* keep the window draggable */}
             <Box
               css={{
-                flex: 1,
-                padding: "$md",
-                height: 50,
-                cursor: "grabbing",
-              }}
-              id="drag-region"
-            />
-            {/* actions */}
-            <Box
-              css={{
-                display: "flex",
-                alignContent: "center",
-                alignItems: "center",
-                gap: "$md",
-              }}
-            >
-              <Button
-                onMouseOver={() => setMouseOver(true)}
-                onMouseLeave={() => setMouseOver(false)}
-                css={{
-                  color: "$primary",
-                  padding: "$lg",
-                  display: "flex",
-                  alignContent: "center",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  borderRadius: "$md",
-                  background: "$blackMuted",
-                  "&:hover": {
-                    background: "$primary",
-                    color: "$white",
-                  },
-                }}
-                onClick={toggleDistractionFreeMode}
-              >
-                {uiState.distractionFreeMode ? (
-                  <EyeSlash size={16} />
-                ) : (
-                  <Eye size={16} />
-                )}
-              </Button>
-              <Button
-                onMouseOver={() => setMouseOver(true)}
-                onMouseLeave={() => setMouseOver(false)}
-                onClick={() => maximizeWindow()}
-                css={{
-                  color: "$primary",
-                  padding: "$lg",
-                  display: "flex",
-                  alignContent: "center",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  borderRadius: "$md",
-                  background: "$blackMuted",
-                  "&:hover": {
-                    background: "$primary",
-                    color: "$white",
-                  },
-                }}
-              >
-                <CornersOut size={16} />
-              </Button>
-            </Box>
-          </Box>
-          {/* track view */}
-          <VStack style={{ width: "100%" }} gap={6}>
-            {!loadingIssue && (
-              <Text css={{ fontSize: 15, color: "$gray" }}>
-                {activeIndex} / {issue?.issue.pages.length! - 1}
-              </Text>
-            )}
-            <Box
-              onMouseOver={() => setMouseOver(true)}
-              onMouseDown={() => setMouseOver(false)}
-              css={{
-                background: "$blackMuted",
-                backdropFilter: "blur(50px)",
-                borderRadius: "$md",
                 width: "100%",
                 display: "flex",
                 alignContent: "center",
                 alignItems: "center",
-                lineHeight: 80,
-                overflowY: "hidden",
+                justifyContent: "flex-start",
+                gap: "$xxxl",
               }}
             >
-              <Button
+              <LinkButton
+                onMouseOver={() => setMouseOver(true)}
+                onMouseLeave={() => setMouseOver(false)}
+                to="/"
                 css={{
+                  padding: "$lg",
+                  background: "$primary",
+                  color: "$white",
+                  borderRadius: "$md",
                   display: "flex",
                   alignContent: "center",
                   alignItems: "center",
                   justifyContent: "center",
-                  color: "$white",
-                  padding: "$sm",
-                  height: "100%",
-                  width: "5%",
-                  background: "$blackMuted",
-                  backdropFilter: "blur(400px)",
-                  borderTopLeftRadius: "$md",
-                  borderBottomLeftRadius: "$md",
                 }}
-                onClick={handleLeftClick}
-                disabled={activeIndex === 0}
               >
-                <CaretLeft />
-              </Button>
+                <CaretLeft size={16} />
+              </LinkButton>
+              <Text css={{ color: "$white", fontSize: 15 }}>
+                {issue?.issue?.name}
+              </Text>
+              {/* keep the window draggable */}
               <Box
                 css={{
-                  width: "90%",
-                  height: "100%",
+                  flex: 1,
+                  padding: "$md",
+                  height: 50,
+                  cursor: "grabbing",
+                }}
+                id="drag-region"
+              />
+              {/* actions */}
+              <Box
+                css={{
                   display: "flex",
                   alignContent: "center",
                   alignItems: "center",
+                  gap: "$md",
                 }}
               >
-                <AnimatedBox
-                  initial={{
-                    width: 0,
+                <Button
+                  onMouseOver={() => setMouseOver(true)}
+                  onMouseLeave={() => setMouseOver(false)}
+                  css={{
+                    color: "$primary",
+                    padding: "$lg",
+                    display: "flex",
+                    alignContent: "center",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    borderRadius: "$md",
+                    background: "$blackMuted",
+                    "&:hover": {
+                      background: "$primary",
+                      color: "$white",
+                    },
                   }}
-                  transition={{
-                    duration: 0.3,
-                    bounce: true,
-                    ease: "easeOut",
+                  onClick={toggleDistractionFreeMode}
+                >
+                  {uiState.distractionFreeMode ? (
+                    <EyeSlash size={16} />
+                  ) : (
+                    <Eye size={16} />
+                  )}
+                </Button>
+                <Button
+                  onMouseOver={() => setMouseOver(true)}
+                  onMouseLeave={() => setMouseOver(false)}
+                  onClick={() => maximizeWindow()}
+                  css={{
+                    color: "$primary",
+                    padding: "$lg",
+                    display: "flex",
+                    alignContent: "center",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    borderRadius: "$md",
+                    background: "$blackMuted",
+                    "&:hover": {
+                      background: "$primary",
+                      color: "$white",
+                    },
                   }}
-                  animate={{
-                    width: `${
-                      (activeIndex / issue?.issue.pages.length!) * 100
-                    }%`,
-                  }}
-                  ref={scrubRef}
+                >
+                  <CornersOut size={16} />
+                </Button>
+              </Box>
+            </Box>
+            {/* track view */}
+            <VStack style={{ width: "100%" }} gap={6}>
+              {!loadingIssue && (
+                <Text css={{ fontSize: 15, color: "$gray" }}>
+                  {activeIndex} / {issue?.issue.pages.length! - 1}
+                </Text>
+              )}
+              <Box
+                onMouseOver={() => setMouseOver(true)}
+                onMouseDown={() => setMouseOver(false)}
+                css={{
+                  background: "$blackMuted",
+                  backdropFilter: "blur(50px)",
+                  borderRadius: "$md",
+                  width: "100%",
+                  display: "flex",
+                  alignContent: "center",
+                  alignItems: "center",
+                  lineHeight: 80,
+                  overflowY: "hidden",
+                }}
+              >
+                <Button
                   css={{
                     display: "flex",
                     alignContent: "center",
                     alignItems: "center",
-                    gap: "$md",
-                    height: "80%",
+                    justifyContent: "center",
+                    color: "$white",
                     padding: "$sm",
+                    height: "100%",
+                    width: "5%",
+                    background: "$blackMuted",
+                    backdropFilter: "blur(400px)",
+                    borderTopLeftRadius: "$md",
+                    borderBottomLeftRadius: "$md",
+                  }}
+                  onClick={handleLeftClick}
+                  disabled={activeIndex === 0}
+                >
+                  <CaretLeft />
+                </Button>
+                <Box
+                  css={{
+                    width: "90%",
+                    height: "100%",
+                    display: "flex",
+                    alignContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <AnimatedBox
+                    initial={{
+                      width: 0,
+                    }}
+                    transition={{
+                      duration: 0.3,
+                      bounce: true,
+                      ease: "easeOut",
+                    }}
+                    animate={{
+                      width: `${
+                        (activeIndex / issue?.issue.pages.length!) * 100
+                      }%`,
+                    }}
+                    ref={scrubRef}
+                    css={{
+                      display: "flex",
+                      alignContent: "center",
+                      alignItems: "center",
+                      gap: "$md",
+                      height: "80%",
+                      padding: "$sm",
+                      borderTopRightRadius: "$md",
+                      borderBottomRightRadius: "$md",
+                      overflowY: "scroll",
+                      background: "$primary",
+                    }}
+                  />
+                </Box>
+                <Button
+                  onMouseOver={() => setMouseOver(true)}
+                  onMouseLeave={() => setMouseOver(false)}
+                  css={{
+                    display: "flex",
+                    alignContent: "center",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    color: "$white",
+                    padding: "$sm",
+                    background: "$blackMuted",
+                    backdropFilter: "blur(400px)",
+                    left: "95%",
+                    height: "100%",
+                    width: "5%",
                     borderTopRightRadius: "$md",
                     borderBottomRightRadius: "$md",
-                    overflowY: "scroll",
-                    background: "$primary",
                   }}
-                />
+                  disabled={activeIndex === issue?.issue.pages.length! - 1}
+                  onClick={handleRightClick}
+                >
+                  <CaretRight />
+                </Button>
               </Box>
-              <Button
-                onMouseOver={() => setMouseOver(true)}
-                onMouseLeave={() => setMouseOver(false)}
-                css={{
-                  display: "flex",
-                  alignContent: "center",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  color: "$white",
-                  padding: "$sm",
-                  background: "$blackMuted",
-                  backdropFilter: "blur(400px)",
-                  left: "95%",
-                  height: "100%",
-                  width: "5%",
-                  borderTopRightRadius: "$md",
-                  borderBottomRightRadius: "$md",
-                }}
-                disabled={activeIndex === issue?.issue.pages.length! - 1}
-                onClick={handleRightClick}
-              >
-                <CaretRight />
-              </Button>
-            </Box>
-          </VStack>
-        </AnimatedBox>
+            </VStack>
+          </AnimatedBox>
+        </>
       )}
       {/* Panel View */}
       {activeLayout.layout === "SinglePage" ? (

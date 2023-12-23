@@ -53,11 +53,7 @@ export default function Collection() {
     );
 
   const { data: issues, isLoading: gettingIssues } =
-    trpcReact.library.getLibrary.useQuery(undefined, {
-      onSuccess: (d) => {
-        console.log(d);
-      },
-    });
+    trpcReact.library.getLibrary.useQuery();
 
   const { mutate: addIssueToLibrary, isLoading: saving } =
     trpcReact.library.addIssueToCollection.useMutation({
@@ -208,7 +204,7 @@ export default function Collection() {
               to="/"
               css={{
                 background: "$primary",
-                padding: "$md",
+                padding: "$lg",
                 borderRadius: "$md",
                 display: "flex",
                 alignContent: "center",
@@ -217,7 +213,7 @@ export default function Collection() {
                 color: "$white",
               }}
             >
-              <CaretLeft />
+              <CaretLeft size={16} />
             </LinkButton>
           </HStack>
           <HStack
@@ -415,15 +411,14 @@ export default function Collection() {
                     >
                       <Image
                         src={v.thumbnailUrl}
-                        css={{ width: 35, height: 45, borderRadius: "$md" }}
+                        css={{ width: 42, height: 52, borderRadius: "$md" }}
                       />
                       <VStack
                         alignContent="flex-start"
                         alignItems="flex-start"
                         justifyContent="center"
-                        gap={4}
                       >
-                        <Text css={{ fontSize: 16, color: "$white" }}>
+                        <Text css={{ fontSize: 15, color: "$white" }}>
                           {v.name}
                         </Text>
                         <Text css={{ fontSize: 12, color: "$gray" }}>
