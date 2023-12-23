@@ -21,6 +21,7 @@ export const { styled, css, config } = createStitches({
       xxl: "12px",
       xxxl: "14px",
       hg: "20px",
+      xhg:"40px",
     },
     radii: {
       sm: "2px",

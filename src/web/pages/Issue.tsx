@@ -53,7 +53,7 @@ export default function Issue() {
     } else {
       return;
     }
-  }, 1000);
+  },100);
 
   const { data: issue, isLoading: loadingIssue } =
     trpcReact.issue.getIssue.useQuery(

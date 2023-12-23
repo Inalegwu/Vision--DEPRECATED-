@@ -12,6 +12,7 @@ const createWindow = () => {
 
   const mainWindow = new BrowserWindow({
     frame: false,
+    autoHideMenuBar:true,
     width: windowSize.width - 50,
     height: windowSize.height - 50,
     webPreferences: {

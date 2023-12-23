@@ -45,6 +45,8 @@ export type ComicMetaData = {
 export type ApplicationState = {
   firstLaunch: boolean;
   applicationId: string | undefined;
+  openTime?:number;
+  closeTime?:number;
 };
 
 // INCOMING

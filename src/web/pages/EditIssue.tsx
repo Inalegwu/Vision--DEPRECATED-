@@ -1,12 +1,11 @@
 import { CaretLeft, Pencil, X } from "@phosphor-icons/react";
+import { trpcReact } from "@shared/config";
+import { IssueParams } from "@shared/types";
 import moment from "moment";
 import { useCallback, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { trpcReact } from "../../shared/config";
-import { IssueParams } from "../../shared/types";
 import { HStack, Layout, VStack } from "../components";
 import { Box, Button, Image, Input, Text } from "../components/atoms";
-// import { useCallback, useState } from "react";
 
 export default function EditIssue() {
   const utils=trpcReact.useUtils();
@@ -21,7 +20,9 @@ export default function EditIssue() {
   const [editingName,setEditingName]=useState<boolean>(false);
 
   const goBack=useCallback(()=>{
-    router("/");
+    router("/",{
+      unstable_viewTransition:true
+    });
   },[])
 
   const { data: issue, isLoading: fetchingIssue } =
@@ -65,7 +66,7 @@ export default function EditIssue() {
         <VStack alignContent="flex-start" alignItems="flex-start" justifyContent="space-between" style={{height:"100%",width:"60%"}}>
           {/* navigation */}
           <HStack alignContent="center" alignItems="center" justifyContent="flex-start" style={{padding:"$xl",borderRadius:"$md"}}>
-            <Button onClick={goBack} css={{display:"flex",alignContent:"center",alignItems:"center",justifyContent:"center",padding:"$lg",background:"$primary",color:"$white"}}>
+            <Button onClick={goBack} css={{display:"flex",alignContent:"center",alignItems:"center",justifyContent:"center",padding:"$lg",background:"$primary",color:"$white",borderRadius:"$md"}}>
               <CaretLeft size={15}/>
             </Button>
           </HStack>
