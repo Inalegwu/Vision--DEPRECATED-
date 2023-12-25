@@ -6,13 +6,15 @@ import {
   CornersOut,
   Eye,
   EyeSlash,
+  Lightbulb,
+  LightbulbFilament,
 } from "@phosphor-icons/react";
 import { trpcReact } from "@shared/config";
 import { IssueParams } from "@shared/types";
 import { LOADING_PHRASES, getRandomIndex } from "@shared/utils";
-import { useDebounce, useKeyPress } from "@src/web/hooks";
+import { useDebounce, useKeyPress, useTimeout } from "@src/web/hooks";
 import { globalState$, readerLayout } from "@src/web/state";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -46,14 +48,14 @@ export default function Issue() {
     }
     // ctrl+j to disable distraction free mode
     else if (e.keyCode === 10) {
-      toast.success("Distraction free mode deactivated",{
-        position:"top-center"
+      toast.success("Distraction free mode deactivated", {
+        position: "top-center",
       });
       globalState$.uiState.distractionFreeMode.set(false);
     } else {
       return;
     }
-  },100);
+  }, 100);
 
   const { data: issue, isLoading: loadingIssue } =
     trpcReact.issue.getIssue.useQuery(
@@ -67,34 +69,35 @@ export default function Issue() {
       },
     );
 
-  const { mutate: maximizeWindow ,data:windowStat} =
+  const { mutate: maximizeWindow, data: windowStat } =
     trpcReact.window.maximizeWindow.useMutation();
 
-  // show or hide the overlay navigation when the mouse moves
-  // useWindow("mousemove", () => {
-    
-  // });
-
-  window.addEventListener("mousemove",()=>{
-if (!navigationShowing) {
+  window.addEventListener("mousemove", () => {
+    if (!navigationShowing) {
       setNavigationShowing(true);
     }
-  })
+  });
 
   // go forward or backward a page
-  useKeyPress(keyPress)
+  useKeyPress(keyPress);
 
-  useEffect(() => {
-    const navigationTimeout = setTimeout(() => {
-      if (navigationShowing && !mouseOver) {
-        setNavigationShowing(false);
-      }
-    }, 4000);
+  // useEffect(() => {
+  //   const navigationTimeout = setTimeout(() => {
+  //     if (navigationShowing && !mouseOver) {
+  //       setNavigationShowing(false);
+  //     }
+  //   }, 4000);
 
-    return () => {
-      clearTimeout(navigationTimeout);
-    };
-  }, [navigationShowing, mouseOver]);
+  //   return () => {
+  //     clearTimeout(navigationTimeout);
+  //   };
+  // }, [navigationShowing, mouseOver]);
+
+  useTimeout(() => {
+    if (navigationShowing && !mouseOver) {
+      setNavigationShowing(false);
+    }
+  }, 4000);
 
   const handleRightClick = useCallback(() => {
     if (activeIndex === issue?.issue.pages.length! - 1) {
@@ -115,10 +118,13 @@ if (!navigationShowing) {
       position: "top-right",
     });
     globalState$.uiState.distractionFreeMode.set(true);
-    if(windowStat?.fullscreen_status) return
+    if (windowStat?.fullscreen_status) return;
 
     maximizeWindow();
+  }, []);
 
+  const toggleAmbientBackground = useCallback(() => {
+    globalState$.uiState.ambientBackground.set(!uiState.ambientBackground);
   }, []);
 
   return (
@@ -254,6 +260,33 @@ if (!navigationShowing) {
                       color: "$white",
                     },
                   }}
+                  onClick={toggleAmbientBackground}
+                  title="Turn On/Off Ambient Mode"
+                >
+                  {uiState.ambientBackground ? (
+                    <LightbulbFilament size={16} />
+                  ) : (
+                    <Lightbulb size={16} />
+                  )}
+                </Button>
+                <Button
+                  onMouseOver={() => setMouseOver(true)}
+                  onMouseLeave={() => setMouseOver(false)}
+                  css={{
+                    color: "$primary",
+                    padding: "$lg",
+                    display: "flex",
+                    alignContent: "center",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    borderRadius: "$md",
+                    background: "$blackMuted",
+                    "&:hover": {
+                      background: "$primary",
+                      color: "$white",
+                    },
+                  }}
+                  title="Turn on Distraction Free Mode"
                   onClick={toggleDistractionFreeMode}
                 >
                   {uiState.distractionFreeMode ? (
@@ -280,6 +313,7 @@ if (!navigationShowing) {
                       color: "$white",
                     },
                   }}
+                  title="Toggle Fullscreen"
                 >
                   <CornersOut size={16} />
                 </Button>

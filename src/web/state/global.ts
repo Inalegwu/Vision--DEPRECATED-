@@ -10,6 +10,7 @@ export const globalState$ = observable<GlobalState>({
   },
   uiState: {
     distractionFreeMode: false,
+    ambientBackground: false,
   },
 });
 

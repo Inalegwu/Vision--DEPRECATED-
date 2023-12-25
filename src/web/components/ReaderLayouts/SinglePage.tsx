@@ -1,5 +1,6 @@
 import { AnimatedBox, AnimatedImage, Box, Image } from "@components/atoms";
 import { LayoutProps } from "@src/shared/types";
+import { globalState$ } from "@src/web/state";
 import { useState } from "react";
 
 function SinglePage({ pages, activeIndex }: LayoutProps) {
@@ -9,6 +10,8 @@ function SinglePage({ pages, activeIndex }: LayoutProps) {
     x: 0,
     y: 0,
   });
+
+  const ambientMode = globalState$.uiState.ambientBackground.get();
 
   // TODO react-use-gesture for pinch to zoom
   // and dragging and all the fun stuff
@@ -35,19 +38,44 @@ function SinglePage({ pages, activeIndex }: LayoutProps) {
         overflow: "hidden",
       }}
     >
-      <Image src={pages[activeIndex].content} alt={pages[activeIndex].name} css={{width:"100%",height:"100%",position:"absolute",zIndex:0,opacity:0.6}}/>
-     <Box css={{width:"100%",height:"100%",background:"transparent",backdropFilter:"blur(100px)",position:"absolute",zIndex:1,display:"flex",alignContent:"center",alignItems:"center",justifyContent:"center"}}>
-       <AnimatedImage
-        src={pages[activeIndex].content}
-        alt={pages[activeIndex].name}
+      {ambientMode && (
+        <Image
+          src={pages[activeIndex].content}
+          alt={pages[activeIndex].name}
+          css={{
+            width: "100%",
+            height: "100%",
+            position: "absolute",
+            zIndex: 0,
+            opacity: 0.6,
+          }}
+        />
+      )}
+      <Box
         css={{
+          width: "100%",
           height: "100%",
-          aspectRatio: 1,
-          borderLeft:"0.1px solid $gray",
-          borderRight:"0.1px solid $gray"
+          background: "transparent",
+          backdropFilter: "blur(100px)",
+          position: "absolute",
+          zIndex: 1,
+          display: "flex",
+          alignContent: "center",
+          alignItems: "center",
+          justifyContent: "center",
         }}
-      />
-     </Box>
+      >
+        <AnimatedImage
+          src={pages[activeIndex].content}
+          alt={pages[activeIndex].name}
+          css={{
+            height: "100%",
+            aspectRatio: 1,
+            borderLeft: "0.1px solid $gray",
+            borderRight: "0.1px solid $gray",
+          }}
+        />
+      </Box>
     </AnimatedBox>
   );
 }

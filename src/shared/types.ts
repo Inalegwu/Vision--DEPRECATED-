@@ -45,13 +45,14 @@ export type ComicMetaData = {
 export type ApplicationState = {
   firstLaunch: boolean;
   applicationId: string | undefined;
-  openTime?:number;
-  closeTime?:number;
+  openTime?: number;
+  closeTime?: number;
 };
 
 // INCOMING
 export type UIState = {
   distractionFreeMode: boolean;
+  ambientBackground: boolean;
 };
 
 export type Point = {
