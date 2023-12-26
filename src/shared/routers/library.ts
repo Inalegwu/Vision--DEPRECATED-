@@ -43,12 +43,6 @@ export const libraryRouter = router({
           .replace(/(\d+)$/g, "")
           .replace("-", " ");
 
-        // check if an issue already exists by evaluating it's name
-        // I should probably do this with an issue hash instead
-        // issue with the same name will resolve to the same hash
-        // and as such , they can be searched for by their hash values instead of
-        // names which are susceptible to conversion errors and the likes
-
         const issueExists = await ctx.db.query.issues.findFirst({
           where: (issues, { eq }) => eq(issues.name, name),
         });
