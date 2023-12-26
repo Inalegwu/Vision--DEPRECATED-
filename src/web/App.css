@@ -16,6 +16,7 @@ body {
   -ms-user-select: none;
   user-select: none;
   overflow: hidden;
+  min-width:200px;
 }
 
 #drag-region {
