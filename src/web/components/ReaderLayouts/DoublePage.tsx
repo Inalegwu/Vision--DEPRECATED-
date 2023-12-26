@@ -1,10 +1,13 @@
 import { observer } from "@legendapp/state/react";
+import { globalState$ } from "@src/web/state";
 import { LayoutProps } from "../../../shared/types";
 import { AnimatedImage, Box } from "../atoms";
 
 // TODO implement the actual double page view
 
 const DoublePage = observer(({ pages, activeIndex }: LayoutProps) => {
+  const ambientMode = globalState$.uiState.ambientBackground.get();
+
   if (!pages) {
     return <></>;
   }
@@ -18,26 +21,30 @@ const DoublePage = observer(({ pages, activeIndex }: LayoutProps) => {
         alignContent: "center",
         alignItems: "center",
         justifyContent: "center",
+        padding: "$xxxl",
+        gap: "$lg",
       }}
     >
       <AnimatedImage
-        src={pages[activeIndex].content}
-        alt={pages[activeIndex].name}
+        src={pages[activeIndex]?.content}
+        alt={pages[activeIndex]?.name}
         css={{
           width: "50%",
           height: "100%",
           margin: "auto",
           aspectRatio: 1,
+          borderRadius: "$lg",
         }}
       />
       <AnimatedImage
-        src={pages[activeIndex + 1].content}
-        alt={pages[activeIndex + 1].content}
+        src={pages[activeIndex + 1]?.content}
+        alt={pages[activeIndex + 1]?.content}
         css={{
           width: "50%",
           height: "100%",
           margin: "auto",
           aspectRatio: 1,
+          borderRadius: "$lg",
         }}
       />
     </Box>

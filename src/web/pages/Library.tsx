@@ -307,8 +307,8 @@ export default function Library() {
             return <IssueCard issue={v} key={v.id} />;
           })}
           {fetchingLibraryContent &&
-            [...Array(10)].map((v) => {
-              return <IssueSkeleton key={v} />;
+            [...Array(10)].map((_, idx) => {
+              return <IssueSkeleton key={`${idx}`} />;
             })}
         </Box>
       </Box>

@@ -12,6 +12,7 @@ import {
   IssueCard,
   IssueSkeleton,
   Layout,
+  Skeleton,
   Spinner,
   VStack,
 } from "@components/index";
@@ -51,6 +52,7 @@ export default function Collection() {
       },
     );
 
+  // use this to populate the list of issues to add to the collection
   const { data: issues, isLoading: gettingIssues } =
     trpcReact.library.getLibrary.useQuery();
 
@@ -245,6 +247,25 @@ export default function Collection() {
               </>
             ) : (
               <>
+                {getting && (
+                  <Skeleton
+                    initial={{ width: "0%" }}
+                    animate={{
+                      width: "80%",
+                    }}
+                    exit={{ width: "0%" }}
+                    transition={{
+                      duration: 0.1,
+                      ease: "easeInOut",
+                      repeat: Infinity,
+                    }}
+                    css={{
+                      padding: "$xxxl",
+                      borderRadius: "$md",
+                      background: "$gray",
+                    }}
+                  />
+                )}
                 <Text css={{ fontSize: 27, fontWeight: "bold" }}>{name}</Text>
               </>
             )}

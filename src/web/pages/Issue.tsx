@@ -9,12 +9,14 @@ import {
   EyeSlash,
   Lightbulb,
   LightbulbFilament,
+  Square,
+  SquareSplitHorizontal,
 } from "@phosphor-icons/react";
 import { trpcReact } from "@shared/config";
-import { IssueParams } from "@shared/types";
+import { IssueParams, ReaderLayout } from "@shared/types";
 import { LOADING_PHRASES, getRandomIndex } from "@shared/utils";
 import { useDebounce, useKeyPress, useTimeout } from "@src/web/hooks";
-import { globalState$, readerLayout } from "@src/web/state";
+import { globalState$ } from "@src/web/state";
 import { useCallback } from "react";
 import toast from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
@@ -37,7 +39,9 @@ export default function Issue() {
   const navigationShowingValue = navigationShowing.get();
 
   const { uiState } = globalState$.get();
-  const activeLayout = readerLayout.get();
+  const activeLayout = globalState$.uiState.readerLayout.get();
+
+  console.log(activeLayout);
 
   const keyPress = useDebounce((e: KeyboardEvent) => {
     if (e.keyCode === 91 || e.keyCode === 104) {
@@ -89,14 +93,19 @@ export default function Issue() {
   }, 4000);
 
   const handleRightClick = useCallback(() => {
-    if (activeIndexValue === issue?.issue.pages.length! - 1) {
+    if (activeIndex.get() === issue?.issue.pages.length! - 1) {
       return;
     }
+
+    if (activeIndex.get() === issue?.issue.pages.length! - 2) {
+      return;
+    }
+
     activeIndex.set(activeIndex.get() + 1);
   }, [activeIndex, issue]);
 
   const handleLeftClick = useCallback(() => {
-    if (activeIndexValue === 0) {
+    if (activeIndex.get() === 0) {
       return;
     }
     activeIndex.set(activeIndex.get() - 1);
@@ -113,8 +122,24 @@ export default function Issue() {
   }, [maximizeWindow, windowStat]);
 
   const toggleAmbientBackground = useCallback(() => {
+    if (globalState$.uiState.readerLayout.get() === "DoublePage") {
+      toast.error(
+        "Ambient Background is only available in Single Page and Manga View",
+      );
+      return;
+    }
     globalState$.uiState.ambientBackground.set(!uiState.ambientBackground);
   }, [uiState.ambientBackground]);
+
+  const toggleReaderLayout = useCallback(
+    (layout: ReaderLayout) => {
+      if (layout === "DoublePage" && uiState.ambientBackground === true) {
+        globalState$.uiState.ambientBackground.set(false);
+      }
+      globalState$.uiState.readerLayout.set(layout);
+    },
+    [uiState],
+  );
 
   return (
     <Box
@@ -284,6 +309,50 @@ export default function Issue() {
                   )}
                 </Button>
                 <Button
+                  css={{
+                    color: "$primary",
+                    padding: "$lg",
+                    display: "flex",
+                    alignContent: "center",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    borderRadius: "$md",
+                    background: `${
+                      activeLayout === "DoublePage" ? "$primary" : "$blackMuted"
+                    }`,
+                    "&:hover": {
+                      background: "$primary",
+                      color: "$white",
+                    },
+                  }}
+                  title="Activate Double Page View"
+                  onClick={() => toggleReaderLayout("DoublePage")}
+                >
+                  <SquareSplitHorizontal size={16} />
+                </Button>
+                <Button
+                  css={{
+                    color: "$primary",
+                    padding: "$lg",
+                    display: "flex",
+                    alignContent: "center",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    borderRadius: "$md",
+                    background: `${
+                      activeLayout === "SinglePage" ? "$primary" : "$blackMuted"
+                    }`,
+                    "&:hover": {
+                      background: "$primary",
+                      color: "$white",
+                    },
+                  }}
+                  title="Activate Single Page View"
+                  onClick={() => toggleReaderLayout("SinglePage")}
+                >
+                  <Square />
+                </Button>
+                <Button
                   onMouseOver={() => mouseOver.set(true)}
                   onMouseLeave={() => mouseOver.set(false)}
                   onClick={() => maximizeWindow()}
@@ -415,7 +484,7 @@ export default function Issue() {
         </>
       )}
       {/* Panel View */}
-      {activeLayout.layout === "SinglePage" ? (
+      {activeLayout === "SinglePage" ? (
         <SinglePage pages={issue?.issue.pages} activeIndex={activeIndexValue} />
       ) : (
         <DoublePage pages={issue?.issue.pages} activeIndex={activeIndexValue} />

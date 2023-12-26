@@ -53,6 +53,7 @@ export type ApplicationState = {
 export type UIState = {
   distractionFreeMode: boolean;
   ambientBackground: boolean;
+  readerLayout: ReaderLayout;
 };
 
 export type Point = {

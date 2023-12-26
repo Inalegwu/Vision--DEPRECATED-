@@ -1,5 +1,5 @@
 import Skeleton from "./Skeleton";
-import { AnimatedBox, Box } from "./atoms";
+import { AnimatedBox } from "./atoms";
 
 export default function IssueSkeleton() {
   return (
@@ -13,16 +13,23 @@ export default function IssueSkeleton() {
           background: "$gray",
         }}
       />
-      <Box
+      <AnimatedBox
         css={{
           padding: "$md",
           borderRadius: "$sm",
           background: "$gray",
         }}
       />
-      <Box
+      <AnimatedBox
+        initial={{ width: "0%" }}
+        animate={{ width: "70%" }}
+        transition={{
+          ease: "easeInOut",
+          bounce: true,
+          bounceDamping: 0.1,
+          repeat: Infinity,
+        }}
         css={{
-          width: "70%",
           padding: "$md",
           borderRadius: "$sm",
           background: "$gray",
