@@ -93,11 +93,11 @@ export default function Issue() {
   }, 4000);
 
   const handleRightClick = useCallback(() => {
-    if (activeIndex.get() === issue?.issue.pages.length! - 1) {
+    if (activeIndex.get() === issue?.issue?.pages?.length! - 1) {
       return;
     }
 
-    if (activeIndex.get() === issue?.issue.pages.length! - 2) {
+    if (activeIndex.get() === issue?.issue?.pages?.length! - 2) {
       return;
     }
 
@@ -122,12 +122,6 @@ export default function Issue() {
   }, [maximizeWindow, windowStat]);
 
   const toggleAmbientBackground = useCallback(() => {
-    if (globalState$.uiState.readerLayout.get() === "DoublePage") {
-      toast.error(
-        "Ambient Background is only available in Single Page and Manga View",
-      );
-      return;
-    }
     globalState$.uiState.ambientBackground.set(!uiState.ambientBackground);
   }, [uiState.ambientBackground]);
 

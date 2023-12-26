@@ -13,41 +13,59 @@ const DoublePage = observer(({ pages, activeIndex }: LayoutProps) => {
   }
 
   return (
-    <Box
-      css={{
-        width: "100%",
-        height: "100%",
-        display: "flex",
-        alignContent: "center",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: "$xxxl",
-        gap: "$lg",
-      }}
-    >
-      <AnimatedImage
-        src={pages[activeIndex]?.content}
-        alt={pages[activeIndex]?.name}
+    <>
+      {ambientMode && (
+        <AnimatedImage
+          src={pages[activeIndex]?.content}
+          alt={pages[activeIndex].name}
+          css={{
+            width: "100%",
+            height: "100%",
+            position: "absolute",
+            zIndex: 0,
+          }}
+        />
+      )}
+      <Box
         css={{
-          width: "50%",
+          width: "100%",
           height: "100%",
-          margin: "auto",
-          aspectRatio: 1,
-          borderRadius: "$lg",
+          display: "flex",
+          alignContent: "center",
+          alignItems: "center",
+          justifyContent: "center",
+          padding: "$xxxl",
+          gap: "$lg",
+          background: "transparent",
+          backdropFilter: "blur(400px)",
         }}
-      />
-      <AnimatedImage
-        src={pages[activeIndex + 1]?.content}
-        alt={pages[activeIndex + 1]?.content}
-        css={{
-          width: "50%",
-          height: "100%",
-          margin: "auto",
-          aspectRatio: 1,
-          borderRadius: "$lg",
-        }}
-      />
-    </Box>
+      >
+        <AnimatedImage
+          src={pages[activeIndex]?.content}
+          alt={pages[activeIndex]?.name}
+          css={{
+            width: "50%",
+            height: "100%",
+            margin: "auto",
+            aspectRatio: 1,
+            borderRadius: "$lg",
+            border: "0.1px solid $lightGray",
+          }}
+        />
+        <AnimatedImage
+          src={pages[activeIndex + 1]?.content}
+          alt={pages[activeIndex + 1]?.content}
+          css={{
+            width: "50%",
+            height: "100%",
+            margin: "auto",
+            aspectRatio: 1,
+            borderRadius: "$lg",
+            border: "0.1px solid $lightGray",
+          }}
+        />
+      </Box>
+    </>
   );
 });
 
