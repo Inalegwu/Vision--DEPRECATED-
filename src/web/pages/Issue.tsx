@@ -41,8 +41,6 @@ export default function Issue() {
   const { uiState } = globalState$.get();
   const activeLayout = globalState$.uiState.readerLayout.get();
 
-  console.log(activeLayout);
-
   const keyPress = useDebounce((e: KeyboardEvent) => {
     if (e.keyCode === 91 || e.keyCode === 104) {
       handleLeftClick();
