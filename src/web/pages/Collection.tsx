@@ -65,7 +65,7 @@ export default function Collection() {
     });
 
   const { mutate: changeName, isLoading: changingName } =
-    trpcReact.issue.changeIssueName.useMutation({
+    trpcReact.collection.changeCollectionName.useMutation({
       onSuccess: () => {
         utils.library.invalidate();
         setEditingName(false);
@@ -91,7 +91,7 @@ export default function Collection() {
   );
 
   const updateName = useCallback(() => {
-    changeName({ id: collectionId || "", newName: name });
+    changeName({ id: collectionId || "", name: name });
   }, [name, collectionId, changeName]);
 
   const deleteCollection = useCallback(() => {
@@ -351,10 +351,10 @@ export default function Collection() {
             {issuesListVisible && (
               <AnimatedBox
                 initial={{ top: "100%" }}
-                animate={{ top: "35%"}}
+                animate={{ top: "35%" }}
                 exit={{ top: "100%" }}
                 transition={{
-                  duration:0.3,
+                  duration: 0.3,
                   ease: "easeInOut",
                 }}
                 css={{

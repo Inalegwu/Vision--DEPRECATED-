@@ -36,11 +36,9 @@ export default function IssueCard(props: Props) {
       },
     });
 
-  console.log(contextVisible);
-
   const handleClick = useCallback(() => {
     router(`/${props.issue.id}`);
-  }, [props.issue]);
+  }, [props.issue, router]);
 
   const handleContextMenu = useCallback(
     (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
@@ -61,7 +59,6 @@ export default function IssueCard(props: Props) {
 
   const deleteIssue = useCallback(() => {
     contextMenuRef.current?.hide();
-    console.log(props.issue.id);
     mutate({
       id: props.issue.id,
     });

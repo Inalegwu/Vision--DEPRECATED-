@@ -5,33 +5,40 @@ import { TRPCError } from "@trpc/server";
 import { eq } from "drizzle-orm";
 import z from "zod";
 
-
 // all actions that can be carried out on an issue
 export const issueRouter = router({
   getIssue: publicProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
-      const issue = await ctx.db.query.issues.findFirst({
-        where: (issues, { eq }) => eq(issues.id, input.id),
-      });
+      try {
+        const issue = await ctx.db.query.issues.findFirst({
+          where: (issues, { eq }) => eq(issues.id, input.id),
+        });
 
-      if (!issue) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "Couldn't find that issue , sorry 🤷‍♂️",
+        if (!issue) {
+          throw new TRPCError({
+            code: "NOT_FOUND",
+            message: "Couldn't find that issue , sorry 🤷‍♂️",
+          });
+        }
+
+        const pages = await ctx.db.query.pages.findMany({
+          where: (pages, { eq }) => eq(pages.issueId, issue.id),
+        });
+
+        return {
+          issue: {
+            ...issue,
+            pages,
+          },
+        };
+      } catch (e) {
+        console.log(e);
+        trackEvent("error_occured", {
+          router: "issue",
+          function: "getIssue",
         });
       }
-
-      const pages = await ctx.db.query.pages.findMany({
-        where: (pages, { eq }) => eq(pages.issueId, issue.id),
-      });
-
-      return {
-        issue: {
-          ...issue,
-          pages,
-        },
-      };
     }),
   removeIssue: publicProcedure
     .input(z.object({ id: z.string() }))
@@ -48,48 +55,62 @@ export const issueRouter = router({
 
         return true;
       } catch (e) {
+        console.log(e);
         trackEvent("error_occured", {
-          router: "collection",
-          function: "addToLibrary",
+          router: "issue",
+          function: "removeIssue",
         });
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           cause: e,
-          message: "Error occured",
+          message: "Something went wrong while trying to remove that issue",
         });
       }
     }),
   getIssueData: publicProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
-      const issue = await ctx.db.query.issues.findFirst({
-        where: (issues, { eq }) => eq(issues.id, input.id),
-      });
-
-      /**
-       * TODO something like this will be implemented
-       * when the metadata files are being saved
-       *
-       * const metadata=await ctx.db.query.meta.findFirst({
-       *  where:(meta,{eq})=>eq(meta.issueId.input.id),
-       * });
-       *
-       *
-       */
-
-      if (!issue) {
-        trackEvent("Fetch issue error", {
-          issue_id: input.id,
+      try {
+        const issue = await ctx.db.query.issues.findFirst({
+          where: (issues, { eq }) => eq(issues.id, input.id),
         });
+
+        if (!issue) {
+          /**
+           * TODO something like this will be implemented
+           * when the metadata files are being saved
+           *
+           * const metadata=await ctx.db.query.meta.findFirst({
+           *  where:(meta,{eq})=>eq(meta.issueId.input.id),
+           * });
+           *
+           *
+           */
+
+          trackEvent("Fetch issue error", {
+            issue_id: input.id,
+          });
+          throw new TRPCError({
+            code: "NOT_FOUND",
+            message: "No Issue With That ID",
+          });
+        }
+
+        return {
+          data: issue,
+        };
+      } catch (e) {
+        trackEvent("error_occured", {
+          router: "issue",
+          function: "getIssueData",
+        });
+        console.log(e);
         throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "No Issue With That ID",
+          code: "INTERNAL_SERVER_ERROR",
+          cause: e,
+          message: "Error occured",
         });
       }
-
-      return {
-        data: issue,
-      };
     }),
   changeIssueName: publicProcedure
     .input(z.object({ id: z.string(), newName: z.string() }))
@@ -103,8 +124,8 @@ export const issueRouter = router({
           .where(eq(issues.id, input.id));
       } catch (e) {
         trackEvent("error_occured", {
-          router: "collection",
-          function: "addToLibrary",
+          router: "issue",
+          function: "changeIssueName",
         });
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",

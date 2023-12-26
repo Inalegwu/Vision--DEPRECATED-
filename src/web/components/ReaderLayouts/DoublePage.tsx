@@ -1,9 +1,10 @@
+import { observer } from "@legendapp/state/react";
 import { LayoutProps } from "../../../shared/types";
 import { AnimatedImage, Box } from "../atoms";
 
 // TODO implement the actual double page view
 
-function DoublePage({ pages, activeIndex }: LayoutProps) {
+const DoublePage = observer(({ pages, activeIndex }: LayoutProps) => {
   if (!pages) {
     return <></>;
   }
@@ -41,6 +42,6 @@ function DoublePage({ pages, activeIndex }: LayoutProps) {
       />
     </Box>
   );
-}
+});
 
 export default DoublePage;

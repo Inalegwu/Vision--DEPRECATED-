@@ -7,7 +7,6 @@ import { publicProcedure, router } from "@src/trpc";
 import { TRPCError } from "@trpc/server";
 import { dialog } from "electron";
 
-
 // all actions related to the users library of colletions and issues
 export const libraryRouter = router({
   addToLibrary: publicProcedure.mutation(async ({ ctx }) => {
@@ -38,15 +37,17 @@ export const libraryRouter = router({
           sortedFiles[0]?.data?.buffer || sortedFiles[1]?.data?.buffer!,
         );
 
-        console.log(sortedFiles[0]?.name, sortedFiles[1]?.name);
-
-        console.log();
-
         const name = filePaths[0]
           .replace(/^.*[\\\/]/, "")
           .replace(/\.[^/.]+$/, "")
           .replace(/(\d+)$/g, "")
           .replace("-", " ");
+
+        // check if an issue already exists by evaluating it's name
+        // I should probably do this with an issue hash instead
+        // issue with the same name will resolve to the same hash
+        // and as such , they can be searched for by their hash values instead of
+        // names which are susceptible to conversion errors and the likes
 
         const issueExists = await ctx.db.query.issues.findFirst({
           where: (issues, { eq }) => eq(issues.name, name),
@@ -60,6 +61,7 @@ export const libraryRouter = router({
           });
         }
 
+        // the issue just created
         const createdIssue = await ctx.db
           .insert(issues)
           .values({
@@ -73,14 +75,22 @@ export const libraryRouter = router({
           });
 
         for (const file of sortedFiles) {
+          // ignore extraction contents that are flagged as directories
+          // as such the entire folder and as such it's contents won't be
+          // serialized into a string
+          // else you'll get a text content too large error somewhere else
           if (file.isDir) {
-            return;
+            continue;
           }
 
           const content = convertToImageUrl(file.data.buffer);
 
           await ctx.db.insert(pages).values({
             id: generateUUID(),
+            // use the id of the issue just created
+            // as the pages issue id
+            // this allows for an issue and it's pages to remain
+            // related
             issueId: createdIssue[0].id,
             content,
             name: `${createdIssue[0].name}-${file.name}`,
@@ -141,7 +151,7 @@ export const libraryRouter = router({
 
       for (const file of sortedFiles) {
         if (file.fileHeader.flags.directory) {
-          return;
+          continue;
         }
 
         const content = convertToImageUrl(file.extraction?.buffer!);
@@ -159,6 +169,7 @@ export const libraryRouter = router({
         reason: Reasons.NONE,
       };
     } catch (e) {
+      console.log(e);
       trackEvent("error_occured", {
         router: "collection",
         function: "addToLibrary",
@@ -183,7 +194,7 @@ export const libraryRouter = router({
       const collections = await ctx.db.query.collections.findMany({
         with: {
           issues: {
-            orderBy:(issues,{desc})=>[desc(issues.name)]
+            orderBy: (issues, { desc }) => [desc(issues.name)],
           },
         },
       });
@@ -201,7 +212,7 @@ export const libraryRouter = router({
     } catch (e) {
       trackEvent("error_occured", {
         router: "collection",
-        function: "addToLibrary",
+        function: "getLibrary",
       });
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",

@@ -1,9 +1,10 @@
 import { AnimatedBox, AnimatedImage, Box, Image } from "@components/atoms";
+import { observer } from "@legendapp/state/react";
 import { LayoutProps } from "@src/shared/types";
 import { globalState$ } from "@src/web/state";
 import { useState } from "react";
 
-function SinglePage({ pages, activeIndex }: LayoutProps) {
+const SinglePage = observer(({ pages, activeIndex }: LayoutProps) => {
   // for zooming
   const [_crop, _setCrop] = useState({
     crop: 0,
@@ -40,8 +41,8 @@ function SinglePage({ pages, activeIndex }: LayoutProps) {
     >
       {ambientMode && (
         <Image
-          src={pages[activeIndex].content}
-          alt={pages[activeIndex].name}
+          src={pages[activeIndex]?.content}
+          alt={pages[activeIndex]?.name}
           css={{
             width: "100%",
             height: "100%",
@@ -66,8 +67,8 @@ function SinglePage({ pages, activeIndex }: LayoutProps) {
         }}
       >
         <AnimatedImage
-          src={pages[activeIndex].content}
-          alt={pages[activeIndex].name}
+          src={pages[activeIndex]?.content}
+          alt={pages[activeIndex]?.name}
           css={{
             height: "100%",
             aspectRatio: 1,
@@ -78,6 +79,6 @@ function SinglePage({ pages, activeIndex }: LayoutProps) {
       </Box>
     </AnimatedBox>
   );
-}
+});
 
 export default SinglePage;

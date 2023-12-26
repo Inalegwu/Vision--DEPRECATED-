@@ -20,8 +20,8 @@ export const collectionRouter = router({
           where: (collections, { eq }) => eq(collections.id, input.id),
           with: {
             issues: {
-              orderBy:(issues,{desc})=>[desc(issues.name)]
-            }
+              orderBy: (issues, { desc }) => [desc(issues.name)],
+            },
           },
         });
 
@@ -32,7 +32,7 @@ export const collectionRouter = router({
         console.log(e);
         trackEvent("error_occured", {
           router: "collection",
-          function: "addToLibrary",
+          function: "getIssuesInCollection",
         });
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
@@ -41,7 +41,7 @@ export const collectionRouter = router({
         });
       }
     }),
-     addIssueToCollection: publicProcedure
+  addIssueToCollection: publicProcedure
     .input(
       z.object({
         issueId: z.string().refine((v) => v.trim),
@@ -76,7 +76,7 @@ export const collectionRouter = router({
       } catch (e) {
         trackEvent("error_occured", {
           router: "collection",
-          function: "addToLibrary",
+          function: "addIssueToCollection",
         });
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
@@ -85,7 +85,7 @@ export const collectionRouter = router({
         });
       }
     }),
-    deleteCollection: publicProcedure
+  deleteCollection: publicProcedure
     .input(
       z.object({
         id: z.string().refine((v) => v.trim),
@@ -117,7 +117,7 @@ export const collectionRouter = router({
       } catch (e) {
         trackEvent("error_occured", {
           router: "collection",
-          function: "addToLibrary",
+          function: "deleteCollection",
         });
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
@@ -157,7 +157,7 @@ export const collectionRouter = router({
       } catch (e) {
         trackEvent("error_occured", {
           router: "collection",
-          function: "addToLibrary",
+          function: "removeIssueFromCollection",
         });
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
@@ -166,7 +166,7 @@ export const collectionRouter = router({
         });
       }
     }),
-    createCollection: publicProcedure
+  createCollection: publicProcedure
     .input(
       z.object({
         name: z.string().refine((v) => v.trim),
@@ -188,6 +188,10 @@ export const collectionRouter = router({
           data: created,
         };
       } catch (e) {
+        trackEvent("error_occured", {
+          router: "collection",
+          function: "createCollection",
+        });
         if (e instanceof DrizzleError) {
           throw new TRPCError({
             code: "PARSE_ERROR",
@@ -195,6 +199,34 @@ export const collectionRouter = router({
             cause: e.message,
           });
         }
+      }
+    }),
+  changeCollectionName: publicProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        name: z.string(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      try {
+        await ctx.db
+          .update(collections)
+          .set({
+            name: input.name,
+          })
+          .where(eq(collections.id, input.id));
+      } catch (e) {
+        trackEvent("error_occured", {
+          router: "collection",
+          function: "changeCollectionName",
+        });
+        console.log(e);
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          cause: "unknown",
+          message: "Something went wrong while changing collection name",
+        });
       }
     }),
 });

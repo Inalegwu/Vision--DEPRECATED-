@@ -19,10 +19,7 @@ import {
 import { Plus } from "@phosphor-icons/react";
 import { trpcReact } from "@shared/config";
 import { Reasons } from "@shared/types";
-import {
-  LOADING_PHRASES,
-  getRandomIndex
-} from "@src/shared/utils";
+import { LOADING_PHRASES, getRandomIndex } from "@src/shared/utils";
 import { globalState$ } from "@src/web/state";
 import { AnimatePresence } from "framer-motion";
 import { useCallback, useEffect, useState } from "react";

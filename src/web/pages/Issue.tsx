@@ -1,5 +1,6 @@
 import { AnimatedBox, Box, Button, LinkButton, Text } from "@components/atoms";
 import { DoublePage, SinglePage, Spinner, VStack } from "@components/index";
+import { useObservable } from "@legendapp/state/react";
 import {
   CaretLeft,
   CaretRight,
@@ -14,9 +15,9 @@ import { IssueParams } from "@shared/types";
 import { LOADING_PHRASES, getRandomIndex } from "@shared/utils";
 import { useDebounce, useKeyPress, useTimeout } from "@src/web/hooks";
 import { globalState$, readerLayout } from "@src/web/state";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useRef } from "react";
 import toast from "react-hot-toast";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLinkClickHandler, useNavigate, useParams } from "react-router-dom";
 
 export default function Issue() {
   const router = useNavigate();
@@ -29,16 +30,17 @@ export default function Issue() {
   }
 
   // internal state
-  const [activeIndex, setActiveIndex] = useState<number>(0);
-  const [mouseOver, setMouseOver] = useState<boolean>(false);
-  const [navigationShowing, setNavigationShowing] = useState<boolean>(true);
+  const activeIndex = useObservable<number>(0);
+  const mouseOver = useObservable<boolean>(false);
+  const navigationShowing = useObservable<boolean>(false);
+
+  const activeIndexValue = activeIndex.get();
+  const navigationShowingValue = navigationShowing.get();
 
   const { uiState } = globalState$.get();
   const activeLayout = readerLayout.get();
 
   const keyPress = useDebounce((e: KeyboardEvent) => {
-    // e.stopImmediatePropagation();
-    // [ or L to scroll left
     if (e.keyCode === 91 || e.keyCode === 104) {
       handleLeftClick();
     }
@@ -73,44 +75,32 @@ export default function Issue() {
     trpcReact.window.maximizeWindow.useMutation();
 
   window.addEventListener("mousemove", () => {
-    if (!navigationShowing) {
-      setNavigationShowing(true);
+    if (!navigationShowing.get()) {
+      navigationShowing.set(true);
     }
   });
 
   // go forward or backward a page
   useKeyPress(keyPress);
 
-  // useEffect(() => {
-  //   const navigationTimeout = setTimeout(() => {
-  //     if (navigationShowing && !mouseOver) {
-  //       setNavigationShowing(false);
-  //     }
-  //   }, 4000);
-
-  //   return () => {
-  //     clearTimeout(navigationTimeout);
-  //   };
-  // }, [navigationShowing, mouseOver]);
-
   useTimeout(() => {
-    if (navigationShowing && !mouseOver) {
-      setNavigationShowing(false);
+    if (navigationShowing.get() && !mouseOver.get()) {
+      navigationShowing.set(false);
     }
   }, 4000);
 
   const handleRightClick = useCallback(() => {
-    if (activeIndex === issue?.issue.pages.length! - 1) {
+    if (activeIndexValue === issue?.issue.pages.length! - 1) {
       return;
     }
-    setActiveIndex(activeIndex + 1);
+    activeIndex.set(activeIndex.get() + 1);
   }, [activeIndex, issue]);
 
   const handleLeftClick = useCallback(() => {
-    if (activeIndex === 0) {
+    if (activeIndexValue === 0) {
       return;
     }
-    setActiveIndex(activeIndex - 1);
+    activeIndex.set(activeIndex.get() - 1);
   }, [activeIndex]);
 
   const toggleDistractionFreeMode = useCallback(() => {
@@ -126,6 +116,11 @@ export default function Issue() {
   const toggleAmbientBackground = useCallback(() => {
     globalState$.uiState.ambientBackground.set(!uiState.ambientBackground);
   }, []);
+
+  // TODO
+  const handleMouseOver = useCallback(() => {}, []);
+
+  const handleMouseLeave = useLinkClickHandler(() => {}, []);
 
   return (
     <Box
@@ -167,7 +162,7 @@ export default function Issue() {
         </Box>
       )}
       {/* navigation overlay */}
-      {navigationShowing && !uiState.distractionFreeMode && (
+      {navigationShowing.get() && !uiState.distractionFreeMode && (
         <>
           <AnimatedBox
             transition={{
@@ -178,7 +173,7 @@ export default function Issue() {
               opacity: 0,
             }}
             animate={{
-              opacity: navigationShowing ? 1 : 0,
+              opacity: navigationShowingValue ? 1 : 0,
             }}
             css={{
               width: "100%",
@@ -205,8 +200,8 @@ export default function Issue() {
               }}
             >
               <LinkButton
-                onMouseOver={() => setMouseOver(true)}
-                onMouseLeave={() => setMouseOver(false)}
+                onMouseOver={() => mouseOver.set(true)}
+                onMouseLeave={() => mouseOver.set(false)}
                 to="/"
                 css={{
                   padding: "$lg",
@@ -244,8 +239,8 @@ export default function Issue() {
                 }}
               >
                 <Button
-                  onMouseOver={() => setMouseOver(true)}
-                  onMouseLeave={() => setMouseOver(false)}
+                  onMouseOver={() => mouseOver.set(true)}
+                  onMouseLeave={() => mouseOver.set(false)}
                   css={{
                     color: "$primary",
                     padding: "$lg",
@@ -261,7 +256,6 @@ export default function Issue() {
                     },
                   }}
                   onClick={toggleAmbientBackground}
-                  title="Turn On/Off Ambient Mode"
                 >
                   {uiState.ambientBackground ? (
                     <LightbulbFilament size={16} />
@@ -270,8 +264,8 @@ export default function Issue() {
                   )}
                 </Button>
                 <Button
-                  onMouseOver={() => setMouseOver(true)}
-                  onMouseLeave={() => setMouseOver(false)}
+                  onMouseOver={() => mouseOver.set(true)}
+                  onMouseLeave={() => mouseOver.set(false)}
                   css={{
                     color: "$primary",
                     padding: "$lg",
@@ -296,8 +290,8 @@ export default function Issue() {
                   )}
                 </Button>
                 <Button
-                  onMouseOver={() => setMouseOver(true)}
-                  onMouseLeave={() => setMouseOver(false)}
+                  onMouseOver={() => mouseOver.set(true)}
+                  onMouseLeave={() => mouseOver.set(false)}
                   onClick={() => maximizeWindow()}
                   css={{
                     color: "$primary",
@@ -323,12 +317,12 @@ export default function Issue() {
             <VStack style={{ width: "100%" }} gap={6}>
               {!loadingIssue && (
                 <Text css={{ fontSize: 15, color: "$gray" }}>
-                  {activeIndex} / {issue?.issue.pages.length! - 1}
+                  {activeIndexValue} / {issue?.issue.pages.length! - 1}
                 </Text>
               )}
               <Box
-                onMouseOver={() => setMouseOver(true)}
-                onMouseDown={() => setMouseOver(false)}
+                onMouseOver={() => mouseOver.set(true)}
+                onMouseDown={() => mouseOver.set(false)}
                 css={{
                   background: "$blackMuted",
                   backdropFilter: "blur(50px)",
@@ -357,7 +351,7 @@ export default function Issue() {
                     borderBottomLeftRadius: "$md",
                   }}
                   onClick={handleLeftClick}
-                  disabled={activeIndex === 0}
+                  disabled={activeIndexValue === 0}
                 >
                   <CaretLeft />
                 </Button>
@@ -381,7 +375,7 @@ export default function Issue() {
                     }}
                     animate={{
                       width: `${
-                        (activeIndex / issue?.issue.pages.length!) * 100
+                        (activeIndexValue / issue?.issue.pages.length!) * 100
                       }%`,
                     }}
                     ref={scrubRef}
@@ -400,8 +394,8 @@ export default function Issue() {
                   />
                 </Box>
                 <Button
-                  onMouseOver={() => setMouseOver(true)}
-                  onMouseLeave={() => setMouseOver(false)}
+                  onMouseOver={() => mouseOver.set(true)}
+                  onMouseLeave={() => mouseOver.set(false)}
                   css={{
                     display: "flex",
                     alignContent: "center",
@@ -417,7 +411,7 @@ export default function Issue() {
                     borderTopRightRadius: "$md",
                     borderBottomRightRadius: "$md",
                   }}
-                  disabled={activeIndex === issue?.issue.pages.length! - 1}
+                  disabled={activeIndexValue === issue?.issue.pages.length! - 1}
                   onClick={handleRightClick}
                 >
                   <CaretRight />
@@ -429,9 +423,9 @@ export default function Issue() {
       )}
       {/* Panel View */}
       {activeLayout.layout === "SinglePage" ? (
-        <SinglePage pages={issue?.issue.pages} activeIndex={activeIndex} />
+        <SinglePage pages={issue?.issue.pages} activeIndex={activeIndexValue} />
       ) : (
-        <DoublePage pages={issue?.issue.pages} activeIndex={activeIndex} />
+        <DoublePage pages={issue?.issue.pages} activeIndex={activeIndexValue} />
       )}
     </Box>
   );
