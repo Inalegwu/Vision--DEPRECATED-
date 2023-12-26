@@ -66,7 +66,7 @@ export default function IssueCard(props: Props) {
     if (deleting) {
       toast.loading(`Deleting ${props.issue.name}`);
     }
-  }, [props.issue, deleting]);
+  }, [props.issue, deleting, mutate]);
 
   return (
     <>

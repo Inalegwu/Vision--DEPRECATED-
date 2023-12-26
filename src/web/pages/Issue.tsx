@@ -16,7 +16,7 @@ import { trpcReact } from "@shared/config";
 import { IssueParams, ReaderLayout } from "@shared/types";
 import { LOADING_PHRASES, getRandomIndex } from "@shared/utils";
 import { useDebounce, useKeyPress, useTimeout } from "@src/web/hooks";
-import { globalState$ } from "@src/web/state";
+import { globalState$, readingState } from "@src/web/state";
 import { useCallback } from "react";
 import toast from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
@@ -30,16 +30,20 @@ export default function Issue() {
     return;
   }
 
+  // application state
+  const { uiState } = globalState$.get();
+  const activeLayout = globalState$.uiState.readerLayout.get();
+  const currentlyReading = readingState.currentlyReading
+    .get()
+    .find((v) => v.id === issueId);
+
   // internal state
-  const activeIndex = useObservable<number>(0);
+  const activeIndex = useObservable<number>(currentlyReading?.page || 0);
   const mouseOver = useObservable<boolean>(false);
   const navigationShowing = useObservable<boolean>(false);
 
   const activeIndexValue = activeIndex.get();
   const navigationShowingValue = navigationShowing.get();
-
-  const { uiState } = globalState$.get();
-  const activeLayout = globalState$.uiState.readerLayout.get();
 
   const keyPress = useDebounce((e: KeyboardEvent) => {
     if (e.keyCode === 91 || e.keyCode === 104) {
@@ -133,6 +137,13 @@ export default function Issue() {
     [uiState],
   );
 
+  const saveIssueReadingState = useCallback(() => {
+    readingState.currentlyReading.set([
+      ...readingState.currentlyReading.get(),
+      { id: issueId!, page: activeIndexValue },
+    ]);
+  }, [activeIndexValue, issueId]);
+
   return (
     <Box
       css={{
@@ -214,6 +225,7 @@ export default function Issue() {
                 onMouseOver={() => mouseOver.set(true)}
                 onMouseLeave={() => mouseOver.set(false)}
                 to="/"
+                onClick={saveIssueReadingState}
                 css={{
                   padding: "$lg",
                   background: "$primary",
