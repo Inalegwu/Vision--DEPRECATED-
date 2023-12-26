@@ -3,8 +3,6 @@ import { globalState$ } from "@src/web/state";
 import { LayoutProps } from "../../../shared/types";
 import { AnimatedImage, Box } from "../atoms";
 
-// TODO implement the actual double page view
-
 const DoublePage = observer(({ pages, activeIndex }: LayoutProps) => {
   const ambientMode = globalState$.uiState.ambientBackground.get();
 

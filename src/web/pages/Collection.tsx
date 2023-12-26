@@ -384,7 +384,7 @@ export default function Collection() {
                   borderTopRightRadius: "$xl",
                   overflowY: "scroll",
                   background: "$blackMuted",
-                  backdropFilter: "blur(200px)",
+                  backdropFilter: "blur(500px)",
                   position: "absolute",
                   zIndex: 1,
                   left: 0,

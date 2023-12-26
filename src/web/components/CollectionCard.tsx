@@ -33,12 +33,11 @@ export default function CollectionCard({ collection }: CollectionCardProps) {
             css={{
               width: 170,
               height: 260,
-              border: "0.1px solid rgba(255,255,255,0.3)",
+              border: "0.1px solid $lightGray",
               transition: "0.5s ease-in-out",
-              // transform: "rotate(-1deg)",
               borderRadius: "$md",
               "&:hover": {
-                border: "0.1px solid $secondary",
+                border: "0.1px solid $primary",
               },
             }}
           />
