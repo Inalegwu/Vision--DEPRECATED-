@@ -17,9 +17,12 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 21.1.0
+
+      - name: Install PNPM
+        run : npm install -g pnpm
       
       - name: Install Packages
-        run: yarn install
+        run: pnpm install
 
       - name: Build/release Electron app
         uses: paneron/action-electron-builder@v1.8.1
