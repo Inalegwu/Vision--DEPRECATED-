@@ -5,12 +5,11 @@ import { Toaster } from "react-hot-toast";
 import { Route, HashRouter as Router, Routes } from "react-router-dom";
 import { Collection, EditIssue, FirstLaunch, Issue, Library } from "./pages";
 
-enableReactTracking({ auto: true,warnUnobserved:true });
+enableReactTracking({ auto: true, warnUnobserved: true });
 
 configureObservablePersistence({
   pluginLocal: ObservablePersistLocalStorage,
 });
-
 
 export const App = () => {
   return (

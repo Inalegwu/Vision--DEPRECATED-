@@ -20,7 +20,7 @@ export const collectionRouter = router({
           where: (collections, { eq }) => eq(collections.id, input.id),
           with: {
             issues: {
-              orderBy: (issues, { desc }) => [desc(issues.name)],
+              orderBy: (issues, { desc, asc }) => [asc(issues.name)],
             },
           },
         });

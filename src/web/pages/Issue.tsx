@@ -15,14 +15,13 @@ import { IssueParams } from "@shared/types";
 import { LOADING_PHRASES, getRandomIndex } from "@shared/utils";
 import { useDebounce, useKeyPress, useTimeout } from "@src/web/hooks";
 import { globalState$, readerLayout } from "@src/web/state";
-import { useCallback, useRef } from "react";
+import { useCallback } from "react";
 import toast from "react-hot-toast";
-import { useLinkClickHandler, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 export default function Issue() {
   const router = useNavigate();
   const { issueId } = useParams<IssueParams>();
-  const scrubRef = useRef<HTMLDivElement>(null);
 
   if (!issueId) {
     router("/");
@@ -111,16 +110,11 @@ export default function Issue() {
     if (windowStat?.fullscreen_status) return;
 
     maximizeWindow();
-  }, []);
+  }, [maximizeWindow, windowStat]);
 
   const toggleAmbientBackground = useCallback(() => {
     globalState$.uiState.ambientBackground.set(!uiState.ambientBackground);
-  }, []);
-
-  // TODO
-  const handleMouseOver = useCallback(() => {}, []);
-
-  const handleMouseLeave = useLinkClickHandler(() => {}, []);
+  }, [uiState.ambientBackground]);
 
   return (
     <Box
@@ -378,7 +372,6 @@ export default function Issue() {
                         (activeIndexValue / issue?.issue.pages.length!) * 100
                       }%`,
                     }}
-                    ref={scrubRef}
                     css={{
                       display: "flex",
                       alignContent: "center",

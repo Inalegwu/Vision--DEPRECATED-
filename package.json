@@ -25,23 +25,33 @@
     "artifactName": "${productName}_${version}_${platform}_${arch}.${ext}",
     "buildDependenciesFromSource": true,
     "icon": "assets/icon.png",
-    "files": ["dist/**/*"],
+    "files": [
+      "dist/**/*"
+    ],
     "directories": {
       "output": "release/${version}"
     },
     "mac": {
-      "target": ["dmg", "zip"]
+      "target": [
+        "dmg",
+        "zip"
+      ]
     },
     "win": {
       "target": [
         {
           "target": "nsis",
-          "arch": ["x64"]
+          "arch": [
+            "x64"
+          ]
         }
       ]
     },
     "linux": {
-      "target": ["AppImage", "deb"]
+      "target": [
+        "AppImage",
+        "deb"
+      ]
     },
     "nsis": {
       "oneClick": false,
@@ -50,7 +60,9 @@
     }
   },
   "electronmon": {
-    "patterns": ["dist/**/*"]
+    "patterns": [
+      "dist/**/*"
+    ]
   },
   "dependencies": {
     "@aptabase/electron": "^0.3.1",
@@ -76,6 +88,7 @@
     "node-unrar-js": "^2.0.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-error-boundary": "^4.0.12",
     "react-hot-toast": "^2.4.1",
     "react-router-dom": "^6.17.0",
     "sort-by": "^1.2.0",

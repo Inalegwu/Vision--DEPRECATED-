@@ -116,7 +116,7 @@ export default function Library() {
             alignContent: "center",
             justifyContent: "center",
             background: "$blackMuted",
-            backdropFilter: "blur(20px)",
+            backdropFilter: "blur(1000px)",
           }}
         >
           <Box
@@ -262,6 +262,44 @@ export default function Library() {
             paddingBottom: "$hg",
           }}
         >
+          {library?.collections.length === 0 && library.issues.length === 0 ? (
+            <Box
+              css={{
+                width: "100%",
+                height: "100%",
+                display: "flex",
+                alignContent: "center",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <VStack
+                alignContent="center"
+                alignItems="center"
+                justifyContent="center"
+                gap={2}
+              >
+                <Text css={{ fontSize: 20, fontWeight: "bold" }}>
+                  It's a bit lonely here , Add Some Issues or Create a
+                  Collection
+                </Text>
+                <Button
+                  css={{
+                    background: "$primary",
+                    color: "$white",
+                    borderRadius: "$md",
+                    padding: "$md",
+                    fontSize: 16,
+                  }}
+                  onClick={() => addToLibrary()}
+                >
+                  <Text>Add To Library</Text>
+                </Button>
+              </VStack>
+            </Box>
+          ) : (
+            <></>
+          )}
           {library?.collections.map((v) => {
             return <CollectionCard key={v.id} collection={v} />;
           })}

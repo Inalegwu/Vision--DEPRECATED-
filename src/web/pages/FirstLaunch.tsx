@@ -16,12 +16,9 @@ export default function FirstLaunch() {
   const router = useNavigate();
 
   useEffect(() => {
-    globalState$.set({
-      appState: {
-        applicationId: v4(),
-        firstLaunch: false,
-      },
-      uiState: globalState$.get().uiState,
+    globalState$.appState.set({
+      applicationId: v4(),
+      firstLaunch: false,
     });
   }, []);
 
