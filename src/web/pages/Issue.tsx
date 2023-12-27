@@ -52,14 +52,7 @@ export default function Issue() {
     // ] or H to scroll right
     else if (e.keyCode === 93 || e.keyCode === 108) {
       handleRightClick();
-    }
-    // ctrl+j to disable distraction free mode
-    else if (e.keyCode === 10) {
-      toast.success("Distraction free mode deactivated", {
-        position: "top-center",
-      });
-      globalState$.uiState.distractionFreeMode.set(false);
-    } else {
+    }else {
       return;
     }
   }, 100);
@@ -99,8 +92,8 @@ export default function Issue() {
       return;
     }
 
-    if (activeIndex.get() === issue?.issue?.pages?.length! - 2) {
-      return;
+    if(activeLayout==="DoublePage" && activeIndex.get() === issue?.issue?.pages?.length! - 2){
+       return;
     }
 
     activeIndex.set(activeIndex.get() + 1);
@@ -110,6 +103,7 @@ export default function Issue() {
     if (activeIndex.get() === 0) {
       return;
     }
+
     activeIndex.set(activeIndex.get() - 1);
   }, [activeIndex]);
 
@@ -129,9 +123,6 @@ export default function Issue() {
 
   const toggleReaderLayout = useCallback(
     (layout: ReaderLayout) => {
-      if (layout === "DoublePage" && uiState.ambientBackground === true) {
-        globalState$.uiState.ambientBackground.set(false);
-      }
       globalState$.uiState.readerLayout.set(layout);
     },
     [uiState],
@@ -488,6 +479,9 @@ export default function Issue() {
         </>
       )}
       {/* Panel View */}
+      {uiState.distractionFreeMode && <Button title="Turn off Distraction free mode" onClick={()=>globalState$.uiState.distractionFreeMode.set(false)} css={{position:"absolute",top:"93%",left:"96.3%",zIndex:9999,borderRadius:"$full",padding:"$xxl",background:"$blackMuted",backdropFilter:"blur(400px)",color:"$primary",display:"flex",alignContent:"center",alignItems:"center",justifyContent:"center"}}>
+        <EyeSlash size={16}/>
+        </Button>}
       {activeLayout === "SinglePage" ? (
         <SinglePage pages={issue?.issue.pages} activeIndex={activeIndexValue} />
       ) : (

@@ -7,6 +7,7 @@ import { appRouter } from "./shared/routers/_app";
 
 initialize("A-EU-0154526847");
 
+try{
 const createWindow = () => {
   const windowSize = screen.getPrimaryDisplay().workAreaSize;
 
@@ -39,3 +40,6 @@ app.whenReady().then(() => {
 });
 
 app.once("window-all-closed", () => app.quit());
+}catch(e){
+  console.log(e);
+}

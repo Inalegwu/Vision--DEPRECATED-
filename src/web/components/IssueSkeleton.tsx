@@ -14,6 +14,14 @@ export default function IssueSkeleton() {
         }}
       />
       <AnimatedBox
+      initial={{ width: "0%" }}
+        animate={{ width: "100%" }}
+        transition={{
+          ease: "easeInOut",
+          bounce: true,
+          duration:0.5,
+          repeat: Infinity,
+        }}
         css={{
           padding: "$md",
           borderRadius: "$sm",
@@ -26,8 +34,8 @@ export default function IssueSkeleton() {
         transition={{
           ease: "easeInOut",
           bounce: true,
-          bounceDamping: 0.1,
           repeat: Infinity,
+          duration:0.5
         }}
         css={{
           padding: "$md",

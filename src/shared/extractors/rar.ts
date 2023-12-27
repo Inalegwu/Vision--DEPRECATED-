@@ -1,6 +1,6 @@
+import { sortPages } from "@shared/utils";
 import { readFileSync } from "fs";
 import { createExtractorFromData } from "node-unrar-js";
-import { sortPages } from "../utils";
 
 // Handles parsing and extraction of .cbr files
 export default async function RarExtractor(filePath: string) {

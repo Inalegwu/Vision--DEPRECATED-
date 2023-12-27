@@ -50,7 +50,7 @@ const DoublePage = observer(({ pages, activeIndex }: LayoutProps) => {
             border: "0.1px solid $lightGray",
           }}
         />
-        <AnimatedImage
+       {pages[activeIndex+1].content!==""&& <AnimatedImage
           src={pages[activeIndex + 1]?.content}
           alt={pages[activeIndex + 1]?.content}
           css={{
@@ -61,7 +61,7 @@ const DoublePage = observer(({ pages, activeIndex }: LayoutProps) => {
             borderRadius: "$lg",
             border: "0.1px solid $lightGray",
           }}
-        />
+        />}
       </Box>
     </>
   );
