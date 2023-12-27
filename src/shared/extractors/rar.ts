@@ -20,14 +20,12 @@ export default async function RarExtractor(filePath: string) {
   });
 
   const list = extractor.getFileList();
-  const fileHeaders = [...list.fileHeaders];
 
-  const files = fileHeaders.map((v) => v.name);
-  const extracted = extractor.extract({ files });
+  const extracted = extractor.extract({
+    files: [...list.fileHeaders].map((v) => v.name),
+  });
 
-  const extractedFiles = [...extracted.files];
-
-  const sortedFiles = extractedFiles.sort((a, b) =>
+  const sortedFiles = [...extracted.files].sort((a, b) =>
     sortPages(a.fileHeader.name, b.fileHeader.name),
   );
 

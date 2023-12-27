@@ -9,7 +9,8 @@
       "correctness": {
         "noUnusedLabels": "error",
         "noUnusedVariables": "error",
-        "noUnreachable": "error"
+        "noUnreachable": "error",
+        "useExhaustiveDependencies": "warn"
       },
       "complexity": {
         "noUselessCatch": "warn"

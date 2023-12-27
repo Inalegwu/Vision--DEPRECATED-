@@ -12,7 +12,7 @@ export default function CollectionCard({ collection }: CollectionCardProps) {
 
   const handleClick = useCallback(() => {
     router(`/collections/${collection.id}`);
-  }, []);
+  }, [router, collection]);
 
   return (
     <AnimatedBox

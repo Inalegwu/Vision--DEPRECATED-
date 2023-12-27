@@ -79,7 +79,7 @@ export default function Library() {
       clearTimeout(dismissToolTip);
       clearTimeout(changeLoadingPhrase);
     };
-  }, []);
+  }, [setCreateModalVisible, setPhraseIndex]);
 
   const { data: library, isLoading: fetchingLibraryContent } =
     trpcReact.library.getLibrary.useQuery();
@@ -94,7 +94,7 @@ export default function Library() {
 
   const create = useCallback(() => {
     createCollection({ name: collectionName });
-  }, [collectionName]);
+  }, [collectionName, createCollection]);
 
   return (
     <Layout>

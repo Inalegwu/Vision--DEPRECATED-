@@ -10,7 +10,6 @@ import { dialog } from "electron";
 // all actions related to the users library of colletions and issues
 export const libraryRouter = router({
   addToLibrary: publicProcedure.mutation(async ({ ctx }) => {
-    trackEvent("Add To Library");
     try {
       const { canceled, filePaths } = await dialog.showOpenDialog({
         title: "Select Issue",
@@ -97,12 +96,12 @@ export const libraryRouter = router({
         };
       }
 
-      const { metaDataFile: _md, sortedFiles } = await RarExtractor(
+      const { metaDataFile: md, sortedFiles } = await RarExtractor(
         filePaths[0],
       );
 
-      if (_md) {
-        const decodedMeta = decodeMetaData(_md.extraction?.buffer!);
+      if (md) {
+        const decodedMeta = decodeMetaData(md.extraction?.buffer!);
         const splitMeta = decodedMeta.split("\n");
         console.log(splitMeta);
       }
