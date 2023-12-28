@@ -11,7 +11,7 @@ export const { styled, css, config } = createStitches({
       blackMuted: "rgba(0,0,0,0.8)",
       deepBlack: "rgba(0,0,0,0)",
       white: "rgb(255,255,255)",
-      danger: "rgba(255,90,90,0.9)",
+      danger: "rgba(255,70,90,0.9)",
     },
     space: {
       sm: "2px",

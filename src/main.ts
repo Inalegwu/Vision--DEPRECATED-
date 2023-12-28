@@ -17,7 +17,7 @@ const createWindow = () => {
     width: windowSize.width - 50,
     height: windowSize.height - 50,
     minHeight:700,
-    minWidth:1024,
+    minWidth:730,
     webPreferences: {
       sandbox: false,
       preload: path.resolve(__dirname, "preload.js"),

@@ -41,7 +41,7 @@ export default function Layout(props: LayoutProps) {
           width: "100%",
           height: "4%",
           display: "flex",
-          padding: "$xl",
+          padding: "$xxl",
           alignContent: "center",
           alignItems: "center",
           justifyContent: "space-between",
@@ -75,13 +75,13 @@ export default function Layout(props: LayoutProps) {
           justifyContent="flex-end"
         >
           <Button
-            css={{ color: "$lightGray", "&:hover": { color: "$white" },display:"flex",alignContent:"center",alignItems:"center",justifyContent:"center" }}
+            css={{ color: "$lightGray", "&:hover": { color: "$primary" },display:"flex",alignContent:"center",alignItems:"center",justifyContent:"center" }}
             onClick={() => minimizeWindow()}
           >
             <Minus />
           </Button>
           <Button
-           css={{ color: "$lightGray", "&:hover": { color: "$white" },display:"flex",alignContent:"center",alignItems:"center",justifyContent:"center" }}
+           css={{ color: "$lightGray", "&:hover": { color: "$primary" },display:"flex",alignContent:"center",alignItems:"center",justifyContent:"center" }}
             onClick={() => maximizeWindow()}
           >
             <CornersOut />

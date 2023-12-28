@@ -130,6 +130,14 @@ export default function Issue() {
 
   const saveIssueReadingState = useCallback(() => {
     // update the currently reading list 
+    const found=readingState.currentlyReading.get().find((v)=>v.id===issueId);
+    if(found){
+      readingState.currentlyReading.set([
+        ...readingState.currentlyReading.get().filter((v)=>v.id===issueId),
+        {id:issueId!,page:activeIndexValue}
+      ])
+      return 
+    }
     readingState.currentlyReading.set([
       ...readingState.currentlyReading.get(),
       { id: issueId!, page: activeIndexValue },
