@@ -15,7 +15,7 @@ import {
 import { trpcReact } from "@shared/config";
 import { IssueParams, ReaderLayout } from "@shared/types";
 import { LOADING_PHRASES, getRandomIndex } from "@shared/utils";
-import { useDebounce, useKeyPress, useTimeout } from "@src/web/hooks";
+import { useDebounce, useKeyPress, useTimeout, useWindow } from "@src/web/hooks";
 import { globalState$, readingState } from "@src/web/state";
 import { useCallback } from "react";
 import toast from "react-hot-toast";
@@ -33,6 +33,8 @@ export default function Issue() {
   // application state
   const { uiState } = globalState$.get();
   const activeLayout = globalState$.uiState.readerLayout.get();
+
+  // if the user has a currently reading state saved...
   const currentlyReading = readingState.currentlyReading
     .get()
     .find((v) => v.id === issueId);
@@ -42,9 +44,12 @@ export default function Issue() {
   const mouseOver = useObservable<boolean>(false);
   const navigationShowing = useObservable<boolean>(false);
 
+  // use these values where it would cause Rules of Hooks errors
   const activeIndexValue = activeIndex.get();
   const navigationShowingValue = navigationShowing.get();
 
+  // debounce the users page navigation keypress
+  // to prevent trigerring events multiple times
   const keyPress = useDebounce((e: KeyboardEvent) => {
     if (e.keyCode === 91 || e.keyCode === 104) {
       handleLeftClick();
@@ -72,7 +77,8 @@ export default function Issue() {
   const { mutate: maximizeWindow, data: windowStat } =
     trpcReact.window.maximizeWindow.useMutation();
 
-  window.addEventListener("mousemove", () => {
+  // show the navigation overlay on mouse move
+  useWindow("mousemove", () => {
     if (!navigationShowing.get()) {
       navigationShowing.set(true);
     }
@@ -88,18 +94,25 @@ export default function Issue() {
   }, 4000);
 
   const handleRightClick = useCallback(() => {
+    // on default layout
     if (activeIndex.get() === issue?.issue?.pages?.length! - 1) {
       return;
     }
 
+    // the users active layout style is double layout
+    // stop the user from moving forward when the next page
+    // is the issues page length + 2
     if(activeLayout==="DoublePage" && activeIndex.get() === issue?.issue?.pages?.length! - 2){
        return;
     }
 
+    // if none of the cases above , increment page count
     activeIndex.set(activeIndex.get() + 1);
   }, [activeIndex, issue]);
 
   const handleLeftClick = useCallback(() => {
+    // if we are currently on the first page , do absolutely nothing
+    // I'll probably make this a wrap around
     if (activeIndex.get() === 0) {
       return;
     }
@@ -107,6 +120,10 @@ export default function Issue() {
     activeIndex.set(activeIndex.get() - 1);
   }, [activeIndex]);
 
+  // turn on distraction free mode
+  // this hides the navigation ui and stops listening for
+  // mouse moves, no distractions
+  // this also takes the app into fullscreen mode for full immersion
   const toggleDistractionFreeMode = useCallback(() => {
     toast.success("You're now in distraction free mode", {
       position: "top-right",
@@ -117,10 +134,15 @@ export default function Issue() {
     maximizeWindow();
   }, [maximizeWindow, windowStat]);
 
+  // turns on or off ambient background for the users reader view
+  // ambient mode basically uses the colors from the image as a background effect
+  // when active.
+  // When inactive , the user has a plain black background
   const toggleAmbientBackground = useCallback(() => {
     globalState$.uiState.ambientBackground.set(!uiState.ambientBackground);
   }, [uiState.ambientBackground]);
 
+  // change the users reader layout
   const toggleReaderLayout = useCallback(
     (layout: ReaderLayout) => {
       globalState$.uiState.readerLayout.set(layout);
@@ -128,6 +150,10 @@ export default function Issue() {
     [],
   );
 
+  // save the users reading state
+  // this allows the user to jump back into a specific spot
+  // when they leave the issue
+  // also useful for showing reading progress in other parts of the app
   const saveIssueReadingState = useCallback(() => {
     // update the currently reading list 
     const found=readingState.currentlyReading.get().find((v)=>v.id===issueId);

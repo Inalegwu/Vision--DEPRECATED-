@@ -35,11 +35,17 @@ export default function Library() {
   const createModalVisible = useObservable(false);
   const mouseOver = useObservable(false);
   const collectionName = useObservable("");
+
+  // gets a random index and uses that to select
+  // a loading phrase
   const phraseIndex = useObservable<number>(
     getRandomIndex(0, LOADING_PHRASES.length - 1),
   );
 
-  const state = globalState$.get();
+  // the app state
+  // used in useEffect to know where to navigate the user
+  // to on first launch
+  const {appState} = globalState$.get();
 
   const { mutate: addToLibrary, isLoading: addingToLibrary } =
     trpcReact.library.addToLibrary.useMutation({
@@ -63,13 +69,15 @@ export default function Library() {
       }
     },6000)
 
+
+    // change the loading phrase every 4 seconds
     useInterval(()=>{
       phraseIndex.set(getRandomIndex(0,LOADING_PHRASES.length-1));
     },4000)
 
   useEffect(() => {
     // is the the users first launch of the app ???
-    if (state.appState.firstLaunch) {
+    if (appState.firstLaunch) {
       // go to the first launch page if the application firstLaunch is false
       // which is the default
       router("/first_launch", {

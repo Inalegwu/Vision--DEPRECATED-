@@ -2,21 +2,25 @@ import * as Stitches from "@stitches/react";
 import { config } from "../web/stitches.config";
 import { collections, issues, pages } from "./schema";
 
+// Backend Types
 export enum Reasons {
   CANCELLED = "100",
   NONE = "000",
 }
 
+// Style Types
 export type ThemeState = "dark" | "light";
 
 export type ThemeCSS = Stitches.CSS<typeof config>;
 
+// database types
 export type InsertPage = typeof pages.$inferInsert;
 export type InsertIssue = typeof issues.$inferInsert;
 export type Issue = typeof issues.$inferSelect;
 export type Page = typeof pages.$inferSelect;
 export type Collection = typeof collections.$inferSelect;
 
+// UI Types
 export type ReaderLayout = "SinglePage" | "DoublePage" | "Manga";
 
 export type CollectionParams = {
@@ -42,6 +46,15 @@ export type ComicMetaData = {
   PageCount: number;
 };
 
+
+
+export type Point = {
+  x: number;
+  y: number;
+};
+
+// State Types
+
 export type ApplicationState = {
   firstLaunch: boolean;
   applicationId: string | undefined;
@@ -49,21 +62,22 @@ export type ApplicationState = {
   closeTime?: number;
 };
 
-// INCOMING
 export type UIState = {
   distractionFreeMode: boolean;
   ambientBackground: boolean;
   readerLayout: ReaderLayout;
+  colorMode:"light"|"dark"
 };
-
-export type Point = {
-  x: number;
-  y: number;
-};
-
-// global state , separate from the
-// reader layout
 export type GlobalState = {
   appState: ApplicationState;
   uiState: UIState;
 };
+
+export type CurrentlyReading = {
+  id: string;
+  page: number;
+};
+
+export type ReadingState = {
+  currentlyReading: CurrentlyReading[];
+}

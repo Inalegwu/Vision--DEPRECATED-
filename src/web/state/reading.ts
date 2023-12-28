@@ -1,15 +1,8 @@
 import { observable } from "@legendapp/state";
 import { persistObservable } from "@legendapp/state/persist";
 import { ObservablePersistLocalStorage } from "@legendapp/state/persist-plugins/local-storage";
+import { ReadingState } from "@src/shared/types";
 
-export type CurrentlyReading = {
-  id: string;
-  page: number;
-};
-
-export type ReadingState = {
-  currentlyReading: CurrentlyReading[];
-};
 
 export const readingState = observable<ReadingState>({
   currentlyReading: [],
