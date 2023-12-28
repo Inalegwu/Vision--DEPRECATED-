@@ -37,25 +37,46 @@ export function clamp(num: number, min: number, max: number): number {
   return Math.max(Math.min(num, max), min);
 }
 
+// prevent one action from being triggered multiple times
+// takes in a function and a millisecond count
+// the function is the event handler that will be attached to
+// say a button for instance
+// the ms is the time interval for an action to be fired
+// once one action is loaded up , event triggers after will cause the last
+// event to be discarded in favour of the new one
+// see src/web/hooks/useDebounce for React hook definition
 export function debounce<A = unknown[], R = void>(
   fn: (args: A) => R,
   ms: number,
 ): [(args: A) => Promise<R>, () => void] {
+  // declare the timeout function
+  // NodeJS.Timeout , is a reference to the setTimeout function
   let timer: NodeJS.Timeout;
 
+  // this is our debounced function , the core of this functionality
+  // it returns a new promise that is resolved after the timespan passed
+  // in as ms
   const debouncedFn = (args: A): Promise<R> =>
     new Promise((resolve) => {
+      // if there is already a timer
+      // clear it
       if (timer) {
         clearTimeout(timer);
       }
 
+      // create a timeout to resolve
+      // our function parameter after our ms time
       timer = setTimeout(() => {
         resolve(fn(args));
       }, ms);
     });
 
+    // a global tear down function that clears the timer once
+    // the function has been resolved
   const tearDown = () => clearTimeout(timer);
 
+  // return the debounced function and the tearDown function
+  // to allow for cleanup when used
   return [debouncedFn, tearDown];
 }
 

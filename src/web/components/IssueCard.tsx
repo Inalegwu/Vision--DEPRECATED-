@@ -1,10 +1,12 @@
+import { useObservable } from "@legendapp/state/react";
 import { Pencil, Trash } from "@phosphor-icons/react";
 import { Issue, Point } from "@shared/types";
 import { trpcReact } from "@src/shared/config";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useRef } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { useWindow } from "../hooks";
+import { readingState } from "../state";
 import ContextMenu, { ContextMenuRefProps } from "./ContextMenu";
 import { AnimatedBox, Box, Button, Image, LinkButton, Text } from "./atoms";
 
@@ -16,12 +18,14 @@ export default function IssueCard(props: Props) {
   const router = useNavigate();
   const utils = trpcReact.useUtils();
   const contextMenuRef = useRef<ContextMenuRefProps>(null);
-  const [points, setPoints] = useState<Point>({
+  const points = useObservable<Point>({
     x: 0,
     y: 0,
   });
 
   const contextVisible = contextMenuRef.current?.isVisible();
+
+  const currentlyReading=readingState.currentlyReading.get().find((v)=>v.id===props.issue.id);
 
   const { mutate, isLoading: deleting } =
     trpcReact.issue.removeIssue.useMutation({
@@ -36,13 +40,17 @@ export default function IssueCard(props: Props) {
       },
     });
 
+    const {data}=trpcReact.issue.getIssuePageLength.useQuery({
+      id:props.issue.id
+    })
+
   const handleClick = useCallback(() => {
     router(`/${props.issue.id}`);
   }, [props.issue, router]);
 
   const handleContextMenu = useCallback(
     (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-      setPoints({
+      points.set({
         x: e.pageX,
         y: e.pageY,
       });
@@ -62,10 +70,6 @@ export default function IssueCard(props: Props) {
     mutate({
       id: props.issue.id,
     });
-
-    if (deleting) {
-      toast.loading(`Deleting ${props.issue.name}`);
-    }
   }, [props.issue, deleting, mutate]);
 
   return (
@@ -83,7 +87,7 @@ export default function IssueCard(props: Props) {
           justifyContent: "center",
         }}
         ref={contextMenuRef}
-        points={points}
+        points={points.get()}
       >
         <LinkButton
           css={{
@@ -98,7 +102,7 @@ export default function IssueCard(props: Props) {
             justifyContent: "flex-start",
             gap: "$md",
           }}
-          to={`/editIssue/${props.issue.id}`}
+          to={`/editIssue/${props.issue?.id}`}
         >
           <Pencil size={14} />
           <Text>Edit Issue Info</Text>
@@ -134,6 +138,7 @@ export default function IssueCard(props: Props) {
           alignItems: "flex-start",
           gap: "$md",
           color: "$white",
+          position:"relative",
           opacity: `${deleting ? 0.5 : 1}`,
           transition: "0.3s ease-in-out",
           "&:hover": {
@@ -151,6 +156,11 @@ export default function IssueCard(props: Props) {
             borderRadius: "$md",
             overflow: "hidden",
             color: "$white",
+            display:"flex",
+            flexDirection:"column",
+            alignContent:"center",
+            alignItems:"center",
+            justifyContent:"center",
             transition: "0.5s ease-in-out",
             "&:hover": {
               border: "0.1px solid $secondary",
@@ -159,13 +169,16 @@ export default function IssueCard(props: Props) {
         >
           <Image
             css={{ height: "100%", width: "100%" }}
-            src={props.issue.thumbnailUrl}
-            alt={props.issue.name}
+            src={props.issue?.thumbnailUrl}
+            alt={props.issue?.name}
           />
+          {currentlyReading && <Box css={{top:"88%",position:"absolute",zIndex:3,width:"96%",borderRadius:"$full",background:"$lightGray",backdropFilter:"blur(400px)"}}>
+              <AnimatedBox initial={{width:"0%"}} transition={{duration:1,ease:"easeOut"}} animate={{width:`${(currentlyReading.page/data!)*100}%`}} css={{padding:"$md",background:"$primary",borderRadius:"$full"}}/>
+            </Box>}
         </Box>
         <Box css={{ width: 170 }}>
           <Text css={{ fontSize: 13, color: "$white" }}>
-            {props.issue.name}
+            {props.issue?.name}
           </Text>
         </Box>
       </AnimatedBox>

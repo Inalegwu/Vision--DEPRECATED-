@@ -94,7 +94,11 @@ export default function Layout(props: LayoutProps) {
           </Button>
         </HStack>
       </Box>
-      <Box css={{ width: "100%", height: "96%" }}>{props.children}</Box>
+      {/* navbar */}
+      {/* <Box css={{position:"absolute",zIndex:30,background:"$blackMuted",backdropFilter:"blur(300px)",padding:"$lg",borderRadius:"$lg",left:"46%",top:"93%"}}>
+        content
+      </Box> */}
+      <Box css={{ width: "100%", height: "96%" }}>{props.children}B</Box>
      </Box>
     </Box>
   );

@@ -19,7 +19,7 @@ export default function IssueSkeleton() {
         transition={{
           ease: "easeInOut",
           bounce: true,
-          duration:0.5,
+          duration:1,
           repeat: Infinity,
         }}
         css={{
@@ -35,7 +35,7 @@ export default function IssueSkeleton() {
           ease: "easeInOut",
           bounce: true,
           repeat: Infinity,
-          duration:0.5
+          duration:1
         }}
         css={{
           padding: "$md",

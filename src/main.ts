@@ -1,4 +1,4 @@
-import { initialize } from "@aptabase/electron/main";
+import { initialize, trackEvent } from "@aptabase/electron/main";
 import { BrowserWindow, app, screen } from "electron";
 import { createIPCHandler } from "electron-trpc/main";
 import path from "path";
@@ -16,6 +16,8 @@ const createWindow = () => {
     autoHideMenuBar: true,
     width: windowSize.width - 50,
     height: windowSize.height - 50,
+    minHeight:700,
+    minWidth:1024,
     webPreferences: {
       sandbox: false,
       preload: path.resolve(__dirname, "preload.js"),
@@ -41,5 +43,9 @@ app.whenReady().then(() => {
 
 app.once("window-all-closed", () => app.quit());
 }catch(e){
+  trackEvent("failed to launch app window",{
+    cause:`${e}`,
+    location:"mains"
+  })
   console.log(e);
 }

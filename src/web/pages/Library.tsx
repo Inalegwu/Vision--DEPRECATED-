@@ -16,23 +16,26 @@ import {
   Spinner,
   VStack,
 } from "@components/index";
+import { useObservable } from "@legendapp/state/react";
 import { Plus } from "@phosphor-icons/react";
 import { trpcReact } from "@shared/config";
 import { Reasons } from "@shared/types";
 import { LOADING_PHRASES, getRandomIndex } from "@src/shared/utils";
 import { globalState$ } from "@src/web/state";
 import { AnimatePresence } from "framer-motion";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { useInterval, useTimeout } from "../hooks";
 
 export default function Library() {
   const utils = trpcReact.useUtils();
   const router = useNavigate();
-  const [createModalVisible, setCreateModalVisible] = useState<boolean>(false);
-  const [mouseOver, setMouseOver] = useState<boolean>(false);
-  const [collectionName, setCollectionName] = useState<string>("");
-  const [phraseIndex, setPhraseIndex] = useState<number>(
+  const inputRef=useRef<HTMLInputElement>(null);
+  const createModalVisible = useObservable(false);
+  const mouseOver = useObservable(false);
+  const collectionName = useObservable("");
+  const phraseIndex = useObservable<number>(
     getRandomIndex(0, LOADING_PHRASES.length - 1),
   );
 
@@ -54,6 +57,16 @@ export default function Library() {
       },
     });
 
+    useTimeout(()=>{
+      if(!mouseOver){
+        createModalVisible.set(false);
+      }
+    },6000)
+
+    useInterval(()=>{
+      phraseIndex.set(getRandomIndex(0,LOADING_PHRASES.length-1));
+    },4000)
+
   useEffect(() => {
     // is the the users first launch of the app ???
     if (state.appState.firstLaunch) {
@@ -65,21 +78,7 @@ export default function Library() {
       });
     }
 
-    const dismissToolTip = setTimeout(() => {
-      if (!mouseOver) {
-        setCreateModalVisible(false);
-      }
-    }, 6000);
-
-    const changeLoadingPhrase = setTimeout(() => {
-      setPhraseIndex(getRandomIndex(0, LOADING_PHRASES.length - 1));
-    }, 7000);
-
-    return () => {
-      clearTimeout(dismissToolTip);
-      clearTimeout(changeLoadingPhrase);
-    };
-  }, [setCreateModalVisible, setPhraseIndex]);
+  }, []);
 
   const { data: library, isLoading: fetchingLibraryContent } =
     trpcReact.library.getLibrary.useQuery();
@@ -93,8 +92,17 @@ export default function Library() {
     });
 
   const create = useCallback(() => {
-    createCollection({ name: collectionName });
+    createCollection({ name: collectionName.get() });
+    inputRef.current?.blur();
+
+    createModalVisible.set(false);
+
   }, [collectionName, createCollection]);
+
+  const toggleCreateModal=useCallback(()=>{
+   createModalVisible.set(true)
+    inputRef.current?.focus();
+  },[])
 
   return (
     <Layout>
@@ -138,7 +146,7 @@ export default function Library() {
                 exit={{ opacity: 0 }}
                 transition={{ ease: "anticipate" }}
               >
-                {LOADING_PHRASES[phraseIndex]}
+                {LOADING_PHRASES[phraseIndex.get()]}
               </AnimatedText>
             </AnimatePresence>
           </Box>
@@ -159,42 +167,54 @@ export default function Library() {
               gap={6}
             />
             <AnimatePresence>
-              {createModalVisible && (
+              {createModalVisible.get() && (
                 <AnimatedBox
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   css={{
-                    background: "$secondary",
+                    background: "$blackMuted",
                     borderRadius: "$md",
                     padding: "$md",
                     backdropFilter: "blur(500px)",
                     border: "0.3px solid $gray",
                     position: "absolute",
                     zIndex: 1,
-                    left: "84%",
+                    left: "80%",
                     top: "17%",
+                    display:"flex",
+                    flexDirection:"column",
+                    alignContent:"center",
+                    alignItems:"center",
+                    justifyContent:"center",
+                    boxShadow:"0px 0.1px 40px 0px rgba(255,255,255,0.1)",
+                    gap:"$md"
                   }}
                 >
                   <Input
-                    onMouseOver={() => setMouseOver(true)}
+                  ref={inputRef}
+                    onMouseOver={() => mouseOver.set(true)}
                     onKeyDown={(e) => {
                       if (e.key === "Enter") {
                         create();
                       }
                     }}
-                    onFocus={() => setMouseOver(true)}
-                    onBlur={() => setMouseOver(false)}
+                    onFocus={() => mouseOver.set(true)}
+                    onBlur={() => mouseOver.set(false)}
                     css={{
-                      background: "$gray",
                       opacity: 0.5,
                       borderRadius: "$md",
-                      padding: "$md",
+                      padding: "$lg",
                       color: "$white",
+                      background:"$blackMuted",
+                      border:"0.1px solid $lightGray"
                     }}
-                    onChange={(e) => setCollectionName(e.currentTarget.value)}
+                    onChange={(e) => collectionName.set(e.currentTarget.value)}
                     placeholder="Collection Name"
                   />
+                  <Button onClick={create} css={{width:"100%",padding:"$lg",borderRadius:"$md",background:"$primary",display:"flex",alignContent:"center",alignItems:"center",justifyContent:"center",color:"$white"}}>
+                    <Text>Create Collection</Text>
+                  </Button>
                 </AnimatedBox>
               )}
             </AnimatePresence>
@@ -218,7 +238,7 @@ export default function Library() {
                     background: "$primary",
                   },
                 }}
-                onClick={() => setCreateModalVisible(true)}
+                onClick={toggleCreateModal}
               >
                 <Text css={{ fontSize: 12 }}>Create Collection</Text>
               </Button>

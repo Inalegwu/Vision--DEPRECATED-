@@ -16,5 +16,6 @@ export const readingState = observable<ReadingState>({
 });
 
 persistObservable(readingState, {
+  local:"reading__state",
   pluginLocal: ObservablePersistLocalStorage,
 });

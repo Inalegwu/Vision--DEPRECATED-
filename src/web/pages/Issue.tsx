@@ -125,10 +125,11 @@ export default function Issue() {
     (layout: ReaderLayout) => {
       globalState$.uiState.readerLayout.set(layout);
     },
-    [uiState],
+    [],
   );
 
   const saveIssueReadingState = useCallback(() => {
+    // update the currently reading list 
     readingState.currentlyReading.set([
       ...readingState.currentlyReading.get(),
       { id: issueId!, page: activeIndexValue },

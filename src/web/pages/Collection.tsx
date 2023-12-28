@@ -334,7 +334,7 @@ export default function Collection() {
             paddingBottom: "$xxxl",
           }}
         >
-          {collection?.collection?.issues.length === 0 && (
+          {collection?.collection?.issues?.length === 0 && (
             <Box
               css={{
                 display: "flex",
@@ -459,7 +459,7 @@ export default function Collection() {
           {collection?.collection?.issues.map((v) => {
             return <IssueCard issue={v} key={v.id} />;
           })}
-          {getting && [...Array(10)].map((v) => <IssueSkeleton key={v} />)}
+          {getting && [...Array(10)].map((_,idx) => <IssueSkeleton key={`${idx}`} />)}
           <Button
             onClick={() => setIssuesListVisible(true)}
             css={{

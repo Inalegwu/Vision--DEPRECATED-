@@ -1,14 +1,13 @@
+import { observer } from "@legendapp/state/react";
 import { Point, ThemeCSS } from "@shared/types";
 import { AnimatePresence } from "framer-motion";
 import React, {
   useCallback,
-  useEffect,
   useImperativeHandle,
-  useState,
+  useState
 } from "react";
+import { useTimeout } from "../hooks";
 import { AnimatedBox } from "./atoms";
-
-// TODO
 
 export type ContextMenuRefProps = {
   isVisible: () => boolean;
@@ -22,33 +21,27 @@ export type ContextMenuProps = {
   style?: ThemeCSS;
 };
 
-const ContextMenu = React.forwardRef<ContextMenuRefProps, ContextMenuProps>(
+const ContextMenu = observer(React.forwardRef<ContextMenuRefProps, ContextMenuProps>(
   ({ children, points, style }, ref) => {
-    const [visible, setVisible] = useState<boolean>(false);
-    const [mouseOver, setMouseOver] = useState<boolean>(false);
+    const [visible,setVisible] = useState(false);
+    const [mouseOver,setMouseOver]= useState(false);
 
-    useEffect(() => {
-      const t = setTimeout(() => {
-        if (visible && !mouseOver) {
-          setVisible(false);
+    useTimeout(()=>{
+      if (visible&& !mouseOver) {
+         setVisible(false);
         }
-      }, 3000);
-
-      return () => {
-        clearTimeout(t);
-      };
-    }, [visible, mouseOver]);
+    },3000)
 
     const isVisible = useCallback(() => {
-      return visible;
+      return visible
     }, [visible]);
 
     const show = useCallback(() => {
-      setVisible(true);
+      setVisible(true)
     }, []);
 
     const hide = useCallback(() => {
-      setVisible(false);
+      setVisible(false)
     }, []);
 
     useImperativeHandle(ref, () => ({ show, hide, isVisible }));
@@ -76,6 +69,6 @@ const ContextMenu = React.forwardRef<ContextMenuRefProps, ContextMenuProps>(
       </AnimatePresence>
     );
   },
-);
+));
 
 export default ContextMenu;
