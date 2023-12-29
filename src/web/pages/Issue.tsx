@@ -169,15 +169,23 @@ export default function Issue() {
         // keep all the issues whose id isn't this issues'
         ...readingState.currentlyReading.get().filter((v) => v.id !== issueId),
         // add this issue again with the current page index
-        { id: issueId!, page: activeIndexValue,total:issue?.issue.pages.length! },
+        {
+          id: issueId!,
+          page: activeIndexValue,
+          total: issue?.issue.pages.length!,
+        },
       ]);
       return;
     }
     readingState.currentlyReading.set([
       ...readingState.currentlyReading.get(),
-      { id: issueId!, page: activeIndexValue,total:issue?.issue.pages.length! },
+      {
+        id: issueId!,
+        page: activeIndexValue,
+        total: issue?.issue.pages.length!,
+      },
     ]);
-  }, [activeIndexValue, issueId]);
+  }, [activeIndexValue, issueId, issueId, issue]);
 
   return (
     <Box

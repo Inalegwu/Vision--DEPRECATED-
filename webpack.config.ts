@@ -54,7 +54,7 @@ const common: Configuration = {
         },
         {
           from: "./.drizzle/",
-          to: "./drizzle/",
+          to: "./.drizzle/",
         },
       ],
     }),
