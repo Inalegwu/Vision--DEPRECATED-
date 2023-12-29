@@ -45,7 +45,7 @@ export default function Layout(props: LayoutProps) {
           alignContent: "center",
           alignItems: "center",
           justifyContent: "space-between",
-          borderBottom: "0.1px solid rgba(255,255,255,0.1)",
+          borderBottom: "0.1px solid rgba(255,255,255,0.05)",
         }}
       >
         <Box

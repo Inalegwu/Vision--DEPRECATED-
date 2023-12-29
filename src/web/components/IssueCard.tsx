@@ -2,15 +2,13 @@ import { useObservable } from "@legendapp/state/react";
 import { Pencil, Trash } from "@phosphor-icons/react";
 import { Issue, Point } from "@shared/types";
 import { trpcReact } from "@src/shared/config";
-import { AnimatePresence } from "framer-motion";
-import moment from "moment";
 import { useCallback, useRef } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-import { useTimeout, useWindow } from "../hooks";
+import { useWindow } from "../hooks";
 import { readingState } from "../state";
 import ContextMenu, { ContextMenuRefProps } from "./ContextMenu";
-import { AnimatedBox, AnimatedText, Box, Button, Image, LinkButton, Text } from "./atoms";
+import { AnimatedBox, Box, Button, Image, LinkButton, Text } from "./atoms";
 
 type Props = {
   issue: Issue;
@@ -21,7 +19,6 @@ export default function IssueCard(props: Props) {
   const utils = trpcReact.useUtils();
   const contextMenuRef = useRef<ContextMenuRefProps>(null);
 
-  const infoVisible=useObservable(true);
 
   const points = useObservable<Point>({
     x: 0,
@@ -43,6 +40,7 @@ export default function IssueCard(props: Props) {
       onSuccess: () => {
         utils.issue.invalidate();
         utils.library.invalidate();
+        utils.collection.getIssuesInCollection.invalidate()
         toast.success(`${props.issue.name} Deleted Successfully`);
       },
     });
@@ -67,10 +65,6 @@ export default function IssueCard(props: Props) {
       contextMenuRef.current?.hide();
     }
   });
-
-  useTimeout(()=>{
-    infoVisible.set(false)
-  },3000)
 
   const deleteIssue = useCallback(() => {
     contextMenuRef.current?.hide();
@@ -140,13 +134,11 @@ export default function IssueCard(props: Props) {
         <Box css={{width:"100%",height:"100%",position:"absolute",zIndex:1,background:"rgba(0,0,0,0.6)",display:"flex",flexDirection:"column",alignContent:"flex-start",alignItems:"flex-start",justifyContent:"flex-end",padding:"$md",gap:"$sm"}}>
           <Text css={{fontSize:14,fontWeight:"normal"}}>{props.issue.name}</Text>
           <Box css={{width:"100%",borderRadius:"$full",background:"$lightGray",backdropFilter:"blur(300px)"}}>
-            <AnimatedBox initial={{width:0}} animate={{width:`${(currentlyReading?.page!/currentlyReading?.total!)*100}%`}} css={{background:"$secondary",borderRadius:"$full",padding:"$sm"}}/>
+            {/* ensure the progress bar is only showing when all this information is available , this allows the ui to be rendered only when the user has that information for the app to consume instead of populating the ui with unnecessary elements */}
+            {currentlyReading&&currentlyReading.page&&currentlyReading.total?<AnimatedBox initial={{width:0}} animate={{width:`${(currentlyReading?.page/currentlyReading?.total)*100}%`}} css={{background:"$secondary",borderRadius:"$full",padding:"$sm"}}/>:(<></>)}
           </Box>
         </Box>
       </Box>
-      <AnimatePresence>{
-       infoVisible.get()&& <AnimatedText  initial={{opacity:0}} animate={{opacity:1}} css={{fontSize:11,color:"$lightGray",fontWeight:"lighter"}}>{moment(props.issue.dateCreated).fromNow()}</AnimatedText> 
-        }</AnimatePresence>
     </Box>
     </>
   );

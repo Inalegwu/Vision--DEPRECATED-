@@ -175,8 +175,6 @@ export const libraryRouter = router({
   }),
   getLibrary: publicProcedure.query(async ({ ctx }) => {
     try {
-      trackEvent("Load Library");
-
       // find all the users saved issues
       const issues = await ctx.db.query.issues.findMany({
         orderBy: (issues, { asc }) => asc(issues.name),

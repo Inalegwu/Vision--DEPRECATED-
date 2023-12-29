@@ -15,6 +15,8 @@ export const issueRouter = router({
           where: (issues, { eq }) => eq(issues.id, input.id),
         });
 
+        // if the issue doesn't exist throw an
+        // error so the app doesn't have to crash
         if (!issue) {
           throw new TRPCError({
             code: "NOT_FOUND",
@@ -26,6 +28,9 @@ export const issueRouter = router({
           where: (pages, { eq }) => eq(pages.issueId, issue.id),
         });
 
+        // I have to spread the issue into the object
+        // with the pages because implementing the collection relation
+        // somehow messed up the pages relation 🤷‍♂️
         return {
           issue: {
             ...issue,
@@ -46,9 +51,6 @@ export const issueRouter = router({
       trackEvent("Delete Issue");
       try {
         ctx.db.transaction(async (tx) => {
-          trackEvent("Issue deleted", {
-            deletedIssueId: input.id,
-          });
           await tx.delete(pages).where(eq(pages.issueId, input.id));
           await tx.delete(issues).where(eq(issues.id, input.id));
         });

@@ -368,6 +368,7 @@ export default function Collection() {
               </Button>
             </Box>
           )}
+          {/* add issue view */}
           <AnimatePresence>
             {issuesListVisible && (
               <AnimatedBox
@@ -386,7 +387,7 @@ export default function Collection() {
                   background: "$blackMuted",
                   backdropFilter: "blur(500px)",
                   position: "absolute",
-                  zIndex: 1,
+                  zIndex: 5,
                   left: 0,
                   top: "50%",
                   border: "0.1px solid $lightGray",

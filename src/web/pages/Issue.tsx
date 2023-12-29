@@ -1,4 +1,4 @@
-import { AnimatedBox, Box, Button, LinkButton, Text } from "@components/atoms";
+import { AnimatedBox, Box, Button, Text } from "@components/atoms";
 import { DoublePage, SinglePage, Spinner, VStack } from "@components/index";
 import { useObservable } from "@legendapp/state/react";
 import {
@@ -39,7 +39,9 @@ export default function Issue() {
   const { uiState } = globalState$.get();
   const activeLayout = globalState$.uiState.readerLayout.get();
 
-  // if the user has a currently reading state saved...
+  // if the user has a currently reading state saved, it will
+  // be used to render a progress bar for the users reading progress
+  // this will also enable somethings in the future as well.
   const currentlyReading = readingState.currentlyReading
     .get()
     .find((v) => v.id === issueId);
@@ -50,6 +52,7 @@ export default function Issue() {
   const navigationShowing = useObservable<boolean>(false);
 
   // use these values where it would cause Rules of Hooks errors
+  // i.e conditionals and the rest
   const activeIndexValue = activeIndex.get();
   const navigationShowingValue = navigationShowing.get();
 
@@ -67,6 +70,7 @@ export default function Issue() {
     }
   }, 100);
 
+  // get the issue data
   const { data: issue, isLoading: loadingIssue } =
     trpcReact.issue.getIssue.useQuery(
       {
@@ -79,6 +83,8 @@ export default function Issue() {
       },
     );
 
+    // maximizes the window for either distraction free mode or just activating
+    // fullscreen mode
   const { mutate: maximizeWindow, data: windowStat } =
     trpcReact.window.maximizeWindow.useMutation();
 
@@ -161,6 +167,11 @@ export default function Issue() {
   // also useful for showing reading progress in other parts of the app
   const saveIssueReadingState = useCallback(() => {
     // update the currently reading list
+    // @ts-ignore goes back a page
+    router(-1,{
+      preventScrollReset:true,
+      unstable_viewTransition:true
+    })
     const found = readingState.currentlyReading
       .get()
       .find((v) => v.id === issueId);
@@ -264,10 +275,9 @@ export default function Issue() {
                 gap: "$xxxl",
               }}
             >
-              <LinkButton
+              <Button
                 onMouseOver={() => mouseOver.set(true)}
                 onMouseLeave={() => mouseOver.set(false)}
-                to="/"
                 onClick={saveIssueReadingState}
                 css={{
                   padding: "$lg",
@@ -281,7 +291,7 @@ export default function Issue() {
                 }}
               >
                 <CaretLeft size={16} />
-              </LinkButton>
+              </Button>
               <Text css={{ color: "$white", fontSize: 15 }}>
                 {issue?.issue?.name}
               </Text>

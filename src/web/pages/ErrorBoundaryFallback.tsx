@@ -2,23 +2,42 @@ import { trackEvent } from "@aptabase/electron/renderer";
 import { Box, Button, Text } from "@components/atoms";
 import { useCallback } from "react";
 import { FallbackProps } from "react-error-boundary";
+import pkg from "../../../package.json";
 import { HStack, VStack } from "../components";
 import { globalState$ } from "../state";
 
+// is the application in dev mode or not
 const isDev = process.env.NODE_ENV === "development";
 
 function ErrorBoundaryFallback(props: FallbackProps) {
   const state = globalState$.get();
 
   trackEvent("error_boundary triggered", {
-    cause: props.error,
+    // the time that this component was rendered
+    // which in turn is the time when the error occured
     timeOccured: Date.now(),
+    // the users application id
+    // to see if this is a recurring event
+    // and if it's frequent on this users application
+    // instance
     appId: state.appState.applicationId || "",
+    // the error body that caused the failure
+    // this is essentially the reason why this event was
+    // triggered
     error: props.error,
+    // what version of the app is the user
+    // on , to know whether or not to tell the user
+    // to update
+    appVer:pkg.version
   });
 
+  // this is used to reset the app
+  // to see if the error is a one off
   const resetApp = useCallback(() => {
-    console.log("Restting app");
+    // send an event for when the app is reset
+    // TODO I should find away to track the
+    // count of the reset request to know how many times
+    // the reset was triggered
     trackEvent("Reset App Trial");
     props.resetErrorBoundary();
   }, [props]);
@@ -95,6 +114,7 @@ function ErrorBoundaryFallback(props: FallbackProps) {
               gap: "$md",
             }}
           >
+            {/* the actual error message */}
             <HStack
               alignContent="center"
               alignItems="center"
@@ -108,6 +128,9 @@ function ErrorBoundaryFallback(props: FallbackProps) {
               </Text>
               <Text css={{ fontSize: 23 }}> {props.error.message}</Text>
             </HStack>
+            {/* the error require stack which should allow 
+                to track down the error to where the call was made
+            */}
             <Text
               css={{
                 fontSize: 15,
@@ -133,6 +156,7 @@ function ErrorBoundaryFallback(props: FallbackProps) {
             >
               Cause
             </Text>
+            {/* the cause of the error , which might also help with narrowing things down */}
             <Text css={{ fontSize: 14, color: "$blackMuted" }}>
               {props.error.cause || "Unknown"}
             </Text>

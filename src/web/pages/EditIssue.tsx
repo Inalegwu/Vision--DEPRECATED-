@@ -19,12 +19,16 @@ export default function EditIssue() {
   const [issueName, setIssueName] = useState<string>("");
   const [editingName, setEditingName] = useState<boolean>(false);
 
+  // navigate backwards
   const goBack = useCallback(() => {
-    router("/", {
+    // @ts-ignore this allows the app to simply 
+    // go back a page
+    router(-1, {
       unstable_viewTransition: true,
     });
   }, [router]);
 
+  // get the issues information , like the name and the rest
   const { data: issue, isLoading: _fetchingIssue } =
     trpcReact.issue.getIssueData.useQuery(
       { id: issueId || "" },
@@ -35,6 +39,7 @@ export default function EditIssue() {
       }
     );
 
+    // apply the name changes from the app
   const { mutate: updateIssueName, isLoading: _updatingIssue } =
     trpcReact.issue.changeIssueName.useMutation({
       onSuccess: () => {
@@ -44,6 +49,7 @@ export default function EditIssue() {
       },
     });
 
+    // trigger the update on enter click
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLInputElement>) => {
       if (e.key === "Enter") {
@@ -56,13 +62,6 @@ export default function EditIssue() {
     },
     [issueName, updateIssueName, issueId]
   );
-
-  // const changeIssueName = useCallback(() => {
-  //   updateIssueName({
-  //     id: issueId,
-  //     newName,
-  //   });
-  // }, [issueId, newName]);
 
   return (
     <Layout>

@@ -1,11 +1,16 @@
 import { v4 } from "uuid";
 
+// very ,very ,very thin wrap around
+// uuid/v4 to generate random uuid's
 export function generateUUID() {
   const uuid = v4();
 
   return uuid;
 }
 
+// utility function to convert the array buffer data gotten
+// from the archives extracted content to an image as b64 text which
+// allows it to be rendered as a data url in the app
 export function convertToImageUrl(buffer: ArrayBufferLike): string {
   const b64 = Buffer.from(buffer).toString("base64");
   const dataUrl = `data:image/png;base64,${b64}`;
@@ -13,6 +18,11 @@ export function convertToImageUrl(buffer: ArrayBufferLike): string {
   return dataUrl;
 }
 
+// sort the pages/content of an archive.in this case the pages
+// this allows us ensure that pages are stored in the correct order
+// the database so that reading exprience can be maintained
+// this code was kindly borrowed from codedreads kthoom comic book
+// reader
 export function sortPages(a: string, b: string) {
   // Strip off file extension.
   const aName = a.replace(/\.[^/.]+$/, "");
@@ -33,6 +43,9 @@ export function sortPages(a: string, b: string) {
   return a > b ? 1 : -1;
 }
 
+// clamp values within a range
+// used when there are gesture
+// related events in the application
 export function clamp(num: number, min: number, max: number): number {
   return Math.max(Math.min(num, max), min);
 }
@@ -80,7 +93,11 @@ export function debounce<A = unknown[], R = void>(
   return [debouncedFn, tearDown];
 }
 
-// loading screen phrases
+// Random phrases to keep the loading screen
+// interesting in the app , rather than using the normal
+// this might take a while.
+// This gives the app personality IMO, 'cause I usually like when
+// apps do this
 export const LOADING_PHRASES = [
   "Fighting Darkseid",
   "Making sure Joker hasn't escaped again",
@@ -117,12 +134,19 @@ export const LOADING_PHRASES = [
   "You can Tell I was Built by a DC Fan , Can't You ?",
 ];
 
+// gives a random index
+// used to randomize the loading messages
+// in the UI
 export function getRandomIndex(min: number, max: number): number {
   const newMin = Math.ceil(min);
   const newMax = Math.floor(max);
   return Math.floor(Math.random() * (newMax - newMin + 1)) + newMin;
 }
 
+// decode the xml metadata file that is included in the
+// archive
+// TODO find a way to convert this to an object that can be
+// accessed as md["property"] to allow for saving things
 export function decodeMetaData(data: ArrayBufferLike | Buffer) {
   const text = new TextDecoder("utf-8");
   const decodedMeta = text.decode(data);

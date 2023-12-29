@@ -4,6 +4,8 @@ import { LayoutProps } from "@src/shared/types";
 import { globalState$ } from "@src/web/state";
 import { useState } from "react";
 
+// TODO Implement a slider view instead of just a snap change view
+
 const SinglePage = observer(({ pages, activeIndex }: LayoutProps) => {
   // for zooming
   const [_crop, _setCrop] = useState({

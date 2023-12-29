@@ -47,7 +47,6 @@ export type ComicMetaData = {
 };
 
 
-
 export type Point = {
   x: number;
   y: number;
@@ -56,26 +55,52 @@ export type Point = {
 // State Types
 
 export type ApplicationState = {
+  // tracks whether or not
+  // it's the users first time launching the app
+  // to give them a sweet surprise for their first time
   firstLaunch: boolean;
+  // a unique identifier for the application instance
+  // useful for debugging issues, cause I can track down logs
+  // with the application id to know exactly what went wrong
   applicationId: string | undefined;
+  // saves the time the app was opened
   openTime?: number;
+  // saves the time the app was closed
+  // this can be used to determine the average time spent within
+  // the application from opening to closing
   closeTime?: number;
 };
 
+// ui state
 export type UIState = {
+  // hides the navigation ui on the reader view and allows
+  // the user focus on reading the issue
   distractionFreeMode: boolean;
+  // stylised background for the reader view
   ambientBackground: boolean;
+  // how would the reader like to exprience the application
   readerLayout: ReaderLayout;
+  // the color mode of the application for toggling
+  // light and dark mode
   colorMode:"light"|"dark"
 };
+
+// global application state
 export type GlobalState = {
   appState: ApplicationState;
   uiState: UIState;
 };
 
 export type CurrentlyReading = {
+  // save the id of the issue this data belongs to
+  // so it can be found later
   id: string;
+  // save the page the user was on when they left
+  // the reader view
   page: number;
+  // save the total number of pages the issue has
+  // so there is no need to query the database for that
+  // information
   total:number;
 };
 
