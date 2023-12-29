@@ -1,7 +1,11 @@
-import { AnimatedBox, Box, Image, Text } from "@components/atoms";
+import { AnimatedText, Box, Image, Text } from "@components/atoms";
+import { useObservable } from "@legendapp/state/react";
 import { Collection, Issue } from "@src/shared/types";
+import { AnimatePresence } from "framer-motion";
+import moment from "moment";
 import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTimeout } from "../hooks";
 
 type CollectionCardProps = {
   collection: Collection & { issues: Issue[] };
@@ -10,86 +14,34 @@ type CollectionCardProps = {
 export default function CollectionCard({ collection }: CollectionCardProps) {
   const router = useNavigate();
 
+  const infoText=useObservable(true);
+
   const handleClick = useCallback(() => {
     router(`/collections/${collection.id}`);
   }, [router, collection]);
 
+
+  useTimeout(()=>{
+    infoText.set(false);
+  },3000)
+
+
   return (
-    <AnimatedBox
-      onClick={handleClick}
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      css={{
-        cursor: "pointer",
-        color: "$white",
-        transition: "0.5s ease-in-out",
-        position: "relative",
-      }}
-    >
-      {collection.issues[0] ? (
-        <>
-          <Image
-            src={collection.issues[0].thumbnailUrl}
-            css={{
-              width: 170,
-              height: 260,
-              border: "0.1px solid $lightGray",
-              transition: "0.5s ease-in-out",
-              borderRadius: "$md",
-              "&:hover": {
-                border: "0.1px solid $primary",
-              },
-            }}
-          />
-          <Box
-            css={{
-              position: "absolute",
-              padding: "$lg",
-              width: 23,
-              height: 23,
-              borderRadius: "$full",
-              top: 230,
-              left: "2%",
-              background: "$secondary",
-              color: "$white",
-              display: "flex",
-              alignContent: "center",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-            title={`${collection.name} Has ${collection.issues.length} Issues`}
-          >
-            <Text>{collection.issues.length}</Text>
-          </Box>
-        </>
-      ) : (
-        <>
-          <Box
-            css={{
-              width: 170,
-              height: 260,
-              border: "0.1px solid rgba(255,255,255,0.3)",
-              transition: "0.5s ease-in-out",
-              //   transform: "rotate(-1deg)",
-              borderRadius: "$md",
-              "&:hover": {
-                border: "0.1px solid rgba(255,255,255,0.6)",
-              },
-              display: "flex",
-              alignContent: "center",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <Text css={{ fontWeight: "bold", fontSize: 23 }}>
-              {collection.name.slice(0, 2).toUpperCase()}
-            </Text>
-          </Box>
-        </>
-      )}
-      <Box css={{ width: 170 }}>
-        <Text css={{ fontSize: 14 }}>{collection.name}</Text>
+    <>
+    <Box css={{display:"flex",flexDirection:"column",alignContent:"flex-start",alignItems:"flex-start",gap:"$sm"}}>
+      <Box onClick={handleClick} css={{width:165,height:260,position:"relative",overflow:"hidden",borderRadius:"$md",cursor:"pointer"}}>
+        <Image src={collection.issues[0].thumbnailUrl} css={{width:"100%",height:"100%",position:"absolute",zIndex:0}}/>
+        <Box css={{width:"100%",height:"100%",padding:"$md",background:"rgba(0,0,0,0.4)",position:"absolute",zIndex:1,display:"flex",flexDirection:"column",alignContent:"flex-start",alignItems:"flex-start",justifyContent:"flex-end"}}>
+          <Text css={{fontSize:13,fontWeight:"normal"}}>{collection.name}</Text>
+          <Text css={{fontSize:12.5}}>{collection.issues.length} issue(s)</Text>
+        </Box>
       </Box>
-    </AnimatedBox>
+      <AnimatePresence>
+        {infoText.get()&&<AnimatedText 
+         initial={{opacity:0}} animate={{opacity:1}} css={{fontSize:11,color:"$lightGray",fontWeight:"lighter"}}
+        >{moment(collection.dateCreated).fromNow()}</AnimatedText>}
+      </AnimatePresence>
+    </Box>
+    </>
   );
 }

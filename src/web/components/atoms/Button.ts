@@ -7,4 +7,6 @@ export const Button = styled("button", {
   outline: "none",
   transition: "0.2s ease-in-out",
   cursor: "pointer",
+  letterSpacing:0.3,
+  fontWeight:"lighter"
 });

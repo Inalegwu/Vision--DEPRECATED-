@@ -56,7 +56,7 @@ export default function Layout(props: LayoutProps) {
             gap: "$md",
           }}
         >
-          <Text>Vision</Text>
+          <Text css={{fontWeight:"lighter",letterSpacing:0.3}}>Vision</Text>
         </Box>
         <Box
           id="drag-region"

@@ -4,21 +4,17 @@ import { useCallback } from "react";
 import { FallbackProps } from "react-error-boundary";
 import { HStack, VStack } from "../components";
 import { globalState$ } from "../state";
-import {trpcReact} from "@shared/config";
 
 const isDev = process.env.NODE_ENV === "development";
 
 function ErrorBoundaryFallback(props: FallbackProps) {
   const state = globalState$.get();
 
-  const {data:appVer}=trpcReact.version.useQuery();
-
   trackEvent("error_boundary triggered", {
     cause: props.error,
     timeOccured: Date.now(),
     appId: state.appState.applicationId || "",
     error: props.error,
-    appVersion:appVer!
   });
 
   const resetApp = useCallback(() => {

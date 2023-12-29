@@ -266,7 +266,7 @@ export default function Collection() {
                     }}
                   />
                 )}
-                <Text css={{ fontSize: 27, fontWeight: "bold" }}>{name}</Text>
+                <Text css={{ fontSize: 27, fontWeight: "lighter",letterSpacing:0.3 }}>{name}</Text>
               </>
             )}
             <HStack

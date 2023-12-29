@@ -1,15 +1,16 @@
 import { useObservable } from "@legendapp/state/react";
-import { Check, Pencil, Trash } from "@phosphor-icons/react";
+import { Pencil, Trash } from "@phosphor-icons/react";
 import { Issue, Point } from "@shared/types";
 import { trpcReact } from "@src/shared/config";
 import { AnimatePresence } from "framer-motion";
+import moment from "moment";
 import { useCallback, useRef } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-import { useWindow } from "../hooks";
+import { useTimeout, useWindow } from "../hooks";
 import { readingState } from "../state";
 import ContextMenu, { ContextMenuRefProps } from "./ContextMenu";
-import { AnimatedBox, Box, Button, Image, LinkButton, Text } from "./atoms";
+import { AnimatedBox, AnimatedText, Box, Button, Image, LinkButton, Text } from "./atoms";
 
 type Props = {
   issue: Issue;
@@ -19,6 +20,9 @@ export default function IssueCard(props: Props) {
   const router = useNavigate();
   const utils = trpcReact.useUtils();
   const contextMenuRef = useRef<ContextMenuRefProps>(null);
+
+  const infoVisible=useObservable(true);
+
   const points = useObservable<Point>({
     x: 0,
     y: 0,
@@ -64,6 +68,10 @@ export default function IssueCard(props: Props) {
     }
   });
 
+  useTimeout(()=>{
+    infoVisible.set(false)
+  },3000)
+
   const deleteIssue = useCallback(() => {
     contextMenuRef.current?.hide();
     mutate({
@@ -73,6 +81,7 @@ export default function IssueCard(props: Props) {
 
   return (
     <>
+    {/* context menu */}
       <ContextMenu
         style={{
           border: "0.12px solid $lightGray",
@@ -84,6 +93,8 @@ export default function IssueCard(props: Props) {
           alignContent: "center",
           alignItems: "center",
           justifyContent: "center",
+          width:170,
+          height:70,
         }}
         ref={contextMenuRef}
         points={points.get()}
@@ -104,7 +115,7 @@ export default function IssueCard(props: Props) {
           to={`/editIssue/${props.issue?.id}`}
         >
           <Pencil size={14} />
-          <Text>Edit Issue Info</Text>
+          <Text css={{fontSize:13,fontWeight:"lighter"}}>Edit Issue Info</Text>
         </LinkButton>
         <Button
           onClick={deleteIssue}
@@ -120,114 +131,23 @@ export default function IssueCard(props: Props) {
           }}
         >
           <Trash size={14} />
-          <Text>Delete Issue</Text>
+          <Text css={{fontSize:13,fontWeight:"lighter"}}>Delete Issue</Text>
         </Button>
       </ContextMenu>
-      <AnimatedBox
-        initial={{
-          opacity: 0,
-        }}
-        animate={{
-          opacity: 1,
-        }}
-        css={{
-          display: "flex",
-          flexDirection: "column",
-          alignContent: "flex-start",
-          alignItems: "flex-start",
-          gap: "$md",
-          color: "$white",
-          position: "relative",
-          opacity: `${deleting ? 0.5 : 1}`,
-          transition: "0.3s ease-in-out",
-          "&:hover": {
-            cursor: "pointer",
-          },
-        }}
-        onClick={handleClick}
-        onContextMenu={handleContextMenu}
-      >
-        {/* <AnimatePresence>
-          {doneReading && (
-            <AnimatedBox
-              initial={{ scale: 0, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0, opacity: 0 }}
-              css={{
-                top: "-3%",
-                left: "93%",
-                display: "flex",
-                position: "absolute",
-                zIndex: 3,
-                color: "$primary",
-                alignContent: "center",
-                alignItems: "center",
-                justifyContent: "center",
-                background: "$white",
-                backdropFilter: "blur(200px)",
-                borderRadius: "$full",
-                padding: "$md",
-              }}
-            >
-              <Check size={10} />
-            </AnimatedBox>
-          )}
-        </AnimatePresence> */}
-        <Box
-          css={{
-            border: "0.1px solid rgba(255,255,255,0.3)",
-            height: 260,
-            width: 170,
-            borderRadius: "$md",
-            overflow: "hidden",
-            color: "$white",
-            display: "flex",
-            flexDirection: "column",
-            alignContent: "center",
-            alignItems: "center",
-            justifyContent: "center",
-            transition: "0.5s ease-in-out",
-            "&:hover": {
-              border: "0.1px solid $secondary",
-            },
-          }}
-        >
-          <Image
-            css={{ height: "100%", width: "100%" }}
-            src={props.issue?.thumbnailUrl}
-            alt={props.issue?.name}
-          />
-          {currentlyReading && (
-            <Box
-              css={{
-                top: "90%",
-                position: "absolute",
-                zIndex: 3,
-                width: "96%",
-                borderRadius: "$full",
-                background: "$lightGray",
-                backdropFilter: "blur(400px)",
-              }}
-            >
-              <AnimatedBox
-                initial={{ width: "0%" }}
-                transition={{ duration: 1, ease: "easeOut" }}
-                animate={{ width: `${(currentlyReading.page / currentlyReading.total) * 100}%` }}
-                css={{
-                  padding: "$sm",
-                  background: "$primary",
-                  borderRadius: "$full",
-                }}
-              />
-            </Box>
-          )}
+    <Box onContextMenu={handleContextMenu} css={{display:"flex",flexDirection:"column",alignContent:"flex-start",alignItems:"flex-start",gap:"$sm"}}>
+      <Box onClick={handleClick} css={{width:165,height:260,cursor:"pointer",borderRadius:"$md",position:"relative",overflow:"hidden"}}>
+        <Image src={props.issue.thumbnailUrl} alt={props.issue.name} css={{width:"100%",height:"100%",position:"absolute",zIndex:0}}/>
+        <Box css={{width:"100%",height:"100%",position:"absolute",zIndex:1,background:"rgba(0,0,0,0.6)",display:"flex",flexDirection:"column",alignContent:"flex-start",alignItems:"flex-start",justifyContent:"flex-end",padding:"$md",gap:"$sm"}}>
+          <Text css={{fontSize:14,fontWeight:"normal"}}>{props.issue.name}</Text>
+          <Box css={{width:"100%",borderRadius:"$full",background:"$lightGray",backdropFilter:"blur(300px)"}}>
+            <AnimatedBox initial={{width:0}} animate={{width:`${(currentlyReading?.page!/currentlyReading?.total!)*100}%`}} css={{background:"$secondary",borderRadius:"$full",padding:"$sm"}}/>
+          </Box>
         </Box>
-        <Box css={{ width: 170 }}>
-          <Text css={{ fontSize: 13, color: "$white" }}>
-            {props.issue?.name}
-          </Text>
-        </Box>
-      </AnimatedBox>
+      </Box>
+      <AnimatePresence>{
+       infoVisible.get()&& <AnimatedText  initial={{opacity:0}} animate={{opacity:1}} css={{fontSize:11,color:"$lightGray",fontWeight:"lighter"}}>{moment(props.issue.dateCreated).fromNow()}</AnimatedText> 
+        }</AnimatePresence>
+    </Box>
     </>
   );
 }

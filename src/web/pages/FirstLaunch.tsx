@@ -45,6 +45,7 @@ export default function FirstLaunch() {
         }}
         id="drag-region"
       />
+      {/* made by */}
       <AnimatedBox
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -70,9 +71,10 @@ export default function FirstLaunch() {
       >
         <Text>Made With ❤️ By Humans</Text>
       </AnimatedBox>
+      {/* orb 1 */}
       <AnimatedBox
         initial={{ scale: 0, opacity: 0, left: 0 }}
-        animate={{ scale: 2, opacity: 1, left: "60%" }}
+        animate={{ scale: 2.5, opacity: 1, left: "90%",top:"20%" }}
         transition={{ ease: "easeOut", duration: 1 }}
         css={{
           width: 500,
@@ -84,15 +86,16 @@ export default function FirstLaunch() {
           filter: "blur(100px)",
         }}
       />
+      {/* orb 2 */}
       <AnimatedBox
         initial={{ scale: 0, opacity: 0, left: "100%" }}
-        animate={{ scale: 2, opacity: 1, left: 0 }}
+        animate={{ scale: 2.5, opacity: 1, left: 0,top:"20%" }}
         transition={{ ease: "easeOut", duration: 1 }}
         css={{
           width: 500,
           height: 500,
           borderRadius: "$full",
-          background: "$secondary",
+          background: "$alt",
           position: "absolute",
           zIndex: 0,
           filter: "blur(100px)",

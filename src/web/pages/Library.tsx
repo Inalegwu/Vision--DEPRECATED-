@@ -158,7 +158,7 @@ export default function Library() {
         </AnimatedBox>
         {/* header */}
         <VStack gap={6} style={{ padding: "$xxxl" }}>
-          <Text css={{ fontSize: 27, fontWeight: "bold" }}>My Library</Text>
+          <Text css={{ fontSize: 27, fontWeight: 400,letterSpacing:0.4 }}>My Library</Text>
           <HStack
             width="100%"
             justifyContent="space-between"
@@ -278,7 +278,7 @@ export default function Library() {
                 }}
                 onClick={() => addToLibrary()}
               >
-                <Text css={{ fontSize: 12 }}>Add To Library</Text>
+                <Text css={{ fontSize: 12,letterSpacing:0.3,fontWeight:"lighter" }}>Add To Library</Text>
                 <Plus size={11} />
               </AnimatedButton>
             </HStack>
