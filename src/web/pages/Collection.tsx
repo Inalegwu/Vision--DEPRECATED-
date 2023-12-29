@@ -49,7 +49,7 @@ export default function Collection() {
         onSuccess: (d) => {
           setName(d?.collection?.name || "");
         },
-      },
+      }
     );
 
   // use this to populate the list of issues to add to the collection
@@ -89,7 +89,7 @@ export default function Collection() {
     (v: string) => {
       addIssueToLibrary({ issueId: v, collectionId: collectionId || "" });
     },
-    [collectionId, addIssueToLibrary],
+    [collectionId, addIssueToLibrary]
   );
 
   const updateName = useCallback(() => {
@@ -459,7 +459,8 @@ export default function Collection() {
           {collection?.collection?.issues.map((v) => {
             return <IssueCard issue={v} key={v.id} />;
           })}
-          {getting && [...Array(10)].map((_,idx) => <IssueSkeleton key={`${idx}`} />)}
+          {getting &&
+            [...Array(10)].map((_, idx) => <IssueSkeleton key={`${idx}`} />)}
           <Button
             onClick={() => setIssuesListVisible(true)}
             css={{

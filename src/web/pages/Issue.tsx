@@ -15,7 +15,12 @@ import {
 import { trpcReact } from "@shared/config";
 import { IssueParams, ReaderLayout } from "@shared/types";
 import { LOADING_PHRASES, getRandomIndex } from "@shared/utils";
-import { useDebounce, useKeyPress, useTimeout, useWindow } from "@src/web/hooks";
+import {
+  useDebounce,
+  useKeyPress,
+  useTimeout,
+  useWindow,
+} from "@src/web/hooks";
 import { globalState$, readingState } from "@src/web/state";
 import { useCallback } from "react";
 import toast from "react-hot-toast";
@@ -57,7 +62,7 @@ export default function Issue() {
     // ] or H to scroll right
     else if (e.keyCode === 93 || e.keyCode === 108) {
       handleRightClick();
-    }else {
+    } else {
       return;
     }
   }, 100);
@@ -95,20 +100,23 @@ export default function Issue() {
 
   const handleRightClick = useCallback(() => {
     // on default layout
-    if (activeIndex.get() === issue?.issue?.pages?.length! ) {
+    if (activeIndex.get() === issue?.issue?.pages?.length!) {
       return;
     }
 
     // the users active layout style is double layout
     // stop the user from moving forward when the next page
     // is the issues page length + 2
-    if(activeLayout==="DoublePage" && activeIndex.get() === issue?.issue?.pages?.length! - 2){
-       return;
+    if (
+      activeLayout === "DoublePage" &&
+      activeIndex.get() === issue?.issue?.pages?.length! - 2
+    ) {
+      return;
     }
 
     // if none of the cases above , increment page count
     activeIndex.set(activeIndex.get() + 1);
-  }, [activeIndex, issue]);
+  }, [activeIndex, issue, activeLayout]);
 
   const handleLeftClick = useCallback(() => {
     // if we are currently on the first page , do absolutely nothing
@@ -143,28 +151,27 @@ export default function Issue() {
   }, [uiState.ambientBackground]);
 
   // change the users reader layout
-  const toggleReaderLayout = useCallback(
-    (layout: ReaderLayout) => {
-      globalState$.uiState.readerLayout.set(layout);
-    },
-    [],
-  );
+  const toggleReaderLayout = useCallback((layout: ReaderLayout) => {
+    globalState$.uiState.readerLayout.set(layout);
+  }, []);
 
   // save the users reading state
   // this allows the user to jump back into a specific spot
   // when they leave the issue
   // also useful for showing reading progress in other parts of the app
   const saveIssueReadingState = useCallback(() => {
-    // update the currently reading list 
-    const found=readingState.currentlyReading.get().find((v)=>v.id===issueId);
-    if(found){
+    // update the currently reading list
+    const found = readingState.currentlyReading
+      .get()
+      .find((v) => v.id === issueId);
+    if (found) {
       readingState.currentlyReading.set([
         // keep all the issues whose id isn't this issues'
-        ...readingState.currentlyReading.get().filter((v)=>v.id!==issueId),
+        ...readingState.currentlyReading.get().filter((v) => v.id !== issueId),
         // add this issue again with the current page index
-        {id:issueId!,page:activeIndexValue}
-      ])
-      return 
+        { id: issueId!, page: activeIndexValue },
+      ]);
+      return;
     }
     readingState.currentlyReading.set([
       ...readingState.currentlyReading.get(),
@@ -516,9 +523,29 @@ export default function Issue() {
         </>
       )}
       {/* Panel View */}
-      {uiState.distractionFreeMode && <Button title="Turn off Distraction free mode" onClick={()=>globalState$.uiState.distractionFreeMode.set(false)} css={{position:"absolute",top:"93%",left:"96.3%",zIndex:9999,borderRadius:"$full",padding:"$xxl",background:"$blackMuted",backdropFilter:"blur(400px)",color:"$primary",display:"flex",alignContent:"center",alignItems:"center",justifyContent:"center"}}>
-        <EyeSlash size={16}/>
-        </Button>}
+      {uiState.distractionFreeMode && (
+        <Button
+          title="Turn off Distraction free mode"
+          onClick={() => globalState$.uiState.distractionFreeMode.set(false)}
+          css={{
+            position: "absolute",
+            top: "93%",
+            left: "96.3%",
+            zIndex: 9999,
+            borderRadius: "$full",
+            padding: "$xxl",
+            background: "$blackMuted",
+            backdropFilter: "blur(400px)",
+            color: "$primary",
+            display: "flex",
+            alignContent: "center",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <EyeSlash size={16} />
+        </Button>
+      )}
       {activeLayout === "SinglePage" ? (
         <SinglePage pages={issue?.issue.pages} activeIndex={activeIndexValue} />
       ) : (

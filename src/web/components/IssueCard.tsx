@@ -26,7 +26,9 @@ export default function IssueCard(props: Props) {
 
   const contextVisible = contextMenuRef.current?.isVisible();
 
-  const currentlyReading=readingState.currentlyReading.get().find((v)=>v.id===props.issue.id);
+  const currentlyReading = readingState.currentlyReading
+    .get()
+    .find((v) => v.id === props.issue.id);
 
   const { mutate, isLoading: deleting } =
     trpcReact.issue.removeIssue.useMutation({
@@ -41,15 +43,15 @@ export default function IssueCard(props: Props) {
       },
     });
 
-    const {data}=trpcReact.issue.getIssuePageLength.useQuery({
-      id:props.issue.id
-    })
+  const { data } = trpcReact.issue.getIssuePageLength.useQuery({
+    id: props.issue.id,
+  });
 
   const handleClick = useCallback(() => {
     router(`/${props.issue.id}`);
   }, [props.issue, router]);
 
-  const doneReading=currentlyReading?.page ===data
+  const doneReading = currentlyReading?.page === data;
 
   const handleContextMenu = useCallback(
     (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
@@ -59,7 +61,7 @@ export default function IssueCard(props: Props) {
       });
       contextMenuRef.current?.show();
     },
-    [],
+    []
   );
 
   useWindow("click", () => {
@@ -141,7 +143,7 @@ export default function IssueCard(props: Props) {
           alignItems: "flex-start",
           gap: "$md",
           color: "$white",
-          position:"relative",
+          position: "relative",
           opacity: `${deleting ? 0.5 : 1}`,
           transition: "0.3s ease-in-out",
           "&:hover": {
@@ -151,11 +153,32 @@ export default function IssueCard(props: Props) {
         onClick={handleClick}
         onContextMenu={handleContextMenu}
       >
-      <AnimatePresence>
-        {doneReading && <AnimatedBox initial={{scale:0,opacity:0}} animate={{scale:1,opacity:1}} exit={{scale:0,opacity:0}} css={{top:"-3%",left:"93%",display:"flex",position:"absolute",zIndex:3,color:"$primary",alignContent:"center",alignItems:"center",justifyContent:"center",background:"$white",backdropFilter:"blur(200px)",borderRadius:"$full",padding:"$md"}}>
-        <Check size={10}/>
-      </AnimatedBox>}
-      </AnimatePresence>
+        <AnimatePresence>
+          {doneReading && (
+            <AnimatedBox
+              initial={{ scale: 0, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0, opacity: 0 }}
+              css={{
+                top: "-3%",
+                left: "93%",
+                display: "flex",
+                position: "absolute",
+                zIndex: 3,
+                color: "$primary",
+                alignContent: "center",
+                alignItems: "center",
+                justifyContent: "center",
+                background: "$white",
+                backdropFilter: "blur(200px)",
+                borderRadius: "$full",
+                padding: "$md",
+              }}
+            >
+              <Check size={10} />
+            </AnimatedBox>
+          )}
+        </AnimatePresence>
         <Box
           css={{
             border: "0.1px solid rgba(255,255,255,0.3)",
@@ -164,11 +187,11 @@ export default function IssueCard(props: Props) {
             borderRadius: "$md",
             overflow: "hidden",
             color: "$white",
-            display:"flex",
-            flexDirection:"column",
-            alignContent:"center",
-            alignItems:"center",
-            justifyContent:"center",
+            display: "flex",
+            flexDirection: "column",
+            alignContent: "center",
+            alignItems: "center",
+            justifyContent: "center",
             transition: "0.5s ease-in-out",
             "&:hover": {
               border: "0.1px solid $secondary",
@@ -180,9 +203,30 @@ export default function IssueCard(props: Props) {
             src={props.issue?.thumbnailUrl}
             alt={props.issue?.name}
           />
-          {currentlyReading && <Box css={{top:"90%",position:"absolute",zIndex:3,width:"96%",borderRadius:"$full",background:"$lightGray",backdropFilter:"blur(400px)"}}>
-              <AnimatedBox initial={{width:"0%"}} transition={{duration:1,ease:"easeOut"}} animate={{width:`${(currentlyReading.page/data!)*100}%`}} css={{padding:"$sm",background:"$primary",borderRadius:"$full"}}/>
-            </Box>}
+          {currentlyReading && (
+            <Box
+              css={{
+                top: "90%",
+                position: "absolute",
+                zIndex: 3,
+                width: "96%",
+                borderRadius: "$full",
+                background: "$lightGray",
+                backdropFilter: "blur(400px)",
+              }}
+            >
+              <AnimatedBox
+                initial={{ width: "0%" }}
+                transition={{ duration: 1, ease: "easeOut" }}
+                animate={{ width: `${(currentlyReading.page / data!) * 100}%` }}
+                css={{
+                  padding: "$sm",
+                  background: "$primary",
+                  borderRadius: "$full",
+                }}
+              />
+            </Box>
+          )}
         </Box>
         <Box css={{ width: 170 }}>
           <Text css={{ fontSize: 13, color: "$white" }}>

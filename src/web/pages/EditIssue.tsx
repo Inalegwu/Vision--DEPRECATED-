@@ -32,7 +32,7 @@ export default function EditIssue() {
         onSuccess: (d) => {
           setIssueName(d?.data?.name);
         },
-      },
+      }
     );
 
   const { mutate: updateIssueName, isLoading: _updatingIssue } =
@@ -54,7 +54,7 @@ export default function EditIssue() {
         setEditingName(false);
       }
     },
-    [issueName, updateIssueName, issueId],
+    [issueName, updateIssueName, issueId]
   );
 
   // const changeIssueName = useCallback(() => {

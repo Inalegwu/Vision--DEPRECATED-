@@ -31,7 +31,7 @@ import { useInterval, useTimeout } from "../hooks";
 export default function Library() {
   const utils = trpcReact.useUtils();
   const router = useNavigate();
-  const inputRef=useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
   const createModalVisible = useObservable(false);
   const mouseOver = useObservable(false);
   const collectionName = useObservable("");
@@ -45,7 +45,7 @@ export default function Library() {
   // the app state
   // used in useEffect to know where to navigate the user
   // to on first launch
-  const {appState} = globalState$.get();
+  const { appState } = globalState$.get();
 
   const { mutate: addToLibrary, isLoading: addingToLibrary } =
     trpcReact.library.addToLibrary.useMutation({
@@ -63,17 +63,16 @@ export default function Library() {
       },
     });
 
-    useTimeout(()=>{
-      if(!mouseOver){
-        createModalVisible.set(false);
-      }
-    },6000)
+  useTimeout(() => {
+    if (!mouseOver) {
+      createModalVisible.set(false);
+    }
+  }, 6000);
 
-
-    // change the loading phrase every 4 seconds
-    useInterval(()=>{
-      phraseIndex.set(getRandomIndex(0,LOADING_PHRASES.length-1));
-    },4000)
+  // change the loading phrase every 4 seconds
+  useInterval(() => {
+    phraseIndex.set(getRandomIndex(0, LOADING_PHRASES.length - 1));
+  }, 4000);
 
   useEffect(() => {
     // is the the users first launch of the app ???
@@ -85,8 +84,7 @@ export default function Library() {
         replace: true,
       });
     }
-
-  }, []);
+  }, [router, appState]);
 
   const { data: library, isLoading: fetchingLibraryContent } =
     trpcReact.library.getLibrary.useQuery();
@@ -104,13 +102,12 @@ export default function Library() {
     inputRef.current?.blur();
 
     createModalVisible.set(false);
-
   }, [collectionName, createCollection]);
 
-  const toggleCreateModal=useCallback(()=>{
-   createModalVisible.set(true)
+  const toggleCreateModal = useCallback(() => {
+    createModalVisible.set(true);
     inputRef.current?.focus();
-  },[])
+  }, []);
 
   return (
     <Layout>
@@ -190,17 +187,17 @@ export default function Library() {
                     zIndex: 1,
                     left: "80%",
                     top: "17%",
-                    display:"flex",
-                    flexDirection:"column",
-                    alignContent:"center",
-                    alignItems:"center",
-                    justifyContent:"center",
-                    boxShadow:"0px 0.1px 40px 0px rgba(255,255,255,0.1)",
-                    gap:"$md"
+                    display: "flex",
+                    flexDirection: "column",
+                    alignContent: "center",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    boxShadow: "0px 0.1px 40px 0px rgba(255,255,255,0.1)",
+                    gap: "$md",
                   }}
                 >
                   <Input
-                  ref={inputRef}
+                    ref={inputRef}
                     onMouseOver={() => mouseOver.set(true)}
                     onKeyDown={(e) => {
                       if (e.key === "Enter") {
@@ -214,13 +211,26 @@ export default function Library() {
                       borderRadius: "$md",
                       padding: "$lg",
                       color: "$white",
-                      background:"$blackMuted",
-                      border:"0.1px solid $lightGray"
+                      background: "$blackMuted",
+                      border: "0.1px solid $lightGray",
                     }}
                     onChange={(e) => collectionName.set(e.currentTarget.value)}
                     placeholder="Collection Name"
                   />
-                  <Button onClick={create} css={{width:"100%",padding:"$lg",borderRadius:"$md",background:"$primary",display:"flex",alignContent:"center",alignItems:"center",justifyContent:"center",color:"$white"}}>
+                  <Button
+                    onClick={create}
+                    css={{
+                      width: "100%",
+                      padding: "$lg",
+                      borderRadius: "$md",
+                      background: "$primary",
+                      display: "flex",
+                      alignContent: "center",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      color: "$white",
+                    }}
+                  >
                     <Text>Create Collection</Text>
                   </Button>
                 </AnimatedBox>
