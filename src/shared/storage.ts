@@ -18,8 +18,8 @@ const sqlite = new Database(process.env.STORAGE_LOCATION!, {
   /// config option.
   /// ISSUE_DETAILS HERE
   /// tldr : don't remove this , take my word for it...
-  nativeBinding:
-    "node_modules/better-sqlite3/build/Release/better_sqlite3.node",
+  // nativeBinding:
+  //   "node_modules/better-sqlite3/build/Release/better_sqlite3.node",
 });
 export const db = drizzle(sqlite, { schema });
 

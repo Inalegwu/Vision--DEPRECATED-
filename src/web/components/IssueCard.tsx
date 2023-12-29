@@ -43,15 +43,9 @@ export default function IssueCard(props: Props) {
       },
     });
 
-  const { data } = trpcReact.issue.getIssuePageLength.useQuery({
-    id: props.issue.id,
-  });
-
   const handleClick = useCallback(() => {
     router(`/${props.issue.id}`);
   }, [props.issue, router]);
-
-  const doneReading = currentlyReading?.page === data;
 
   const handleContextMenu = useCallback(
     (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
@@ -153,7 +147,7 @@ export default function IssueCard(props: Props) {
         onClick={handleClick}
         onContextMenu={handleContextMenu}
       >
-        <AnimatePresence>
+        {/* <AnimatePresence>
           {doneReading && (
             <AnimatedBox
               initial={{ scale: 0, opacity: 0 }}
@@ -178,7 +172,7 @@ export default function IssueCard(props: Props) {
               <Check size={10} />
             </AnimatedBox>
           )}
-        </AnimatePresence>
+        </AnimatePresence> */}
         <Box
           css={{
             border: "0.1px solid rgba(255,255,255,0.3)",
@@ -218,7 +212,7 @@ export default function IssueCard(props: Props) {
               <AnimatedBox
                 initial={{ width: "0%" }}
                 transition={{ duration: 1, ease: "easeOut" }}
-                animate={{ width: `${(currentlyReading.page / data!) * 100}%` }}
+                animate={{ width: `${(currentlyReading.page / currentlyReading.total) * 100}%` }}
                 css={{
                   padding: "$sm",
                   background: "$primary",

@@ -76,6 +76,7 @@ export type GlobalState = {
 export type CurrentlyReading = {
   id: string;
   page: number;
+  total:number;
 };
 
 export type ReadingState = {

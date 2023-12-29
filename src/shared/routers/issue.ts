@@ -134,13 +134,17 @@ export const issueRouter = router({
         });
       }
     }),
-    getIssuePageLength:publicProcedure.input(z.object({
-      id:z.string()
-    })).query(async({ctx,input})=>{
-      const pages=await ctx.db.query.pages.findMany({
-        where:(page,{eq})=>eq(page.issueId,input.id),
-      })
+  getIssuePageLength: publicProcedure
+    .input(
+      z.object({
+        id: z.string(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const pages = await ctx.db.query.pages.findMany({
+        where: (page, { eq }) => eq(page.issueId, input.id),
+      });
 
-      return pages.length
-    })
+      return pages.length;
+    }),
 });

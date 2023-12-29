@@ -6,9 +6,14 @@ import { Configuration } from "webpack";
 
 const isDev = process.env.NODE_ENV === "development";
 
+// ["fsevents"],
+
 const common: Configuration = {
   mode: isDev ? "development" : "production",
-  externals: ["fsevents"],
+  externals: {
+    fsevents: "fsevents",
+    "better-sqlite3":"commonjs better-sqlite3"
+  },
   output: {
     publicPath: "./",
     filename: "[name].js",
@@ -49,6 +54,10 @@ const common: Configuration = {
           from: "node_modules/better-sqlite3/",
           to: "node_modules/better-sqlite3/",
         },
+        {
+          from:"./.drizzle/",
+          to:"./.drizzle/"
+        }
       ],
     }),
   ],
