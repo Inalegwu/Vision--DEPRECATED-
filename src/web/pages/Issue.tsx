@@ -95,7 +95,7 @@ export default function Issue() {
 
   const handleRightClick = useCallback(() => {
     // on default layout
-    if (activeIndex.get() === issue?.issue?.pages?.length! - 1) {
+    if (activeIndex.get() === issue?.issue?.pages?.length! ) {
       return;
     }
 
@@ -159,7 +159,9 @@ export default function Issue() {
     const found=readingState.currentlyReading.get().find((v)=>v.id===issueId);
     if(found){
       readingState.currentlyReading.set([
-        ...readingState.currentlyReading.get().filter((v)=>v.id===issueId),
+        // keep all the issues whose id isn't this issues'
+        ...readingState.currentlyReading.get().filter((v)=>v.id!==issueId),
+        // add this issue again with the current page index
         {id:issueId!,page:activeIndexValue}
       ])
       return 
@@ -410,7 +412,7 @@ export default function Issue() {
             <VStack style={{ width: "100%" }} gap={6}>
               {!loadingIssue && (
                 <Text css={{ fontSize: 15, color: "$gray" }}>
-                  {activeIndexValue} / {issue?.issue.pages.length! - 1}
+                  {activeIndexValue} / {issue?.issue.pages.length!}
                 </Text>
               )}
               <Box

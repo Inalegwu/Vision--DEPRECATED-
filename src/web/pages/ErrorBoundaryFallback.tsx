@@ -59,6 +59,9 @@ function ErrorBoundaryFallback(props: FallbackProps) {
           <Text css={{fontSize:14,color:"$blackMuted"}}>{props.error.stack}</Text>
                     <Text css={{fontSize:15,color:"$danger",fontWeight:"bold",fontStyle:"oblique",textDecoration:"underline"}}>Cause</Text>
            <Text css={{fontSize:14,color:"$blackMuted"}}>{props.error.cause||"Unknown"}</Text>
+           <HStack alignContent="center" alignItems="center" justifyContent="center" style={{width:"100%"}}>
+                      <Text css={{color:"$gray",fontWeight:"lighter",fontStyle:"italic",fontSize:13}}>This is a dev mode message</Text>
+           </HStack>
         </Box>}
       </VStack>
     </Box>

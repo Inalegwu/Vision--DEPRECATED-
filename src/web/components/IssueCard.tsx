@@ -1,5 +1,5 @@
 import { useObservable } from "@legendapp/state/react";
-import { Pencil, Trash } from "@phosphor-icons/react";
+import { Check, Pencil, Trash } from "@phosphor-icons/react";
 import { Issue, Point } from "@shared/types";
 import { trpcReact } from "@src/shared/config";
 import { useCallback, useRef } from "react";
@@ -47,6 +47,8 @@ export default function IssueCard(props: Props) {
   const handleClick = useCallback(() => {
     router(`/${props.issue.id}`);
   }, [props.issue, router]);
+
+  const doneReading=currentlyReading?.page ===data
 
   const handleContextMenu = useCallback(
     (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
@@ -148,6 +150,9 @@ export default function IssueCard(props: Props) {
         onClick={handleClick}
         onContextMenu={handleContextMenu}
       >
+      {doneReading && <AnimatedBox css={{top:"-3%",left:"93%",display:"flex",position:"absolute",zIndex:3,color:"$primary",alignContent:"center",alignItems:"center",justifyContent:"center",background:"$white",backdropFilter:"blur(200px)",borderRadius:"$full",padding:"$md"}}>
+        <Check size={10}/>
+      </AnimatedBox>}
         <Box
           css={{
             border: "0.1px solid rgba(255,255,255,0.3)",
@@ -172,8 +177,8 @@ export default function IssueCard(props: Props) {
             src={props.issue?.thumbnailUrl}
             alt={props.issue?.name}
           />
-          {currentlyReading && <Box css={{top:"88%",position:"absolute",zIndex:3,width:"96%",borderRadius:"$full",background:"$lightGray",backdropFilter:"blur(400px)"}}>
-              <AnimatedBox initial={{width:"0%"}} transition={{duration:1,ease:"easeOut"}} animate={{width:`${(currentlyReading.page/data!)*100}%`}} css={{padding:"$md",background:"$primary",borderRadius:"$full"}}/>
+          {currentlyReading && <Box css={{top:"90%",position:"absolute",zIndex:3,width:"96%",borderRadius:"$full",background:"$lightGray",backdropFilter:"blur(400px)"}}>
+              <AnimatedBox initial={{width:"0%"}} transition={{duration:1,ease:"easeOut"}} animate={{width:`${(currentlyReading.page/data!)*100}%`}} css={{padding:"$sm",background:"$primary",borderRadius:"$full"}}/>
             </Box>}
         </Box>
         <Box css={{ width: 170 }}>
