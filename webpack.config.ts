@@ -8,7 +8,7 @@ const isDev = process.env.NODE_ENV === "development";
 
 const common: Configuration = {
   mode: isDev ? "development" : "production",
-  externals: ["fsevents"],
+  externals: ["fsevents","better-sqlite3"],
   output: {
     publicPath: "./",
     filename: "[name].js",
