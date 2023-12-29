@@ -2,6 +2,7 @@ import { useObservable } from "@legendapp/state/react";
 import { Check, Pencil, Trash } from "@phosphor-icons/react";
 import { Issue, Point } from "@shared/types";
 import { trpcReact } from "@src/shared/config";
+import { AnimatePresence } from "framer-motion";
 import { useCallback, useRef } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
@@ -150,9 +151,11 @@ export default function IssueCard(props: Props) {
         onClick={handleClick}
         onContextMenu={handleContextMenu}
       >
-      {doneReading && <AnimatedBox css={{top:"-3%",left:"93%",display:"flex",position:"absolute",zIndex:3,color:"$primary",alignContent:"center",alignItems:"center",justifyContent:"center",background:"$white",backdropFilter:"blur(200px)",borderRadius:"$full",padding:"$md"}}>
+      <AnimatePresence>
+        {doneReading && <AnimatedBox initial={{scale:0,opacity:0}} animate={{scale:1,opacity:1}} exit={{scale:0,opacity:0}} css={{top:"-3%",left:"93%",display:"flex",position:"absolute",zIndex:3,color:"$primary",alignContent:"center",alignItems:"center",justifyContent:"center",background:"$white",backdropFilter:"blur(200px)",borderRadius:"$full",padding:"$md"}}>
         <Check size={10}/>
       </AnimatedBox>}
+      </AnimatePresence>
         <Box
           css={{
             border: "0.1px solid rgba(255,255,255,0.3)",
