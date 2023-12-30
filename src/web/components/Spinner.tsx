@@ -10,7 +10,7 @@ export default function Spinner({ size }: SpinnerProps) {
       animate={{
         rotate: [0, 180, 360],
       }}
-      transition={{ repeat: Infinity, duration: 2 }}
+      transition={{ repeat: Infinity, duration: 2,ease:"circInOut" }}
       css={{
         width: size || 30,
         height: size || 30,

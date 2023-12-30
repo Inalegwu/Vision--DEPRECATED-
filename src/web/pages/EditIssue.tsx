@@ -1,11 +1,15 @@
+import { useObservable } from "@legendapp/state/react";
 import { CaretLeft, Pencil, X } from "@phosphor-icons/react";
 import { trpcReact } from "@shared/config";
 import { IssueParams } from "@shared/types";
 import moment from "moment";
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { HStack, Layout, VStack } from "../components";
-import { Box, Button, Image, Input, Text } from "../components/atoms";
+import { AnimatedBox, Box, Button, Image, Input, Text } from "../components/atoms";
+
+// TODO implement fetching comic data from comixology
+// and saving it to the database under the metadata table
 
 export default function EditIssue() {
   const utils = trpcReact.useUtils();
@@ -16,8 +20,8 @@ export default function EditIssue() {
     return;
   }
 
-  const [issueName, setIssueName] = useState<string>("");
-  const [editingName, setEditingName] = useState<boolean>(false);
+  const issueName = useObservable("");
+  const editingName= useObservable(false);
 
   // navigate backwards
   const goBack = useCallback(() => {
@@ -29,12 +33,12 @@ export default function EditIssue() {
   }, [router]);
 
   // get the issues information , like the name and the rest
-  const { data: issue, isLoading: _fetchingIssue } =
+  const { data: issue, isLoading:gettingIssue } =
     trpcReact.issue.getIssueData.useQuery(
       { id: issueId || "" },
       {
         onSuccess: (d) => {
-          setIssueName(d?.data?.name);
+          issueName.set(d?.data?.name);
         },
       }
     );
@@ -55,9 +59,9 @@ export default function EditIssue() {
       if (e.key === "Enter") {
         updateIssueName({
           id: issueId,
-          newName: issueName,
+          newName: issueName.get(),
         });
-        setEditingName(false);
+        editingName.set(false);
       }
     },
     [issueName, updateIssueName, issueId]
@@ -65,7 +69,7 @@ export default function EditIssue() {
 
   return (
     <Layout>
-      <Box css={{ width: "100%", height: "100%", display: "flex" }}>
+      <Box css={{ width: "100%", height: "100%", display: "flex" ,padding:"$sm"}}>
         {/* left content/metadata */}
         <VStack
           alignContent="flex-start"
@@ -93,7 +97,7 @@ export default function EditIssue() {
                 borderRadius: "$md",
               }}
             >
-              <CaretLeft size={15} />
+              <CaretLeft size={16} />
             </Button>
           </HStack>
           {/* edit metaData view */}
@@ -110,12 +114,12 @@ export default function EditIssue() {
               justifyContent="space-between"
               gap={5}
             >
-              {editingName ? (
+              {editingName.get() ? (
                 <>
                   <Input
                     onKeyDown={handleKeyDown}
-                    value={issueName}
-                    onChange={(e) => setIssueName(e.currentTarget.value)}
+                    value={issueName.get()}
+                    onChange={(e) => issueName.set(e.currentTarget.value)}
                     css={{
                       width: "80%",
                       padding: "$md",
@@ -128,21 +132,24 @@ export default function EditIssue() {
                 </>
               ) : (
                 <>
-                  <Text>{issueName}</Text>
+                  <Text>{issueName.get()}</Text>
                 </>
               )}
               <Button
-                onClick={() => setEditingName(!editingName)}
+                onClick={() => editingName.set(!editingName.get())}
                 css={{
                   color: "$white",
                   display: "flex",
                   alignContent: "center",
                   alignItems: "center",
                   justifyContent: "center",
+                  background:"$blackMuted",
+                  borderRadius:"$full",
+                  padding:"$lg",
                   "&:hover": { color: "$primary" },
                 }}
               >
-                {editingName ? (
+                {editingName.get() ? (
                   <>
                     <X size={14} />
                   </>
@@ -183,6 +190,7 @@ export default function EditIssue() {
             alignContent: "center",
             alignItems: "center",
             justifyContent: "center",
+            gap:"$md"
           }}
         >
           <Image
@@ -191,18 +199,20 @@ export default function EditIssue() {
               width: 350,
               height: 500,
               borderRadius: "$md",
-              border: "0.1px solid $lightGray",
+              border: "0.1px solid $secondary",
             }}
           />
+          {gettingIssue && <AnimatedBox initial={{width:0}} animate={{width:"100%"}} transition={{duration:0.3,ease:"easeOut"}} css={{padding:"$lg",background:"$lightGray",borderRadius:"$md"}}/>}
           <Text
             css={{
               width: "50%",
               marginTop: "$lg",
               textAlign: "center",
-              fontSize: 15,
+              fontSize: 20,
+              fontWeight:"bolder"
             }}
           >
-            {issueName}
+            {issueName.get()}
           </Text>
         </Box>
       </Box>

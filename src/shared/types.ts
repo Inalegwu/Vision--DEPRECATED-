@@ -52,6 +52,8 @@ export type Point = {
   y: number;
 };
 
+export type LibraryFilters="All"|"Collections"|"Issues"
+
 // State Types
 
 export type ApplicationState = {

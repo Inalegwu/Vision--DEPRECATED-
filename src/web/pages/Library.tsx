@@ -19,7 +19,7 @@ import {
 import { useObservable } from "@legendapp/state/react";
 import { Plus } from "@phosphor-icons/react";
 import { trpcReact } from "@shared/config";
-import { Reasons } from "@shared/types";
+import { LibraryFilters, Reasons } from "@shared/types";
 import { LOADING_PHRASES, getRandomIndex } from "@src/shared/utils";
 import { globalState$ } from "@src/web/state";
 import { AnimatePresence } from "framer-motion";
@@ -35,6 +35,9 @@ export default function Library() {
   const createModalVisible = useObservable(false);
   const mouseOver = useObservable(false);
   const collectionName = useObservable("");
+
+  // TODO implement filtering the library view
+  const filter=useObservable<LibraryFilters>("All");
 
   // gets a random index and uses that to select
   // a loading phrase
@@ -63,6 +66,10 @@ export default function Library() {
       },
     });
 
+    // hide the create collection view if the 
+    // mouse isn't over element
+    // TODO also implement hiding the view
+    // when focus is lost
   useTimeout(() => {
     if (!mouseOver) {
       createModalVisible.set(false);
@@ -158,7 +165,7 @@ export default function Library() {
         </AnimatedBox>
         {/* header */}
         <VStack gap={6} style={{ padding: "$xxxl" }}>
-          <Text css={{ fontSize: 27, fontWeight: 400,letterSpacing:0.4 }}>My Library</Text>
+          <Text css={{ fontSize: 30, fontWeight: 400,letterSpacing:0.4 }}>My Library</Text>
           <HStack
             width="100%"
             justifyContent="space-between"

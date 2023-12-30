@@ -41,7 +41,7 @@ export default function Issue() {
 
   // if the user has a currently reading state saved, it will
   // be used to render a progress bar for the users reading progress
-  // this will also enable somethings in the future as well.
+  // this will also enable somethings in the future as well.  
   const currentlyReading = readingState.currentlyReading
     .get()
     .find((v) => v.id === issueId);
@@ -95,15 +95,21 @@ export default function Issue() {
     }
   });
 
-  // go forward or backward a page
+  // Trigger the panel change
+  // when the appropriate navigation keys
+  // are pressed
   useKeyPress(keyPress);
 
+  // hide the navigation view 4 seconds after showing
+  // if the mouse isn't overlapping any action element
   useTimeout(() => {
     if (navigationShowing.get() && !mouseOver.get()) {
       navigationShowing.set(false);
     }
   }, 4000);
 
+  // takes the user to the next
+  // panel
   const handleRightClick = useCallback(() => {
     // on default layout
     if (activeIndex.get() === issue?.issue?.pages?.length!) {
@@ -124,6 +130,7 @@ export default function Issue() {
     activeIndex.set(activeIndex.get() + 1);
   }, [activeIndex, issue, activeLayout]);
 
+  // Takes the user back to the previous panel
   const handleLeftClick = useCallback(() => {
     // if we are currently on the first page , do absolutely nothing
     // I'll probably make this a wrap around
@@ -172,14 +179,18 @@ export default function Issue() {
       preventScrollReset:true,
       unstable_viewTransition:true
     })
+    // check if the issue is already 
+    // saved in the reading state list
     const found = readingState.currentlyReading
       .get()
       .find((v) => v.id === issueId);
+
+    // if the issue is already saved
     if (found) {
       readingState.currentlyReading.set([
-        // keep all the issues whose id isn't this issues'
+        // keep all other issues
         ...readingState.currentlyReading.get().filter((v) => v.id !== issueId),
-        // add this issue again with the current page index
+        // upsert the current issue
         {
           id: issueId!,
           page: activeIndexValue,
@@ -188,8 +199,11 @@ export default function Issue() {
       ]);
       return;
     }
+    // if the issues doesn't already exist
     readingState.currentlyReading.set([
+      // the previous issues already saved
       ...readingState.currentlyReading.get(),
+      // the new issue being added
       {
         id: issueId!,
         page: activeIndexValue,

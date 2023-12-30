@@ -17,6 +17,9 @@ export default function FirstLaunch() {
   const router = useNavigate();
   const initialText = useObservable(true);
 
+  // automatically update the first launch state
+  // as well as assign an application id to this
+  // app instance
   useEffect(() => {
     globalState$.appState.set({
       applicationId: generateUUID(),
@@ -24,6 +27,7 @@ export default function FirstLaunch() {
     });
   }, []);
 
+  // takes the user to their library
   const handleClick = useCallback(() => {
     router("/");
   }, [router]);

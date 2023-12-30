@@ -16,12 +16,13 @@ import {
   Spinner,
   VStack,
 } from "@components/index";
+import { useObservable } from "@legendapp/state/react";
 import { CaretLeft, PencilCircle, Plus, Trash, X } from "@phosphor-icons/react";
 import { trpcReact } from "@src/shared/config";
 import { CollectionParams } from "@src/shared/types";
 import { AnimatePresence } from "framer-motion";
 import moment from "moment";
-import { useCallback, useState } from "react";
+import { useCallback, useRef } from "react";
 import toast from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -35,10 +36,11 @@ export default function Collection() {
     return;
   }
 
-  const [issuesListVisible, setIssuesListVisible] = useState<boolean>(false);
-  const [editingName, setEditingName] = useState<boolean>(false);
-  const [deleteModalVisible, setDeleteModalVisible] = useState<boolean>(false);
-  const [name, setName] = useState<string>("");
+  const inputRef=useRef<HTMLInputElement>(null);
+  const issuesListVisible = useObservable(false);
+  const editingName = useObservable(false);
+  const deleteModalVisible = useObservable(false);
+  const name = useObservable("");
 
   const { data: collection, isLoading: getting } =
     trpcReact.collection.getIssuesInCollection.useQuery(
@@ -47,7 +49,7 @@ export default function Collection() {
       },
       {
         onSuccess: (d) => {
-          setName(d?.collection?.name || "");
+          name.set(d?.collection?.name || "");
         },
       }
     );
@@ -62,7 +64,7 @@ export default function Collection() {
         toast.success(`${data.result[0].name} Added To Collection`);
         utils.collection.getIssuesInCollection.invalidate();
         utils.library.invalidate();
-        setIssuesListVisible(false);
+        issuesListVisible.set(false);
       },
     });
 
@@ -70,7 +72,7 @@ export default function Collection() {
     trpcReact.collection.changeCollectionName.useMutation({
       onSuccess: () => {
         utils.library.invalidate();
-        setEditingName(false);
+        editingName.set(false);
       },
     });
 
@@ -85,6 +87,7 @@ export default function Collection() {
       },
     });
 
+    // add an issue to the collection
   const addToLibrary = useCallback(
     (v: string) => {
       addIssueToLibrary({ issueId: v, collectionId: collectionId || "" });
@@ -92,18 +95,33 @@ export default function Collection() {
     [collectionId, addIssueToLibrary]
   );
 
+  // change the name of the collection
   const updateName = useCallback(() => {
-    changeName({ id: collectionId || "", name: name });
+    changeName({ id: collectionId || "", name: name.get() });
   }, [name, collectionId, changeName]);
 
+  // delete this collection from the database
+  // this however doens't delete the issues in said collection
+  // because the user might want to hold onto those
   const deleteCollection = useCallback(() => {
     if (!collection) return;
     deleteCollectionFromDB({ id: collection?.collection?.id || "" });
   }, [collection, deleteCollectionFromDB]);
 
+  // handle clicking the edit button
+  const handleEditClick=useCallback(()=>{
+    if(editingName.get()===false){
+      inputRef.current?.focus();
+      editingName.set(true);
+    }else{
+      inputRef.current?.blur();
+      editingName.set(false);
+    }
+  },[])
+
   return (
     <Layout>
-      {deleteModalVisible && (
+      {deleteModalVisible.get() && (
         <AnimatePresence>
           <AnimatedBox
             initial={{ opacity: 0 }}
@@ -117,13 +135,11 @@ export default function Collection() {
               height: "100%",
               padding: "$lg",
               position: "absolute",
-              zIndex: 1,
+              zIndex: 99999,
               display: "flex",
               alignContent: "center",
               alignItems: "center",
               justifyContent: "center",
-              background: "transparent",
-              backdropFilter: "blur(100px)",
             }}
           >
             <VStack
@@ -189,7 +205,7 @@ export default function Collection() {
                     justifyContent: "center",
                     width: "50%",
                   }}
-                  onClick={() => setDeleteModalVisible(false)}
+                  onClick={() => deleteModalVisible.set(false)}
                 >
                   <Text css={{ fontSize: 15 }}>Cancel</Text>
                 </Button>
@@ -223,16 +239,17 @@ export default function Collection() {
             justifyContent="space-between"
             style={{ width: "100%" }}
           >
-            {editingName ? (
+            {editingName.get() ? (
               <>
                 <Input
+                ref={inputRef}
                   css={{
                     padding: "$md",
                     border: "0.2px solid $gray",
                     color: "$white",
                     borderRadius: "$md",
                     background: "$background",
-                    fontSize: 27,
+                    fontSize: 22,
                     flex: 0.7,
                   }}
                   disabled={changingName}
@@ -241,8 +258,8 @@ export default function Collection() {
                       updateName();
                     }
                   }}
-                  value={name}
-                  onChange={(e) => setName(e.currentTarget.value)}
+                  value={name.get()}
+                  onChange={(e) => name.set(e.currentTarget.value)}
                 />
               </>
             ) : (
@@ -266,7 +283,7 @@ export default function Collection() {
                     }}
                   />
                 )}
-                <Text css={{ fontSize: 27, fontWeight: "normal",letterSpacing:0.3 }}>{name}</Text>
+                <Text css={{ fontSize: 30, fontWeight: "normal",letterSpacing:0.3 }}>{name.get()}</Text>
               </>
             )}
             <HStack
@@ -291,7 +308,7 @@ export default function Collection() {
                     color: "$white",
                   },
                 }}
-                onClick={() => setEditingName((v) => !v)}
+                onClick={handleEditClick}
               >
                 <PencilCircle size={15} />
               </Button>
@@ -310,7 +327,7 @@ export default function Collection() {
                     color: "$white",
                   },
                 }}
-                onClick={() => setDeleteModalVisible(true)}
+                onClick={() => deleteModalVisible.set(true)}
               >
                 <Trash size={15} />
               </Button>
@@ -361,7 +378,7 @@ export default function Collection() {
                   gap: "$md",
                 }}
                 disabled={saving}
-                onClick={() => setIssuesListVisible(true)}
+                onClick={() => issuesListVisible.set(true)}
               >
                 <Text>Add To Collection</Text>
                 <Plus />
@@ -370,7 +387,7 @@ export default function Collection() {
           )}
           {/* add issue view */}
           <AnimatePresence>
-            {issuesListVisible && (
+            {issuesListVisible.get() && (
               <AnimatedBox
                 initial={{ top: "100%" }}
                 animate={{ top: "35%" }}
@@ -405,7 +422,7 @@ export default function Collection() {
                 >
                   <Button
                     css={{ color: "$danger" }}
-                    onClick={() => setIssuesListVisible(false)}
+                    onClick={() => issuesListVisible.set(false)}
                   >
                     <X size={16} />
                   </Button>
@@ -463,7 +480,7 @@ export default function Collection() {
           {getting &&
             [...Array(10)].map((_, idx) => <IssueSkeleton key={`${idx}`} />)}
           <Button
-            onClick={() => setIssuesListVisible(true)}
+            onClick={() => issuesListVisible.set(true)}
             css={{
               position: "absolute",
               zIndex: 1,
