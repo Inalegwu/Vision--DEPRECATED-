@@ -184,7 +184,7 @@ export default function Library() {
                     backdropFilter: "blur(500px)",
                     border: "0.3px solid $gray",
                     position: "absolute",
-                    zIndex: 1,
+                    zIndex: 10,
                     left: "80%",
                     top: "17%",
                     display: "flex",
@@ -338,16 +338,21 @@ export default function Library() {
           ) : (
             <></>
           )}
+          {/* render collections from library */}
           {library?.collections.map((v) => {
             return <CollectionCard key={v.id} collection={v} />;
           })}
+          {/* render issues from library */}
           {library?.issues.map((v) => {
             return <IssueCard issue={v} key={v.id} />;
           })}
+          {/* Loading Skeleton */}
           {fetchingLibraryContent &&
             [...Array(10)].map((_, idx) => {
               return <IssueSkeleton key={`${idx}`} />;
             })}
+          {/* Optimistic Loading */}
+          {addingToLibrary && [...Array(1)].map((_,idx)=><IssueSkeleton key={`${idx}`}/>)}
         </Box>
       </Box>
     </Layout>

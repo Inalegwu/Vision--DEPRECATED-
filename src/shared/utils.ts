@@ -1,5 +1,10 @@
 import { v4 } from "uuid";
 
+
+// is the application in dev mode or not
+export const IS_DEV = process.env.NODE_ENV === "development";
+
+
 // very ,very ,very thin wrap around
 // uuid/v4 to generate random uuid's
 export function generateUUID() {

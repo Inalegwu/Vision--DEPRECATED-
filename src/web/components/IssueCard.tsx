@@ -132,7 +132,7 @@ export default function IssueCard(props: Props) {
       <Box onClick={handleClick} css={{width:165,height:260,cursor:"pointer",borderRadius:"$md",position:"relative",overflow:"hidden"}}>
         <Image src={props.issue.thumbnailUrl} alt={props.issue.name} css={{width:"100%",height:"100%",position:"absolute",zIndex:0}}/>
         <Box css={{width:"100%",height:"100%",position:"absolute",zIndex:1,background:"rgba(0,0,0,0.6)",display:"flex",flexDirection:"column",alignContent:"flex-start",alignItems:"flex-start",justifyContent:"flex-end",padding:"$md",gap:"$sm"}}>
-          <Text css={{fontSize:14,fontWeight:"normal"}}>{props.issue.name}</Text>
+          <Text css={{fontSize:14,fontWeight:"lighter",width:"70%"}}>{props.issue.name}</Text>
           <Box css={{width:"100%",borderRadius:"$full",background:"$lightGray",backdropFilter:"blur(300px)"}}>
             {/* ensure the progress bar is only showing when all this information is available , this allows the ui to be rendered only when the user has that information for the app to consume instead of populating the ui with unnecessary elements */}
             {currentlyReading&&currentlyReading.page&&currentlyReading.total?<AnimatedBox initial={{width:0}} animate={{width:`${(currentlyReading?.page/currentlyReading?.total)*100}%`}} css={{background:"$secondary",borderRadius:"$full",padding:"$sm"}}/>:(<></>)}

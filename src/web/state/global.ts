@@ -12,7 +12,7 @@ export const globalState$ = observable<GlobalState>({
     distractionFreeMode: false,
     ambientBackground: false,
     readerLayout: "SinglePage",
-    colorMode: "light",
+    colorMode: "dark",
   },
 });
 

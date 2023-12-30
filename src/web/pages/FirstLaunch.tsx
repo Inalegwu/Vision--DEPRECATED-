@@ -66,7 +66,8 @@ export default function FirstLaunch() {
           color: "$white",
           fontSize: 13,
           fontWeight: "lighter",
-          boxShadow: "0px 1px 70px 0px rgba(255,255,255,0.4)",
+          boxShadow: "0px 1px 30px 0px rgba(255,255,255,0.4)",
+          border:"0.1px solid rgba(255,255,255,0.1)"
         }}
       >
         <Text>Made With ❤️ By Humans</Text>

@@ -8,5 +8,5 @@ export const Button = styled("button", {
   transition: "0.2s ease-in-out",
   cursor: "pointer",
   letterSpacing:0.3,
-  fontWeight:"lighter"
+  fontWeight:"lighter",
 });

@@ -74,8 +74,6 @@ const SinglePage = observer(({ pages, activeIndex }: LayoutProps) => {
           css={{
             height: "100%",
             aspectRatio: 1,
-            borderLeft: "0.1px solid $gray",
-            borderRight: "0.1px solid $gray",
           }}
         />
       </Box>

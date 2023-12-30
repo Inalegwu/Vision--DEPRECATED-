@@ -1,13 +1,12 @@
 import { trackEvent } from "@aptabase/electron/renderer";
 import { Box, Button, Text } from "@components/atoms";
+import { IS_DEV } from "@src/shared/utils";
 import { useCallback } from "react";
 import { FallbackProps } from "react-error-boundary";
 import pkg from "../../../package.json";
 import { HStack, VStack } from "../components";
 import { globalState$ } from "../state";
 
-// is the application in dev mode or not
-const isDev = process.env.NODE_ENV === "development";
 
 function ErrorBoundaryFallback(props: FallbackProps) {
   const state = globalState$.get();
@@ -96,7 +95,7 @@ function ErrorBoundaryFallback(props: FallbackProps) {
           <Text css={{ fontWeight: "bold" }}>Reset App</Text>
         </Button>
         {/* show the error inline when in development */}
-        {isDev && (
+        {IS_DEV && (
           <Box
             css={{
               width: "100%",

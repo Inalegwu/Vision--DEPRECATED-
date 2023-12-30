@@ -5,6 +5,7 @@ import path from "path";
 import { createContext } from "./shared/context";
 import { appRouter } from "./shared/routers/_app";
 
+// connect to aptabase instance
 initialize("A-EU-0154526847");
 
 const createWindow = () => {
