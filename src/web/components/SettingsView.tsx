@@ -1,0 +1,138 @@
+import { observer, useObservable } from "@legendapp/state/react";
+import { X } from "@phosphor-icons/react";
+import { AnimatePresence } from "framer-motion";
+import { useCallback } from "react";
+import { settingsView } from "../state";
+import HStack from "./HStack";
+import VStack from "./VStack";
+import { AnimatedBox, Box, Button, Text } from "./atoms";
+
+type ActiveSettingsView = "Appearance" | "";
+
+// change the ui of the settings view depending on the active settings
+// option
+const SwitchSettingsView = (settingsView: ActiveSettingsView) => {
+  switch (settingsView) {
+    case "Appearance":
+      return <>appearance</>;
+
+    default:
+      return <></>;
+  }
+};
+
+const SettingsView = observer(() => {
+  const activeSettingsView = useObservable<ActiveSettingsView>("Appearance");
+
+  const changeActiveSettingsView = useCallback(
+    (viewType: ActiveSettingsView) => {
+      activeSettingsView.set(viewType);
+    },
+    [],
+  );
+
+  console.log(settingsView.get());
+
+  return (
+    <AnimatePresence>
+      {settingsView.get() && (
+        <AnimatedBox
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          css={{
+            display: "flex",
+            alignContent: "center",
+            alignItems: "center",
+            justifyContent: "center",
+            position: "absolute",
+            zIndex: 99999,
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            background: "rgba(0,0,0,0.5)",
+          }}
+        >
+          <Box
+            css={{
+              width: "60%",
+              height: "65%",
+              display: "flex",
+              background: "transparent",
+              borderRadius: "$lg",
+              overflow: "hidden",
+            }}
+          >
+            {/* left side */}
+            <Box
+              css={{
+                width: "25%",
+                height: "100%",
+                background: "$blackMuted",
+                backdropFilter: "blur(1000px)",
+                borderRight: "0.1px solid rgba(255,255,255,0.2)",
+                gap: "$md",
+              }}
+            >
+              {/* close button and more */}
+              <HStack
+                alignContent="center"
+                alignItems="center"
+                justifyContent="space-between"
+                style={{
+                  padding: "$lg",
+                }}
+              >
+                <Button
+                  onClick={() => settingsView.set(false)}
+                  css={{
+                    display: "flex",
+                    alignContent: "center",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    color: "$white",
+                  }}
+                >
+                  <X />
+                </Button>
+              </HStack>
+              {/* actions */}
+              <VStack
+                alignContent="flex-start"
+                alignItems="flex-start"
+                justifyContent="flex-start"
+                style={{ padding: "$lg" }}
+              >
+                <Button
+                  onClick={() => changeActiveSettingsView("Appearance")}
+                  css={{
+                    display: "flex",
+                    alignContent: "center",
+                    alignItems: "center",
+                    justifyContent: "flex-start",
+                    gap: "$md",
+                  }}
+                >
+                  <Text css={{ color: "$white" }}>Appearance</Text>
+                </Button>
+              </VStack>
+            </Box>
+            {/* right side */}
+            <Box
+              css={{
+                width: "75%",
+                height: "100%",
+                background: "$background",
+              }}
+            >
+              {SwitchSettingsView(activeSettingsView.get())}
+            </Box>
+          </Box>
+        </AnimatedBox>
+      )}
+    </AnimatePresence>
+  );
+});
+
+export default SettingsView;

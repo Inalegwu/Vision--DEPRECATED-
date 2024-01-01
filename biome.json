@@ -9,7 +9,7 @@
       "recommended": true,
       "correctness": {
         "noUnusedLabels": "error",
-        "noUnusedVariables": "error",
+        "noUnusedVariables": "warn",
         "noUnreachable": "error",
         "useExhaustiveDependencies": "warn"
       },

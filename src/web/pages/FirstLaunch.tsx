@@ -71,15 +71,15 @@ export default function FirstLaunch() {
           fontSize: 13,
           fontWeight: "lighter",
           boxShadow: "0px 1px 30px 0px rgba(255,255,255,0.4)",
-          border:"0.1px solid rgba(255,255,255,0.1)"
+          border: "0.1px solid rgba(255,255,255,0.1)",
         }}
       >
-        <Text>Made With ❤️ By Humans</Text>
+        <Text>Made With ❤️ By DisgruntledDev</Text>
       </AnimatedBox>
       {/* orb 1 */}
       <AnimatedBox
         initial={{ scale: 0, opacity: 0, left: 0 }}
-        animate={{ scale: 2.5, opacity: 1, left: "90%",top:"20%" }}
+        animate={{ scale: 2.5, opacity: 1, left: "90%", top: "20%" }}
         transition={{ ease: "easeOut", duration: 1 }}
         css={{
           width: 500,
@@ -94,7 +94,7 @@ export default function FirstLaunch() {
       {/* orb 2 */}
       <AnimatedBox
         initial={{ scale: 0, opacity: 0, left: "100%" }}
-        animate={{ scale: 2.5, opacity: 1, left: 0,top:"20%" }}
+        animate={{ scale: 2.5, opacity: 1, left: 0, top: "20%" }}
         transition={{ ease: "easeOut", duration: 1 }}
         css={{
           width: 500,

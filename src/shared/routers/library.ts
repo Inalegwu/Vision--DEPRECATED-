@@ -146,14 +146,13 @@ export const libraryRouter = router({
         if (file.fileHeader.flags.directory) {
           continue;
         }
-      
+
         await ctx.db.insert(pages).values({
           id: generateUUID(),
           name: `${createdIssue[0].name}-${file.fileHeader.name}`,
-          content:convertToImageUrl(file.extraction?.buffer!),
+          content: convertToImageUrl(file.extraction?.buffer!),
           issueId: createdIssue[0].id,
         });
-        
       }
 
       return {

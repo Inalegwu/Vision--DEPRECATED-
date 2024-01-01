@@ -3,11 +3,11 @@ import { createStitches } from "@stitches/react";
 export const { styled, css, config } = createStitches({
   theme: {
     colors: {
-      primary: '#74228d',
-      background: '#000000',
-      backgroundLight:'#ffffff8e',
-      secondary:'#74228d7c',
-      alt: '#621a9ebe',
+      primary: "#74228d",
+      background: "#000000",
+      backgroundLight: "#ffffff8e",
+      secondary: "#74228d7c",
+      alt: "#621a9ebe",
       gray: "rgba(255,255,250,0.2)",
       lightGray: "rgba(255,255,255,0.4)",
       blackMuted: "rgba(0,0,0,0.8)",
@@ -16,6 +16,7 @@ export const { styled, css, config } = createStitches({
       danger: "rgba(255,70,90,0.9)",
     },
     space: {
+      xs: "1px",
       sm: "2px",
       md: "4px",
       lg: "8px",

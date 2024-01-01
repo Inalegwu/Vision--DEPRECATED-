@@ -19,7 +19,6 @@ export default function IssueCard(props: Props) {
   const utils = trpcReact.useUtils();
   const contextMenuRef = useRef<ContextMenuRefProps>(null);
 
-
   const points = useObservable<Point>({
     x: 0,
     y: 0,
@@ -31,7 +30,7 @@ export default function IssueCard(props: Props) {
     .get()
     .find((v) => v.id === props.issue.id);
 
-  const { mutate, isLoading: deleting } =
+  const { mutate, isLoading: _deleting } =
     trpcReact.issue.removeIssue.useMutation({
       onError: (err) => {
         console.log(err);
@@ -40,7 +39,7 @@ export default function IssueCard(props: Props) {
       onSuccess: () => {
         utils.issue.invalidate();
         utils.library.invalidate();
-        utils.collection.getIssuesInCollection.invalidate()
+        utils.collection.getIssuesInCollection.invalidate();
         toast.success(`${props.issue.name} Deleted Successfully`);
       },
     });
@@ -57,7 +56,7 @@ export default function IssueCard(props: Props) {
       });
       contextMenuRef.current?.show();
     },
-    []
+    [points],
   );
 
   useWindow("click", () => {
@@ -71,11 +70,11 @@ export default function IssueCard(props: Props) {
     mutate({
       id: props.issue.id,
     });
-  }, [props.issue, deleting, mutate]);
+  }, [props.issue, mutate]);
 
   return (
     <>
-    {/* context menu */}
+      {/* context menu */}
       <ContextMenu
         style={{
           border: "0.12px solid $lightGray",
@@ -87,8 +86,8 @@ export default function IssueCard(props: Props) {
           alignContent: "center",
           alignItems: "center",
           justifyContent: "center",
-          width:170,
-          height:70,
+          width: 170,
+          height: 70,
         }}
         ref={contextMenuRef}
         points={points.get()}
@@ -109,7 +108,9 @@ export default function IssueCard(props: Props) {
           to={`/editIssue/${props.issue?.id}`}
         >
           <Pencil size={14} />
-          <Text css={{fontSize:13,fontWeight:"lighter"}}>Edit Issue Info</Text>
+          <Text css={{ fontSize: 13, fontWeight: "lighter" }}>
+            Edit Issue Info
+          </Text>
         </LinkButton>
         <Button
           onClick={deleteIssue}
@@ -125,21 +126,91 @@ export default function IssueCard(props: Props) {
           }}
         >
           <Trash size={14} />
-          <Text css={{fontSize:13,fontWeight:"lighter"}}>Delete Issue</Text>
+          <Text css={{ fontSize: 13, fontWeight: "lighter" }}>
+            Delete Issue
+          </Text>
         </Button>
       </ContextMenu>
-    <Box onContextMenu={handleContextMenu} css={{display:"flex",flexDirection:"column",alignContent:"flex-start",alignItems:"flex-start",gap:"$sm"}}>
-      <Box onClick={handleClick} css={{width:165,height:260,cursor:"pointer",borderRadius:"$md",position:"relative",overflow:"hidden"}}>
-        <Image src={props.issue.thumbnailUrl} alt={props.issue.name} css={{width:"100%",height:"100%",position:"absolute",zIndex:0}}/>
-        <Box css={{width:"100%",height:"100%",position:"absolute",zIndex:1,background:"rgba(0,0,0,0.6)",display:"flex",flexDirection:"column",alignContent:"flex-start",alignItems:"flex-start",justifyContent:"flex-end",padding:"$md",gap:"$sm"}}>
-          <Text css={{fontSize:14,fontWeight:"lighter",width:"70%"}}>{props.issue.name}</Text>
-          <Box css={{width:"100%",borderRadius:"$full",background:"$lightGray",backdropFilter:"blur(300px)"}}>
-            {/* ensure the progress bar is only showing when all this information is available , this allows the ui to be rendered only when the user has that information for the app to consume instead of populating the ui with unnecessary elements */}
-            {currentlyReading&&currentlyReading.page&&currentlyReading.total?<AnimatedBox initial={{width:0}} animate={{width:`${(currentlyReading?.page/currentlyReading?.total)*100}%`}} css={{background:"$secondary",borderRadius:"$full",padding:"$sm"}}/>:(<></>)}
+      <Box
+        onContextMenu={handleContextMenu}
+        css={{
+          display: "flex",
+          flexDirection: "column",
+          alignContent: "flex-start",
+          alignItems: "flex-start",
+          gap: "$sm",
+        }}
+      >
+        <Box
+          onClick={handleClick}
+          css={{
+            width: 165,
+            height: 260,
+            cursor: "pointer",
+            borderRadius: "$md",
+            position: "relative",
+            overflow: "hidden",
+          }}
+        >
+          <Image
+            src={props.issue.thumbnailUrl}
+            alt={props.issue.name}
+            css={{
+              width: "100%",
+              height: "100%",
+              position: "absolute",
+              zIndex: 0,
+            }}
+          />
+          <Box
+            css={{
+              width: "100%",
+              height: "100%",
+              position: "absolute",
+              zIndex: 1,
+              background: "rgba(0,0,0,0.6)",
+              display: "flex",
+              flexDirection: "column",
+              alignContent: "flex-start",
+              alignItems: "flex-start",
+              justifyContent: "flex-end",
+              padding: "$md",
+              gap: "$sm",
+            }}
+          >
+            <Text css={{ fontSize: 14, fontWeight: "lighter", width: "70%" }}>
+              {props.issue.name}
+            </Text>
+            <Box
+              css={{
+                width: "100%",
+                borderRadius: "$full",
+                background: "$lightGray",
+                backdropFilter: "blur(300px)",
+              }}
+            >
+              {/* ensure the progress bar is only showing when all this information is available , this allows the ui to be rendered only when the user has that information for the app to consume instead of populating the ui with unnecessary elements */}
+              {currentlyReading?.page && currentlyReading.total ? (
+                <AnimatedBox
+                  initial={{ width: 0 }}
+                  animate={{
+                    width: `${
+                      (currentlyReading?.page / currentlyReading?.total) * 100
+                    }%`,
+                  }}
+                  css={{
+                    background: "$secondary",
+                    borderRadius: "$full",
+                    padding: "$sm",
+                  }}
+                />
+              ) : (
+                <></>
+              )}
+            </Box>
           </Box>
         </Box>
       </Box>
-    </Box>
     </>
   );
 }

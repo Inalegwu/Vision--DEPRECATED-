@@ -29,13 +29,21 @@ export const globalState$ = observable<GlobalState>({
     // currently contemplating having a color
     // mode option , although implementing it into the ui
     // will have to be when I'm migrating the kuma-ui
+    // this will also be in consideration of implementing
+    // multiple ui themes , like the Sofa app
     colorMode: "dark",
+    // defaults to bottom center of the screen
+    // based of the windows width and height
+    navPos: {
+      x: window.outerWidth * 0.45,
+      y: window.outerHeight * 0.92,
+    },
   },
 });
 
 // persist the global state
 // in local storage
-// so the user doesn't keep having new application id's 
+// so the user doesn't keep having new application id's
 // and so they don't see the first launch page
 // every time they open the app
 persistObservable(globalState$, {

@@ -46,13 +46,12 @@ export type ComicMetaData = {
   PageCount: number;
 };
 
-
 export type Point = {
   x: number;
   y: number;
 };
 
-export type LibraryFilters="All"|"Collections"|"Issues"
+export type LibraryFilters = "All" | "Collections" | "Issues";
 
 // State Types
 
@@ -84,7 +83,8 @@ export type UIState = {
   readerLayout: ReaderLayout;
   // the color mode of the application for toggling
   // light and dark mode
-  colorMode:"light"|"dark"
+  colorMode: "light" | "dark";
+  navPos: Point;
 };
 
 // global application state
@@ -103,9 +103,9 @@ export type CurrentlyReading = {
   // save the total number of pages the issue has
   // so there is no need to query the database for that
   // information
-  total:number;
+  total: number;
 };
 
 export type ReadingState = {
   currentlyReading: CurrentlyReading[];
-}
+};
