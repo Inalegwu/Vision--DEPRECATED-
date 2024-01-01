@@ -4,17 +4,19 @@ import { AnimatePresence } from "framer-motion";
 import { useCallback } from "react";
 import { settingsView } from "../state";
 import HStack from "./HStack";
+import { Appearance } from "./SettingsViews";
 import VStack from "./VStack";
 import { AnimatedBox, Box, Button, Text } from "./atoms";
 
-type ActiveSettingsView = "Appearance" | "";
+type ActiveSettingsView = "Appearance" | "Synchronization" | "";
 
+const Views: ActiveSettingsView[] = ["Appearance", "Synchronization"];
 // change the ui of the settings view depending on the active settings
 // option
 const SwitchSettingsView = (settingsView: ActiveSettingsView) => {
   switch (settingsView) {
     case "Appearance":
-      return <>appearance</>;
+      return <Appearance />;
 
     default:
       return <></>;
@@ -28,7 +30,7 @@ const SettingsView = observer(() => {
     (viewType: ActiveSettingsView) => {
       activeSettingsView.set(viewType);
     },
-    [],
+    [activeSettingsView],
   );
 
   console.log(settingsView.get());
@@ -51,7 +53,6 @@ const SettingsView = observer(() => {
             left: 0,
             width: "100%",
             height: "100%",
-            background: "rgba(0,0,0,0.5)",
           }}
         >
           <Box
@@ -102,20 +103,38 @@ const SettingsView = observer(() => {
                 alignContent="flex-start"
                 alignItems="flex-start"
                 justifyContent="flex-start"
-                style={{ padding: "$lg" }}
+                style={{ padding: "$lg", gap: "$md" }}
               >
-                <Button
-                  onClick={() => changeActiveSettingsView("Appearance")}
-                  css={{
-                    display: "flex",
-                    alignContent: "center",
-                    alignItems: "center",
-                    justifyContent: "flex-start",
-                    gap: "$md",
-                  }}
-                >
-                  <Text css={{ color: "$white" }}>Appearance</Text>
-                </Button>
+                {Views.map((v) => (
+                  <Button
+                    onClick={() => changeActiveSettingsView(v)}
+                    css={{
+                      display: "flex",
+                      alignContent: "center",
+                      alignItems: "center",
+                      justifyContent: "flex-start",
+                      width: "100%",
+                      padding: "$md",
+                      borderRadius: "$md",
+                      gap: "$md",
+                      background: `${
+                        v === activeSettingsView.get() ? "$lightGray" : ""
+                      }`,
+                    }}
+                  >
+                    <Text
+                      css={{
+                        color: `${
+                          v === activeSettingsView.get() ? "$black" : "$white"
+                        }`,
+                        fontSize: 13,
+                        fontWeight: "normal",
+                      }}
+                    >
+                      {v}
+                    </Text>
+                  </Button>
+                ))}
               </VStack>
             </Box>
             {/* right side */}
