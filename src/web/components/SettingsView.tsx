@@ -8,9 +8,9 @@ import { Appearance } from "./SettingsViews";
 import VStack from "./VStack";
 import { AnimatedBox, Box, Button, Text } from "./atoms";
 
-type ActiveSettingsView = "Appearance" | "Synchronization" | "";
+type ActiveSettingsView = "Appearance" | "";
 
-const Views: ActiveSettingsView[] = ["Appearance", "Synchronization"];
+const Views: ActiveSettingsView[] = ["Appearance"];
 // change the ui of the settings view depending on the active settings
 // option
 const SwitchSettingsView = (settingsView: ActiveSettingsView) => {

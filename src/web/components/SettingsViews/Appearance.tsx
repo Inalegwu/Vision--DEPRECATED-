@@ -1,8 +1,24 @@
 import { observer } from "@legendapp/state/react";
+import { globalState$ } from "@src/web/state";
+import { useCallback, useEffect, useRef } from "react";
+import HStack from "../HStack";
+import Switch, { SwitchRefProps } from "../Switch";
 import VStack from "../VStack";
-import { Box, Input, Text } from "../atoms";
+import { Box, Text } from "../atoms";
 
 const Appearance = observer(() => {
+  const ambientModeSwitch = useRef<SwitchRefProps>(null);
+
+  useEffect(() => {}, []);
+
+  const handleAmbientBackgroundClick = useCallback(() => {
+    ambientModeSwitch.current?.toggle();
+
+    const newState = ambientModeSwitch.current?.state();
+
+    globalState$.uiState.layoutBackground.set(newState!);
+  }, []);
+
   return (
     <Box
       css={{
@@ -11,32 +27,40 @@ const Appearance = observer(() => {
         padding: "$lg",
         display: "flex",
         flexDirection: "column",
+        alignContent: "flex-start",
+        alignItems: "flex-start",
+        justifyContent: "flex-start",
+        overflowY: "scroll",
         gap: "$md",
       }}
     >
+      {/* ambient background setting */}
       <VStack
         alignContent="flex-start"
         alignItems="flex-start"
-        style={{ gap: "$md" }}
+        style={{ gap: "$md", width: "100%", padding: "$md" }}
       >
-        <Text
-          css={{
-            fontSize: 15,
-            color: "$white",
-          }}
+        <HStack
+          alignContent="center"
+          alignItems="center"
+          justifyContent="space-between"
+          style={{ width: "100%" }}
         >
-          Primary Color
+          <Text css={{ fontSize: 13, fontWeight: "normal" }}>
+            Ambient Background
+          </Text>
+          <Switch
+            initial={globalState$.uiState.layoutBackground.get()}
+            onClick={handleAmbientBackgroundClick}
+            ref={ambientModeSwitch}
+          />
+        </HStack>
+        <Text
+          css={{ fontSize: 12, color: "$lightGray", fontWeight: "lighter" }}
+        >
+          Enable/Disable Ambient Background in the app. The reader ignores this
+          setting
         </Text>
-        <Input
-          type="color"
-          css={{
-            border: "none",
-            padding: "$md",
-            borderRadius: "$md",
-            width: "100%",
-            background: "rgba(0,0,0,0.4)",
-          }}
-        />
       </VStack>
     </Box>
   );

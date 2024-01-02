@@ -9,7 +9,7 @@ import { AnimatedBox, Box, Button, NavLink } from "./atoms";
 export default function FloatingNavigation() {
   const visible = useObservable(true);
 
-  const navPos = globalState$.uiState.navPos;
+  const navPos = globalState$.uiState.navPos.get();
 
   useWindow("mousemove", (e) => {
     if (e.clientY >= 712) {
@@ -33,7 +33,7 @@ export default function FloatingNavigation() {
             top: `${window.innerHeight}px`,
           }}
           animate={{
-            top: `${navPos.get().y}px`,
+            top: `${navPos.y}px`,
           }}
           exit={{
             top: `${window.innerHeight}px`,
@@ -48,7 +48,7 @@ export default function FloatingNavigation() {
             justifyContent: "flex-start",
             position: "absolute",
             zIndex: 5000,
-            left: `${navPos.get().x}px`,
+            left: `${navPos.x}px`,
           }}
         >
           <NavLink

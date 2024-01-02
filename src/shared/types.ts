@@ -79,6 +79,9 @@ export type UIState = {
   distractionFreeMode: boolean;
   // stylised background for the reader view
   ambientBackground: boolean;
+  // ambient mode setting for library and other non-reader
+  // views
+  layoutBackground: boolean;
   // how would the reader like to exprience the application
   readerLayout: ReaderLayout;
   // the color mode of the application for toggling

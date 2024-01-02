@@ -9,6 +9,7 @@ import { DoublePage, SinglePage } from "./ReaderLayouts";
 import SettingsView from "./SettingsView";
 import Skeleton, { SkeletonProps } from "./Skeleton";
 import Spinner from "./Spinner";
+import Switch, { SwitchProps, SwitchRefProps } from "./Switch";
 import VStack from "./VStack";
 
 export {
@@ -25,5 +26,8 @@ export {
   Skeleton,
   SkeletonProps,
   Spinner,
+  Switch,
+  SwitchProps,
+  SwitchRefProps,
   VStack,
 };

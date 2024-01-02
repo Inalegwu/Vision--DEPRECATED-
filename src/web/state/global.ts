@@ -32,6 +32,9 @@ export const globalState$ = observable<GlobalState>({
     // this will also be in consideration of implementing
     // multiple ui themes , like the Sofa app
     colorMode: "dark",
+    // the default state of the ui layout
+    // background (Ambient Mode)
+    layoutBackground: true,
     // defaults to bottom center of the screen
     // based of the windows width and height
     navPos: {

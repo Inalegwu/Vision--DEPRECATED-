@@ -1,6 +1,7 @@
 import { CornersOut, Minus, X } from "@phosphor-icons/react";
 import { useKeyPress } from "@src/web/hooks";
 import { trpcReact } from "../../shared/config";
+import { globalState$ } from "../state";
 import FloatingNavigation from "./FloatingNavigation";
 import HStack from "./HStack";
 import SettingsView from "./SettingsView";
@@ -16,6 +17,8 @@ export default function Layout(props: LayoutProps) {
     trpcReact.window.maximizeWindow.useMutation();
   const { mutate: minimizeWindow } =
     trpcReact.window.minimizeWindow.useMutation();
+
+  const { layoutBackground } = globalState$.uiState.get();
 
   // use ctrl/cmd key + q for quitting the app
   useKeyPress((e) => {
@@ -34,16 +37,18 @@ export default function Layout(props: LayoutProps) {
       }}
     >
       {/* pulse orb */}
-      <Box
-        css={{
-          width: 600,
-          height: 600,
-          background: "$primary",
-          borderRadius: "$full",
-          position: "absolute",
-          zIndex: 0,
-        }}
-      />
+      {layoutBackground && (
+        <Box
+          css={{
+            width: 600,
+            height: 600,
+            background: "$primary",
+            borderRadius: "$full",
+            position: "absolute",
+            zIndex: 0,
+          }}
+        />
+      )}
       {/* overlay */}
       <Box
         css={{
