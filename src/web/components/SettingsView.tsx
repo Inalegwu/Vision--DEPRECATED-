@@ -33,8 +33,6 @@ const SettingsView = observer(() => {
     [activeSettingsView],
   );
 
-  console.log(settingsView.get());
-
   return (
     <AnimatePresence>
       {settingsView.get() && (
@@ -105,8 +103,9 @@ const SettingsView = observer(() => {
                 justifyContent="flex-start"
                 style={{ padding: "$lg", gap: "$md" }}
               >
-                {Views.map((v) => (
+                {Views.map((v, idx) => (
                   <Button
+                    key={`${idx}`}
                     onClick={() => changeActiveSettingsView(v)}
                     css={{
                       display: "flex",

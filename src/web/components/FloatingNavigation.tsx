@@ -1,29 +1,51 @@
-import { useObservable } from "@legendapp/state/react";
+import { observer, useObservable } from "@legendapp/state/react";
 import { GearSix, House } from "@phosphor-icons/react";
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence, PanInfo } from "framer-motion";
 import { useCallback } from "react";
-import { useWindow } from "../hooks";
+import { useTimeout, useWindow } from "../hooks";
 import { globalState$, settingsView } from "../state";
 import { AnimatedBox, Box, Button, NavLink } from "./atoms";
 
-export default function FloatingNavigation() {
+const FloatingNavigation = observer(() => {
   const visible = useObservable(true);
+  const mouseOver = useObservable(false);
 
-  const navPos = globalState$.uiState.navPos.get();
+  const navPos = globalState$.uiState.navPos;
 
+  // show the navigation bar when the users mouse
+  // is close to the bottom of the application window
+  // this is intended to work like the windows/mac
+  // taskbar/dock when set to automatically hide
   useWindow("mousemove", (e) => {
-    if (e.clientY >= 712) {
+    if (e.clientY >= 700) {
       visible.set(true);
     }
   });
 
-  //   TODO implement repositioning the nav by dragging the handle
-  const handleDragStart = useCallback(
-    (e: React.MouseEvent<HTMLButtonElement>) => {
+  // hide the navigation bar after a specified amount of time
+  // eventually this timeout will be set from the user settings
+  // as well as the autohide functionality
+  useTimeout(() => {
+    if (visible.get() && !mouseOver.get()) {
+      visible.set(false);
+    }
+  }, 3000);
+
+  // TODO
+  const handleDrag = useCallback(
+    (e: MouseEvent | PointerEvent | TouchEvent, info: PanInfo) => {
       console.log(e);
     },
     [],
   );
+
+  const handleMouseOver = useCallback(() => {
+    mouseOver.set(true);
+  }, [mouseOver]);
+
+  const handleMouseLeave = useCallback(() => {
+    mouseOver.set(false);
+  }, [mouseOver]);
 
   return (
     <AnimatePresence>
@@ -33,11 +55,13 @@ export default function FloatingNavigation() {
             top: `${window.innerHeight}px`,
           }}
           animate={{
-            top: `${navPos.y}px`,
+            top: `${navPos.get().y}px`,
           }}
           exit={{
             top: `${window.innerHeight}px`,
           }}
+          onMouseOver={handleMouseOver}
+          onMouseLeave={handleMouseLeave}
           css={{
             borderRadius: "$xl",
             background: "$blackMuted",
@@ -48,7 +72,7 @@ export default function FloatingNavigation() {
             justifyContent: "flex-start",
             position: "absolute",
             zIndex: 5000,
-            left: `${navPos.x}px`,
+            left: `${navPos.get().x}px`,
           }}
         >
           <NavLink
@@ -56,6 +80,8 @@ export default function FloatingNavigation() {
             style={({ isActive }) => ({
               color: `${isActive ? "#74228d" : "rgba(255,255,255,0.3)"}`,
             })}
+            onMouseOver={handleMouseOver}
+            onMouseLeave={handleMouseLeave}
             css={{
               display: "flex",
               alignContent: "center",
@@ -67,6 +93,8 @@ export default function FloatingNavigation() {
             <House size={16} />
           </NavLink>
           <Button
+            onMouseOver={handleMouseOver}
+            onMouseLeave={handleMouseLeave}
             onClick={() => settingsView.set(true)}
             css={{
               display: "flex",
@@ -82,8 +110,11 @@ export default function FloatingNavigation() {
           >
             <GearSix size={16} />
           </Button>
-          <Button
-            onClick={handleDragStart}
+          <AnimatedBox
+            draggable
+            onDrag={handleDrag}
+            onMouseOver={handleMouseOver}
+            onMouseLeave={handleMouseLeave}
             css={{
               display: "flex",
               alignContent: "center",
@@ -93,6 +124,8 @@ export default function FloatingNavigation() {
               padding: "$xxxl",
               gap: "$sm",
               cursor: "grabbing",
+              borderTopRightRadius: "$xl",
+              borderBottomRightRadius: "$xl",
             }}
           >
             <Box
@@ -119,9 +152,11 @@ export default function FloatingNavigation() {
                 width: "1px",
               }}
             />
-          </Button>
+          </AnimatedBox>
         </AnimatedBox>
       )}
     </AnimatePresence>
   );
-}
+});
+
+export default FloatingNavigation;

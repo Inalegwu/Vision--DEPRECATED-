@@ -34,7 +34,9 @@ export default function IssueCard(props: Props) {
     trpcReact.issue.removeIssue.useMutation({
       onError: (err) => {
         console.log(err);
-        toast.error("Couldn't Delete That Issue");
+        throw new Error(err.message, {
+          cause: err.shape,
+        });
       },
       onSuccess: () => {
         utils.issue.invalidate();
