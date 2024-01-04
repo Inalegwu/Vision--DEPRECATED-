@@ -32,7 +32,7 @@ const FloatingNavigation = observer(() => {
   // eventually this timeout will be set from the user settings
   // as well as the autohide functionality
   useTimeout(() => {
-    if (visible.get() && !mouseOver.get()) {
+    if (visible.get() && !mouseOver.get() && !settingsView.get()) {
       visible.set(false);
     }
   }, 3000);
