@@ -18,7 +18,7 @@ type ActiveSettingsView = "Appearance" | "";
 const Views: ActiveSettingsView[] = ["Appearance"];
 // change the ui of the settings view depending on the active settings
 // option
-const SwitchSettingsView = observer((settingsView: ActiveSettingsView) => {
+const SwitchSettingsView = (settingsView: ActiveSettingsView) => {
   switch (settingsView) {
     case "Appearance":
       return <Appearance />;
@@ -26,7 +26,7 @@ const SwitchSettingsView = observer((settingsView: ActiveSettingsView) => {
     default:
       return <></>;
   }
-});
+};
 
 const SettingsView = observer(() => {
   const activeSettingsView = useObservable<ActiveSettingsView>("Appearance");

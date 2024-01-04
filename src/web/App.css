@@ -30,11 +30,3 @@ body {
   width: 0;
   background: transparent;
 }
-
-.active {
-  color: #4097e8;
-}
-
-.inactive {
-  color: #333333;
-}
