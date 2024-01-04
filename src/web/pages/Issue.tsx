@@ -41,7 +41,7 @@ export default function Issue() {
 
   // if the user has a currently reading state saved, it will
   // be used to render a progress bar for the users reading progress
-  // this will also enable somethings in the future as well.  
+  // this will also enable somethings in the future as well.
   const currentlyReading = readingState.currentlyReading
     .get()
     .find((v) => v.id === issueId);
@@ -83,8 +83,8 @@ export default function Issue() {
       },
     );
 
-    // maximizes the window for either distraction free mode or just activating
-    // fullscreen mode
+  // maximizes the window for either distraction free mode or just activating
+  // fullscreen mode
   const { mutate: maximizeWindow, data: windowStat } =
     trpcReact.window.maximizeWindow.useMutation();
 
@@ -175,11 +175,11 @@ export default function Issue() {
   const saveIssueReadingState = useCallback(() => {
     // update the currently reading list
     // @ts-ignore goes back a page
-    router(-1,{
-      preventScrollReset:true,
-      unstable_viewTransition:true
-    })
-    // check if the issue is already 
+    router(-1, {
+      preventScrollReset: true,
+      unstable_viewTransition: true,
+    });
+    // check if the issue is already
     // saved in the reading state list
     const found = readingState.currentlyReading
       .get()
@@ -187,6 +187,9 @@ export default function Issue() {
 
     // if the issue is already saved
     if (found) {
+      // this is currently very mess
+      // I have to find a way to make
+      // cleaner and easier to follow
       readingState.currentlyReading.set([
         // keep all other issues
         ...readingState.currentlyReading.get().filter((v) => v.id !== issueId),

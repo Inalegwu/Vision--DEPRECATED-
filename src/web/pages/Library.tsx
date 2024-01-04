@@ -28,6 +28,8 @@ import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { useInterval, useTimeout } from "../hooks";
 
+const filter_map: LibraryFilters[] = ["All", "Collections", "Issues"];
+
 export default function Library() {
   const utils = trpcReact.useUtils();
   const router = useNavigate();
@@ -37,7 +39,7 @@ export default function Library() {
   const collectionName = useObservable("");
 
   // TODO implement filtering the library view
-  const filter=useObservable<LibraryFilters>("All");
+  const filter = useObservable<LibraryFilters>("All");
 
   // gets a random index and uses that to select
   // a loading phrase
@@ -66,10 +68,10 @@ export default function Library() {
       },
     });
 
-    // hide the create collection view if the 
-    // mouse isn't over element
-    // TODO also implement hiding the view
-    // when focus is lost
+  // hide the create collection view if the
+  // mouse isn't over element
+  // TODO also implement hiding the view
+  // when focus is lost
   useTimeout(() => {
     if (!mouseOver) {
       createModalVisible.set(false);
@@ -165,7 +167,9 @@ export default function Library() {
         </AnimatedBox>
         {/* header */}
         <VStack gap={6} style={{ padding: "$xxxl" }}>
-          <Text css={{ fontSize: 30, fontWeight: 400,letterSpacing:0.4 }}>My Library</Text>
+          <Text css={{ fontSize: 30, fontWeight: 400, letterSpacing: 0.4 }}>
+            My Library
+          </Text>
           <HStack
             width="100%"
             justifyContent="space-between"
@@ -285,7 +289,15 @@ export default function Library() {
                 }}
                 onClick={() => addToLibrary()}
               >
-                <Text css={{ fontSize: 12,letterSpacing:0.3,fontWeight:"lighter" }}>Add To Library</Text>
+                <Text
+                  css={{
+                    fontSize: 12,
+                    letterSpacing: 0.3,
+                    fontWeight: "lighter",
+                  }}
+                >
+                  Add To Library
+                </Text>
                 <Plus size={11} />
               </AnimatedButton>
             </HStack>
@@ -359,7 +371,8 @@ export default function Library() {
               return <IssueSkeleton key={`${idx}`} />;
             })}
           {/* Optimistic Loading */}
-          {addingToLibrary && [...Array(1)].map((_,idx)=><IssueSkeleton key={`${idx}`}/>)}
+          {addingToLibrary &&
+            [...Array(1)].map((_, idx) => <IssueSkeleton key={`${idx}`} />)}
         </Box>
       </Box>
     </Layout>

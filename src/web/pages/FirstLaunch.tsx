@@ -74,7 +74,7 @@ export default function FirstLaunch() {
           border: "0.1px solid rgba(255,255,255,0.1)",
         }}
       >
-        <Text>Made With ❤️ By DisgruntledDev</Text>
+        <Text>Developed By Ikwue Inalegwu</Text>
       </AnimatedBox>
       {/* orb 1 */}
       <AnimatedBox

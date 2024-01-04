@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-
 // attach any type of event listeners to the window object
 // and handle the clean up of those event listeners
 // to prevent having multiple listeners firing

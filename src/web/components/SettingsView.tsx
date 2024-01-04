@@ -8,12 +8,17 @@ import { Appearance } from "./SettingsViews";
 import VStack from "./VStack";
 import { AnimatedBox, Box, Button, Text } from "./atoms";
 
+// the types of settings options the application has
 type ActiveSettingsView = "Appearance" | "";
 
+// using this to prevent repetitively typing
+// out buttons and the respective change types
+// I can just map over this and set the active settings
+// view observable to the item itself
 const Views: ActiveSettingsView[] = ["Appearance"];
 // change the ui of the settings view depending on the active settings
 // option
-const SwitchSettingsView = (settingsView: ActiveSettingsView) => {
+const SwitchSettingsView = observer((settingsView: ActiveSettingsView) => {
   switch (settingsView) {
     case "Appearance":
       return <Appearance />;
@@ -21,11 +26,14 @@ const SwitchSettingsView = (settingsView: ActiveSettingsView) => {
     default:
       return <></>;
   }
-};
+});
 
 const SettingsView = observer(() => {
   const activeSettingsView = useObservable<ActiveSettingsView>("Appearance");
 
+  // change the active settings view type
+  // which in turn changes the ui that is being rendered
+  // the the viewport
   const changeActiveSettingsView = useCallback(
     (viewType: ActiveSettingsView) => {
       activeSettingsView.set(viewType);
@@ -103,6 +111,8 @@ const SettingsView = observer(() => {
                 justifyContent="flex-start"
                 style={{ padding: "$lg", gap: "$md" }}
               >
+                {/* render the settings options as clickables to toggle the active view
+                 */}
                 {Views.map((v, idx) => (
                   <Button
                     key={`${idx}`}
@@ -144,6 +154,8 @@ const SettingsView = observer(() => {
                 background: "$background",
               }}
             >
+              {/* the switchSettingsView function (defined above) renders the 
+                appropriate components in the view port for the active settings view*/}
               {SwitchSettingsView(activeSettingsView.get())}
             </Box>
           </Box>

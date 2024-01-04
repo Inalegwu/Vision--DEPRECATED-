@@ -10,6 +10,12 @@ const FloatingNavigation = observer(() => {
   const visible = useObservable(true);
   const mouseOver = useObservable(false);
 
+  // the saved navigation position from
+  // global state
+  // this can be edited and saved back into
+  // local storage to allow the user
+  // customize the navigation bar position to their
+  // taste , along the X-Axis only
   const navPos = globalState$.uiState.navPos;
 
   // show the navigation bar when the users mouse
@@ -17,7 +23,7 @@ const FloatingNavigation = observer(() => {
   // this is intended to work like the windows/mac
   // taskbar/dock when set to automatically hide
   useWindow("mousemove", (e) => {
-    if (e.clientY >= 700) {
+    if (e.clientY >= 600) {
       visible.set(true);
     }
   });
@@ -32,13 +38,17 @@ const FloatingNavigation = observer(() => {
   }, 3000);
 
   // TODO
-  const handleDrag = useCallback(
-    (e: MouseEvent | PointerEvent | TouchEvent, info: PanInfo) => {
-      console.log(e);
+  const handlePan = useCallback(
+    (_e: MouseEvent | PointerEvent | TouchEvent, info: PanInfo) => {
+      console.log({ ...info });
     },
     [],
   );
 
+  // the following functions toggle the mouseOver
+  // state to positive or negative which informs
+  // the useTimeout hook on whether or not it can
+  // dismiss the navigation bar
   const handleMouseOver = useCallback(() => {
     mouseOver.set(true);
   }, [mouseOver]);
@@ -112,7 +122,7 @@ const FloatingNavigation = observer(() => {
           </Button>
           <AnimatedBox
             draggable
-            onDrag={handleDrag}
+            onPan={handlePan}
             onMouseOver={handleMouseOver}
             onMouseLeave={handleMouseLeave}
             css={{

@@ -7,7 +7,6 @@ import { publicProcedure, router } from "@src/trpc";
 import { TRPCError } from "@trpc/server";
 import { dialog } from "electron";
 
-// all actions related to the users library of colletions and issues
 export const libraryRouter = router({
   addToLibrary: publicProcedure.mutation(async ({ ctx }) => {
     try {
@@ -191,7 +190,10 @@ export const libraryRouter = router({
       // filter out all issues that are already included
       // within collections
       const merged = issues.filter(
-        (k) => !collections.find((l) => l.issues.find((m) => m.id === k.id)),
+        (issues) =>
+          !collections.find((collection) =>
+            collection.issues.find((issue) => issue.id === issues.id),
+          ),
       );
 
       return {
