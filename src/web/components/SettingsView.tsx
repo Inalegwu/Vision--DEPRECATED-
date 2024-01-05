@@ -64,7 +64,7 @@ const SettingsView = observer(() => {
           <Box
             css={{
               width: "60%",
-              height: "65%",
+              height: "60%",
               display: "flex",
               background: "transparent",
               borderRadius: "$lg",

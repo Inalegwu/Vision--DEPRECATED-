@@ -5,6 +5,7 @@ import { AnimatePresence } from "framer-motion";
 import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTimeout } from "../hooks";
+import { globalState$ } from "../state";
 
 type CollectionWithIssues = Collection & {
   issues: Issue[];
@@ -18,6 +19,8 @@ export default function CollectionCard({ collection }: CollectionCardProps) {
   const router = useNavigate();
 
   const mouseOver = useObservable(false);
+
+  const { colorMode } = globalState$.uiState.get();
 
   // navigate the user to the collection page
   const handleClick = useCallback(() => {
@@ -90,7 +93,9 @@ export default function CollectionCard({ collection }: CollectionCardProps) {
             width: "100%",
             height: "100%",
             padding: "$md",
-            background: "rgba(0,0,0,0.5)",
+            background: `${
+              colorMode === "dark" ? "rgba(0,0,0,0.5)" : "rgba(0,0,0,0.2)"
+            }`,
             position: "absolute",
             zIndex: 4,
             display: "flex",
@@ -98,11 +103,16 @@ export default function CollectionCard({ collection }: CollectionCardProps) {
             alignContent: "flex-start",
             alignItems: "flex-start",
             justifyContent: "flex-end",
+            borderRadius: "$md",
           }}
         >
           <AnimatedText
             layout
-            css={{ fontSize: 13, fontWeight: "lighter", color: "$white" }}
+            css={{
+              fontSize: 13,
+              fontWeight: "normal",
+              color: "$white",
+            }}
           >
             {collection.name}
           </AnimatedText>
@@ -113,7 +123,11 @@ export default function CollectionCard({ collection }: CollectionCardProps) {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                css={{ fontSize: 12.5, fontWeight: "lighter", color: "$white" }}
+                css={{
+                  fontSize: 12.5,
+                  fontWeight: "normal",
+                  color: "$white",
+                }}
               >
                 {collection.issues.length} issue(s)
               </AnimatedText>

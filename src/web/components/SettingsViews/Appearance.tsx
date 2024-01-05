@@ -80,8 +80,11 @@ const Appearance = observer(() => {
           justifyContent="space-between"
           style={{ width: "100%" }}
         >
-          <Text css={{ fontSize: 13, fontWeight: "normal" }}>Color Mode</Text>
+          <Text css={{ fontSize: 13, fontWeight: "normal" }}>Dark Mode</Text>
           <Switch
+            // set the intial value of the colormode switch based
+            // of the current state of the color mode
+            // if the ui is dark , it is switch on , otherwise it is off
             initial={
               globalState$.uiState.colorMode.get() === "dark" ? true : false
             }

@@ -6,7 +6,7 @@ import { useCallback, useRef } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { useWindow } from "../hooks";
-import { readingState } from "../state";
+import { globalState$, readingState } from "../state";
 import ContextMenu, { ContextMenuRefProps } from "./ContextMenu";
 import { AnimatedBox, Box, Button, Image, LinkButton, Text } from "./atoms";
 
@@ -18,6 +18,8 @@ export default function IssueCard(props: Props) {
   const router = useNavigate();
   const utils = trpcReact.useUtils();
   const contextMenuRef = useRef<ContextMenuRefProps>(null);
+
+  const { colorMode } = globalState$.uiState.get();
 
   const points = useObservable<Point>({
     x: 0,
@@ -170,7 +172,10 @@ export default function IssueCard(props: Props) {
               height: "100%",
               position: "absolute",
               zIndex: 1,
-              background: "rgba(0,0,0,0.6)",
+              background: `${
+                colorMode === "dark" ? "rgba(0,0,0,0.5)" : "rgba(0,0,0,0.2)"
+              }`,
+              color: "$white",
               display: "flex",
               flexDirection: "column",
               alignContent: "flex-start",
@@ -180,7 +185,7 @@ export default function IssueCard(props: Props) {
               gap: "$sm",
             }}
           >
-            <Text css={{ fontSize: 14, fontWeight: "lighter", width: "70%" }}>
+            <Text css={{ fontSize: 14, fontWeight: "normal", width: "70%" }}>
               {props.issue.name}
             </Text>
             <Box

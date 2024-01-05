@@ -18,7 +18,7 @@ export default function Layout(props: LayoutProps) {
   const { mutate: minimizeWindow } =
     trpcReact.window.minimizeWindow.useMutation();
 
-  const { layoutBackground } = globalState$.uiState.get();
+  const { layoutBackground, colorMode } = globalState$.uiState.get();
 
   // use ctrl/cmd key + q for quitting the app
   useKeyPress((e) => {
@@ -32,8 +32,11 @@ export default function Layout(props: LayoutProps) {
       css={{
         height: "100vh",
         width: "100%",
-        color: "$white",
-        background: "$background",
+        color: `${colorMode === "dark" ? "$white" : "$black"}`,
+        background: `${
+          colorMode === "dark" ? "$background" : "$backgroundLight"
+        }`,
+        transition: "0.4s ease-out",
       }}
     >
       {/* pulse orb */}
@@ -103,8 +106,10 @@ export default function Layout(props: LayoutProps) {
           >
             <Button
               css={{
-                color: "$lightGray",
-                "&:hover": { color: "$white" },
+                color: `${colorMode === "dark" ? "$lightGray" : "$blackMuted"}`,
+                "&:hover": {
+                  color: `${colorMode === "dark" ? "$white" : "$black"}`,
+                },
                 display: "flex",
                 alignContent: "center",
                 alignItems: "center",
@@ -116,8 +121,10 @@ export default function Layout(props: LayoutProps) {
             </Button>
             <Button
               css={{
-                color: "$lightGray",
-                "&:hover": { color: "$white" },
+                color: `${colorMode === "dark" ? "$lightGray" : "$blackMuted"}`,
+                "&:hover": {
+                  color: `${colorMode === "dark" ? "$white" : "$black"}`,
+                },
                 display: "flex",
                 alignContent: "center",
                 alignItems: "center",
@@ -129,7 +136,7 @@ export default function Layout(props: LayoutProps) {
             </Button>
             <Button
               css={{
-                color: "$lightGray",
+                color: `${colorMode === "dark" ? "$lightGray" : "$blackMuted"}`,
                 "&:hover": { color: "$danger" },
                 display: "flex",
                 alignContent: "center",

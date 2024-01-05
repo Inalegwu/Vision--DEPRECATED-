@@ -10,6 +10,8 @@ const FloatingNavigation = observer(() => {
   const visible = useObservable(true);
   const mouseOver = useObservable(false);
 
+  const { colorMode } = globalState$.uiState.get();
+
   // the saved navigation position from
   // global state
   // this can be edited and saved back into
@@ -62,19 +64,24 @@ const FloatingNavigation = observer(() => {
       {visible.get() && (
         <AnimatedBox
           initial={{
+            // start outside of the screen view
             top: `${window.innerHeight}px`,
           }}
           animate={{
+            // animate into view into saved position
             top: `${navPos.get().y}px`,
           }}
           exit={{
+            // exit stage center
             top: `${window.innerHeight}px`,
           }}
           onMouseOver={handleMouseOver}
           onMouseLeave={handleMouseLeave}
           css={{
             borderRadius: "$xl",
-            background: "$blackMuted",
+            background: `${
+              colorMode === "dark" ? "$blackMuted" : "$lightGray"
+            }`,
             backdropFilter: "blur(1000px)",
             display: "flex",
             alignContent: "center",
@@ -88,7 +95,13 @@ const FloatingNavigation = observer(() => {
           <NavLink
             to="/"
             style={({ isActive }) => ({
-              color: `${isActive ? "#74228d" : "rgba(255,255,255,0.3)"}`,
+              color: `${
+                isActive
+                  ? "#74228d"
+                  : colorMode === "dark"
+                    ? "rgba(255,255,255,0.3)"
+                    : "rgba(0,0,0,0.5)"
+              }`,
             })}
             onMouseOver={handleMouseOver}
             onMouseLeave={handleMouseLeave}
@@ -112,9 +125,9 @@ const FloatingNavigation = observer(() => {
               alignItems: "center",
               justifyContent: "center",
               padding: "$xxxl",
-              color: "$lightGray",
+              color: `${colorMode === "dark" ? "$lightGray" : "$blackMuted"}`,
               "&:hover": {
-                color: "$white",
+                color: `${colorMode === "dark" ? "$white" : "$black"}`,
               },
             }}
           >
@@ -140,7 +153,9 @@ const FloatingNavigation = observer(() => {
           >
             <Box
               css={{
-                background: "$lightGray",
+                background: `${
+                  colorMode === "dark" ? "$lightGray" : "$blackMuted"
+                }`,
                 borderRadius: "$full",
                 height: 17,
                 width: "1px",
@@ -148,7 +163,9 @@ const FloatingNavigation = observer(() => {
             />
             <Box
               css={{
-                background: "$lightGray",
+                background: `${
+                  colorMode === "dark" ? "$lightGray" : "$blackMuted"
+                }`,
                 borderRadius: "$full",
                 height: 17,
                 width: "1px",
@@ -156,7 +173,9 @@ const FloatingNavigation = observer(() => {
             />
             <Box
               css={{
-                background: "$lightGray",
+                background: `${
+                  colorMode === "dark" ? "$lightGray" : "$blackMuted"
+                }`,
                 borderRadius: "$full",
                 height: 17,
                 width: "1px",

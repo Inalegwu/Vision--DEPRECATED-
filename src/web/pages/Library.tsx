@@ -50,7 +50,7 @@ export default function Library() {
   // the app state
   // used in useEffect to know where to navigate the user
   // to on first launch
-  const { appState } = globalState$.get();
+  const { appState, uiState } = globalState$.get();
 
   const { mutate: addToLibrary, isLoading: addingToLibrary } =
     trpcReact.library.addToLibrary.useMutation({
@@ -111,12 +111,12 @@ export default function Library() {
     inputRef.current?.blur();
 
     createModalVisible.set(false);
-  }, [collectionName, createCollection]);
+  }, [collectionName, createCollection, createModalVisible]);
 
   const toggleCreateModal = useCallback(() => {
     createModalVisible.set(true);
     inputRef.current?.focus();
-  }, []);
+  }, [createModalVisible]);
 
   return (
     <Layout>
@@ -137,7 +137,9 @@ export default function Library() {
             alignItems: "center",
             alignContent: "center",
             justifyContent: "center",
-            background: "$blackMuted",
+            background: `${
+              uiState.colorMode === "dark" ? "$blackMuted" : "rgba(0,0,0,0.2)"
+            }`,
             backdropFilter: "blur(1000px)",
           }}
         >
@@ -189,7 +191,11 @@ export default function Library() {
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   css={{
-                    background: "$blackMuted",
+                    background: `${
+                      uiState.colorMode === "dark"
+                        ? "$blackMuted"
+                        : "$lightGray"
+                    }`,
                     borderRadius: "$md",
                     padding: "$md",
                     backdropFilter: "blur(500px)",
@@ -222,7 +228,11 @@ export default function Library() {
                       borderRadius: "$md",
                       padding: "$lg",
                       color: "$white",
-                      background: "$blackMuted",
+                      background: `${
+                        uiState.colorMode === "dark"
+                          ? "$blackMuted"
+                          : "$lightGray"
+                      }`,
                       border: "0.1px solid $lightGray",
                     }}
                     onChange={(e) => collectionName.set(e.currentTarget.value)}
@@ -255,8 +265,12 @@ export default function Library() {
             >
               <Button
                 css={{
-                  color: "$white",
-                  background: "$gray",
+                  color: `${
+                    uiState.colorMode === "dark" ? "$white" : "$black"
+                  }`,
+                  background: `${
+                    uiState.colorMode === "dark" ? "$gray" : "$lightGray"
+                  }`,
                   padding: "$lg",
                   borderRadius: "$full",
                   display: "flex",
@@ -265,6 +279,7 @@ export default function Library() {
                   justifyContent: "center",
                   "&:hover": {
                     background: "$primary",
+                    color: "$white",
                   },
                 }}
                 onClick={toggleCreateModal}
@@ -273,8 +288,12 @@ export default function Library() {
               </Button>
               <AnimatedButton
                 css={{
-                  color: "$white",
-                  background: "$gray",
+                  color: `${
+                    uiState.colorMode === "dark" ? "$white" : "$black"
+                  }`,
+                  background: `${
+                    uiState.colorMode === "dark" ? "$gray" : "$lightGray"
+                  }`,
                   padding: "$lg",
                   borderRadius: "$full",
                   transition: "0.5s ease-in-out",
@@ -285,6 +304,7 @@ export default function Library() {
                   gap: "$sm",
                   "&:hover": {
                     background: "$primary",
+                    color: "$white",
                   },
                 }}
                 onClick={() => addToLibrary()}
