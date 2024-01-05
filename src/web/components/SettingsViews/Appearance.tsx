@@ -10,6 +10,8 @@ const Appearance = observer(() => {
   const ambientModeSwitch = useRef<SwitchRefProps>(null);
   const colorModeSwitch = useRef<SwitchRefProps>(null);
 
+  const { colorMode } = globalState$.uiState.get();
+
   const handleAmbientBackgroundClick = useCallback(() => {
     ambientModeSwitch.current?.toggle();
 
@@ -63,7 +65,11 @@ const Appearance = observer(() => {
           />
         </HStack>
         <Text
-          css={{ fontSize: 11, color: "$lightGray", fontWeight: "lighter" }}
+          css={{
+            fontSize: 11,
+            color: `${colorMode === "dark" ? "$lightGray" : "$blackMuted"}`,
+            fontWeight: "lighter",
+          }}
         >
           Enable/Disable Ambient Background in the app. The reader ignores this
           setting
@@ -93,7 +99,11 @@ const Appearance = observer(() => {
           />
         </HStack>
         <Text
-          css={{ fontSize: 11, color: "$lightGray", fontWeight: "lighter" }}
+          css={{
+            fontSize: 11,
+            color: `${colorMode === "dark" ? "$lightGray" : "$blackMuted"}`,
+            fontWeight: "lighter",
+          }}
         >
           Tired of the dark side ? Make your way to the light side , or
           vice-versa. Be careful in the dark though , there's a guy dressed like

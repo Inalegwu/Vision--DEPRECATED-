@@ -2,7 +2,7 @@ import { observer, useObservable } from "@legendapp/state/react";
 import { X } from "@phosphor-icons/react";
 import { AnimatePresence } from "framer-motion";
 import { useCallback } from "react";
-import { settingsView } from "../state";
+import { globalState$, settingsView } from "../state";
 import HStack from "./HStack";
 import { Appearance } from "./SettingsViews";
 import VStack from "./VStack";
@@ -30,6 +30,8 @@ const SwitchSettingsView = (settingsView: ActiveSettingsView) => {
 
 const SettingsView = observer(() => {
   const activeSettingsView = useObservable<ActiveSettingsView>("Appearance");
+
+  const { colorMode } = globalState$.uiState.get();
 
   // change the active settings view type
   // which in turn changes the ui that is being rendered
@@ -76,9 +78,15 @@ const SettingsView = observer(() => {
               css={{
                 width: "25%",
                 height: "100%",
-                background: "$blackMuted",
+                background: `${
+                  colorMode === "dark" ? "$blackMuted" : "$lightGray"
+                }`,
                 backdropFilter: "blur(1000px)",
-                borderRight: "0.1px solid rgba(255,255,255,0.2)",
+                borderRight: `${
+                  colorMode === "dark"
+                    ? "0.1px solid rgba(255,255,255,0.2)"
+                    : "0.1px solid rgba(0,0,0,0.5)"
+                }`,
                 gap: "$md",
               }}
             >
@@ -98,7 +106,7 @@ const SettingsView = observer(() => {
                     alignContent: "center",
                     alignItems: "center",
                     justifyContent: "center",
-                    color: "$white",
+                    color: `${colorMode === "dark" ? "$black" : "$white"}`,
                   }}
                 >
                   <X />
@@ -127,7 +135,11 @@ const SettingsView = observer(() => {
                       borderRadius: "$md",
                       gap: "$md",
                       background: `${
-                        v === activeSettingsView.get() ? "$lightGray" : ""
+                        v === activeSettingsView.get()
+                          ? colorMode === "dark"
+                            ? "$lightGray"
+                            : "$white"
+                          : ""
                       }`,
                     }}
                   >
@@ -151,7 +163,9 @@ const SettingsView = observer(() => {
               css={{
                 width: "75%",
                 height: "100%",
-                background: "$background",
+                background: `${
+                  colorMode === "dark" ? "$background" : "$white"
+                }`,
               }}
             >
               {/* the switchSettingsView function (defined above) renders the 

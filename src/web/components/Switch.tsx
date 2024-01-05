@@ -1,5 +1,6 @@
 import { observer, useObservable } from "@legendapp/state/react";
 import React, { useCallback, useImperativeHandle } from "react";
+import { globalState$ } from "../state";
 import { AnimatedBox, Box } from "./atoms";
 
 export type SwitchRefProps = {
@@ -21,6 +22,8 @@ const Switch = observer(
     ({ onClick, initial }, ref) => {
       const toggled = useObservable(initial || false);
 
+      const { colorMode } = globalState$.uiState.get();
+
       const state = useCallback(() => {
         return toggled.get();
       }, [toggled]);
@@ -35,7 +38,11 @@ const Switch = observer(
         <Box
           css={{
             background: `${
-              toggled.get() ? "$primary" : "rgba(255,255,255,0.1)"
+              toggled.get()
+                ? "$primary"
+                : colorMode === "dark"
+                  ? "rgba(255,255,255,0.1)"
+                  : "rgba(0,0,0,0.2)"
             }`,
             borderRadius: "$full",
             width: "7%",
