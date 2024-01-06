@@ -17,7 +17,14 @@ const Appearance = observer(() => {
 
     const newState = ambientModeSwitch.current?.state();
 
-    globalState$.uiState.layoutBackground.set(newState!);
+    // if for some reason newState
+    // returns undefined , I want to know about it
+    if (newState === undefined) {
+      console.log("New State Returned Undefined");
+      return;
+    }
+
+    globalState$.uiState.layoutBackground.set(newState);
   }, []);
 
   const handleColorModeChange = useCallback(() => {
