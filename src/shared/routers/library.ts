@@ -35,6 +35,9 @@ export const libraryRouter = router({
           sortedFiles[0]?.data?.buffer || sortedFiles[1]?.data?.buffer!,
         );
 
+        // use the filepath to create the name of the
+        // issue , as the image content cannot be trusted
+        // to have the appropriate name
         const name = filePaths[0]
           .replace(/^.*[\\\/]/, "")
           .replace(/\.[^/.]+$/, "")
@@ -163,6 +166,7 @@ export const libraryRouter = router({
       trackEvent("error_occured", {
         router: "collection",
         function: "addToLibrary",
+        error: e instanceof Error ? e.message : "untraceable",
       });
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
@@ -204,6 +208,7 @@ export const libraryRouter = router({
       trackEvent("error_occured", {
         router: "collection",
         function: "getLibrary",
+        error: e instanceof Error ? e.message : "untraceable",
       });
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",

@@ -42,6 +42,12 @@ export const issueRouter = router({
         trackEvent("error_occured", {
           router: "issue",
           function: "getIssue",
+          error: e instanceof Error ? e.message : "untraceable",
+        });
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          cause: e,
+          message: "Something went wrong while trying to remove that issue",
         });
       }
     }),
@@ -61,6 +67,7 @@ export const issueRouter = router({
         trackEvent("error_occured", {
           router: "issue",
           function: "removeIssue",
+          error: e instanceof Error ? e.message : "untraceable",
         });
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
@@ -105,6 +112,7 @@ export const issueRouter = router({
         trackEvent("error_occured", {
           router: "issue",
           function: "getIssueData",
+          error: e instanceof Error ? e.message : "untraceable",
         });
         console.log(e);
         throw new TRPCError({

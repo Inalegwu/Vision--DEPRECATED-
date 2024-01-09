@@ -195,9 +195,9 @@ export default function Issue() {
         ...readingState.currentlyReading.get().filter((v) => v.id !== issueId),
         // upsert the current issue
         {
-          id: issueId!,
+          id: issueId,
           page: activeIndexValue,
-          total: issue?.issue.pages.length!,
+          total: issue?.issue.pages.length || 0,
         },
       ]);
       return;
@@ -208,12 +208,12 @@ export default function Issue() {
       ...readingState.currentlyReading.get(),
       // the new issue being added
       {
-        id: issueId!,
+        id: issueId,
         page: activeIndexValue,
         total: issue?.issue.pages.length!,
       },
     ]);
-  }, [activeIndexValue, issueId, issueId, issue]);
+  }, []);
 
   return (
     <Box

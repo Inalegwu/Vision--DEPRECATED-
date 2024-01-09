@@ -157,6 +157,9 @@ export function decodeMetaData(data: ArrayBufferLike | Buffer) {
   const decodedMeta = text.decode(data);
 
   // TODO xml serialization
+  const splitMeta=decodedMeta.split("\n");
+
+  console.log(splitMeta);
 
   return decodedMeta;
 }

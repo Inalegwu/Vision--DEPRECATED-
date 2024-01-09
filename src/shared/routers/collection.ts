@@ -33,6 +33,7 @@ export const collectionRouter = router({
         trackEvent("error_occured", {
           router: "collection",
           function: "getIssuesInCollection",
+          error: e instanceof Error ? e.message : "untraceable",
         });
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
@@ -77,6 +78,7 @@ export const collectionRouter = router({
         trackEvent("error_occured", {
           router: "collection",
           function: "addIssueToCollection",
+          error: e instanceof Error ? e.message : "untraceable",
         });
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
@@ -118,6 +120,7 @@ export const collectionRouter = router({
         trackEvent("error_occured", {
           router: "collection",
           function: "deleteCollection",
+          error: e instanceof Error ? e.message : "untraceable",
         });
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
@@ -158,6 +161,7 @@ export const collectionRouter = router({
         trackEvent("error_occured", {
           router: "collection",
           function: "removeIssueFromCollection",
+          error: e instanceof Error ? e.message : "untraceable",
         });
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
@@ -191,6 +195,7 @@ export const collectionRouter = router({
         trackEvent("error_occured", {
           router: "collection",
           function: "createCollection",
+          error: e instanceof Error ? e.message : "untraceable",
         });
         if (e instanceof DrizzleError) {
           throw new TRPCError({
@@ -220,6 +225,7 @@ export const collectionRouter = router({
         trackEvent("error_occured", {
           router: "collection",
           function: "changeCollectionName",
+          error: e instanceof Error ? e.message : "untraceable",
         });
         console.log(e);
         throw new TRPCError({

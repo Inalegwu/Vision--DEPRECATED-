@@ -7,15 +7,15 @@ export class Logger {
     if (prefix) this.prefix = prefix;
   }
 
-  info(...message: any[]) {
+  info(...message: unknown[]) {
     console.log(`${this.prefix}::[Info]=>${message}`);
   }
 
-  success(...message: any[]) {
+  success(...message: unknown[]) {
     console.log(`${this.prefix}::[Success]=>${message}`);
   }
 
-  error(...message: any) {
+  error(...message: unknown[]) {
     console.log(`${this.prefix}::[Error]=>${message}`);
   }
 }

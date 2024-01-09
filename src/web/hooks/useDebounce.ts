@@ -1,9 +1,16 @@
 import { debounce } from "@src/shared/utils";
 import { useEffect, useMemo } from "react";
 
-// return a React hook for running debounced functions
-// takes in the same definition as the debounce function
-// all it does is handle the automatic teardown of the debounce function
+/**
+ *
+ * Returns a debounced event handler and
+ * handles automatic teardown of created
+ * handler
+ *
+ * Hook Interface of debounce function for
+ * React frontend
+ *
+ */
 const useDebounce = <A = unknown[], R = void>(
   fn: (args: A) => R,
   ms: number,
@@ -15,7 +22,7 @@ const useDebounce = <A = unknown[], R = void>(
   );
 
   // tear down our debounce function once it has been run
-  useEffect(() => () => tearDown(), []);
+  useEffect(() => () => tearDown(), [tearDown]);
 
   // expose only the debounce function to the user to attach to
   // event handlers
