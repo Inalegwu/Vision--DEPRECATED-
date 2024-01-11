@@ -150,8 +150,8 @@ export default function Layout(props: LayoutProps) {
           </HStack>
         </Box>
         <Box css={{ width: "100%", height: "96%" }}>{props.children}</Box>
-        <SettingsView />
-        <FloatingNavigation />
+        {/* <SettingsView />
+        <FloatingNavigation /> */}
       </Box>
     </Box>
   );
