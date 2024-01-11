@@ -1,10 +1,8 @@
 import CopyPlugin from "copy-webpack-plugin";
 import HtmlWebpackPlugin from "html-webpack-plugin";
+import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import path from "path";
 import { Configuration } from "webpack";
-lugin;
-from;
-("mini-css-extract-plugin");
 
 const isDev = process.env.NODE_ENV === "development";
 
@@ -54,6 +52,10 @@ const common: Configuration = {
           from: "node_modules/better-sqlite3/",
           to: "node_modules/better-sqlite3/",
         },
+        // {
+        //   from: "./.drizzle/",
+        //   to: "./.drizzle/",
+        // },
       ],
     }),
   ],
