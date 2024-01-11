@@ -18,6 +18,7 @@ const createWindow = () => {
     height: windowSize.height - 50,
     minHeight: 700,
     minWidth: 730,
+    show: false,
     webPreferences: {
       sandbox: false,
       preload: path.resolve(__dirname, "preload.js"),
@@ -28,6 +29,10 @@ const createWindow = () => {
     router: appRouter,
     windows: [mainWindow],
     createContext,
+  });
+
+  mainWindow.webContents.on("dom-ready", () => {
+    mainWindow.show();
   });
 
   mainWindow.loadFile("dist/index.html");

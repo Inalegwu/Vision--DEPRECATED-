@@ -149,6 +149,7 @@ export default function Issue() {
     toast.success("You're now in distraction free mode", {
       position: "top-right",
     });
+
     globalState$.uiState.distractionFreeMode.set(true);
     if (windowStat?.fullscreen_status) return;
 
