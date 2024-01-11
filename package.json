@@ -25,33 +25,23 @@
     "artifactName": "${productName}_${version}_${platform}_${arch}.${ext}",
     "buildDependenciesFromSource": true,
     "icon": "assets/icon.png",
-    "files": [
-      "dist/**/*"
-    ],
+    "files": ["dist/**/*"],
     "directories": {
-      "output": "release/${version}"
+      "output": "release/"
     },
     "mac": {
-      "target": [
-        "dmg",
-        "zip"
-      ]
+      "target": ["dmg", "zip"]
     },
     "win": {
       "target": [
         {
           "target": "nsis",
-          "arch": [
-            "x64"
-          ]
+          "arch": ["x64"]
         }
       ]
     },
     "linux": {
-      "target": [
-        "AppImage",
-        "deb"
-      ]
+      "target": ["AppImage", "deb"]
     },
     "nsis": {
       "oneClick": false,
@@ -60,9 +50,7 @@
     }
   },
   "electronmon": {
-    "patterns": [
-      "dist/**/*"
-    ]
+    "patterns": ["dist/**/*"]
   },
   "dependencies": {
     "@aptabase/electron": "^0.3.1",
