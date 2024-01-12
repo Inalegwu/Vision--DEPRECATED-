@@ -201,7 +201,6 @@ export default function Issue() {
           total: issue?.issue.pages.length || 0,
         },
       ]);
-      return;
     }
     // if the issues doesn't already exist
     readingState.currentlyReading.set([
@@ -214,7 +213,7 @@ export default function Issue() {
         total: issue?.issue.pages.length!,
       },
     ]);
-  }, []);
+  }, [activeIndexValue, readingState, issue, readingState, router]);
 
   return (
     <Box
