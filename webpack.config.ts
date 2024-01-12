@@ -11,6 +11,7 @@ const common: Configuration = {
   externals: {
     fsevents: "fsevents",
     "better-sqlite3": "commonjs better-sqlite3",
+    "node-unrar-js":"node-unrar-js"
   },
   output: {
     publicPath: "./",
