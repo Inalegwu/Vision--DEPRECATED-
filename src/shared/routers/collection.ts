@@ -33,7 +33,7 @@ export const collectionRouter = router({
         trackEvent("error_occured", {
           router: "collection",
           function: "getIssuesInCollection",
-          error: e instanceof Error ? e.message : "untraceable",
+          error: `${e}`,
         });
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
@@ -78,7 +78,7 @@ export const collectionRouter = router({
         trackEvent("error_occured", {
           router: "collection",
           function: "addIssueToCollection",
-          error: e instanceof Error ? e.message : "untraceable",
+          error: `${e}`,
         });
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
@@ -120,7 +120,7 @@ export const collectionRouter = router({
         trackEvent("error_occured", {
           router: "collection",
           function: "deleteCollection",
-          error: e instanceof Error ? e.message : "untraceable",
+          error: `${e}`,
         });
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
@@ -161,7 +161,7 @@ export const collectionRouter = router({
         trackEvent("error_occured", {
           router: "collection",
           function: "removeIssueFromCollection",
-          error: e instanceof Error ? e.message : "untraceable",
+          error: `${e}`,
         });
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
@@ -195,7 +195,7 @@ export const collectionRouter = router({
         trackEvent("error_occured", {
           router: "collection",
           function: "createCollection",
-          error: e instanceof Error ? e.message : "untraceable",
+          error: `${e}`,
         });
         if (e instanceof DrizzleError) {
           throw new TRPCError({
@@ -225,7 +225,7 @@ export const collectionRouter = router({
         trackEvent("error_occured", {
           router: "collection",
           function: "changeCollectionName",
-          error: e instanceof Error ? e.message : "untraceable",
+          error: `${e}`,
         });
         console.log(e);
         throw new TRPCError({

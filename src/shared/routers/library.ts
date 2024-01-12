@@ -213,7 +213,7 @@ export const libraryRouter = router({
       trackEvent("error_occured", {
         router: "collection",
         function: "getLibrary",
-        error: e instanceof Error ? e.message : "untraceable",
+        error: `${e}`,
       });
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
