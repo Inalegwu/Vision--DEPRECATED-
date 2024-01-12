@@ -36,7 +36,7 @@ export default function Collection() {
     return;
   }
 
-  const inputRef=useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
   const issuesListVisible = useObservable(false);
   const editingName = useObservable(false);
   const deleteModalVisible = useObservable(false);
@@ -51,7 +51,7 @@ export default function Collection() {
         onSuccess: (d) => {
           name.set(d?.collection?.name || "");
         },
-      }
+      },
     );
 
   // use this to populate the list of issues to add to the collection
@@ -87,17 +87,17 @@ export default function Collection() {
       },
     });
 
-    // add an issue to the collection
+  // add an issue to the collection
   const addToLibrary = useCallback(
     (v: string) => {
       addIssueToLibrary({ issueId: v, collectionId: collectionId || "" });
     },
-    [collectionId, addIssueToLibrary]
+    [collectionId, addIssueToLibrary],
   );
 
   // change the name of the collection
   const updateName = useCallback(() => {
-    changeName({ id: collectionId || "", name: name.get() });
+    changeName({ id: collectionId, name: name.get() });
   }, [name, collectionId, changeName]);
 
   // delete this collection from the database
@@ -109,15 +109,15 @@ export default function Collection() {
   }, [collection, deleteCollectionFromDB]);
 
   // handle clicking the edit button
-  const handleEditClick=useCallback(()=>{
-    if(editingName.get()===false){
+  const handleEditClick = useCallback(() => {
+    if (editingName.get() === false) {
       inputRef.current?.focus();
       editingName.set(true);
-    }else{
+    } else {
       inputRef.current?.blur();
       editingName.set(false);
     }
-  },[])
+  }, [editingName]);
 
   return (
     <Layout>
@@ -242,7 +242,7 @@ export default function Collection() {
             {editingName.get() ? (
               <>
                 <Input
-                ref={inputRef}
+                  ref={inputRef}
                   css={{
                     padding: "$md",
                     border: "0.2px solid $gray",
@@ -283,7 +283,15 @@ export default function Collection() {
                     }}
                   />
                 )}
-                <Text css={{ fontSize: 30, fontWeight: "normal",letterSpacing:0.3 }}>{name.get()}</Text>
+                <Text
+                  css={{
+                    fontSize: 30,
+                    fontWeight: "normal",
+                    letterSpacing: 0.3,
+                  }}
+                >
+                  {name.get()}
+                </Text>
               </>
             )}
             <HStack

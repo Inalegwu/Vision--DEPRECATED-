@@ -6,7 +6,14 @@ import moment from "moment";
 import { useCallback } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { HStack, Layout, VStack } from "../components";
-import { AnimatedBox, Box, Button, Image, Input, Text } from "../components/atoms";
+import {
+  AnimatedBox,
+  Box,
+  Button,
+  Image,
+  Input,
+  Text,
+} from "../components/atoms";
 
 // TODO implement fetching comic data from comixology
 // and saving it to the database under the metadata table
@@ -21,11 +28,11 @@ export default function EditIssue() {
   }
 
   const issueName = useObservable("");
-  const editingName= useObservable(false);
+  const editingName = useObservable(false);
 
   // navigate backwards
   const goBack = useCallback(() => {
-    // @ts-ignore this allows the app to simply 
+    // @ts-ignore this allows the app to simply
     // go back a page
     router(-1, {
       unstable_viewTransition: true,
@@ -33,17 +40,17 @@ export default function EditIssue() {
   }, [router]);
 
   // get the issues information , like the name and the rest
-  const { data: issue, isLoading:gettingIssue } =
+  const { data: issue, isLoading: gettingIssue } =
     trpcReact.issue.getIssueData.useQuery(
       { id: issueId || "" },
       {
         onSuccess: (d) => {
           issueName.set(d?.data?.name);
         },
-      }
+      },
     );
 
-    // apply the name changes from the app
+  // apply the name changes from the app
   const { mutate: updateIssueName, isLoading: _updatingIssue } =
     trpcReact.issue.changeIssueName.useMutation({
       onSuccess: () => {
@@ -53,7 +60,7 @@ export default function EditIssue() {
       },
     });
 
-    // trigger the update on enter click
+  // trigger the update on enter click
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLInputElement>) => {
       if (e.key === "Enter") {
@@ -64,12 +71,14 @@ export default function EditIssue() {
         editingName.set(false);
       }
     },
-    [issueName, updateIssueName, issueId]
+    [issueName, updateIssueName, issueId, editingName],
   );
 
   return (
     <Layout>
-      <Box css={{ width: "100%", height: "100%", display: "flex" ,padding:"$sm"}}>
+      <Box
+        css={{ width: "100%", height: "100%", display: "flex", padding: "$sm" }}
+      >
         {/* left content/metadata */}
         <VStack
           alignContent="flex-start"
@@ -143,9 +152,9 @@ export default function EditIssue() {
                   alignContent: "center",
                   alignItems: "center",
                   justifyContent: "center",
-                  background:"$blackMuted",
-                  borderRadius:"$full",
-                  padding:"$lg",
+                  background: "$blackMuted",
+                  borderRadius: "$full",
+                  padding: "$lg",
                   "&:hover": { color: "$primary" },
                 }}
               >
@@ -190,7 +199,7 @@ export default function EditIssue() {
             alignContent: "center",
             alignItems: "center",
             justifyContent: "center",
-            gap:"$md"
+            gap: "$md",
           }}
         >
           <Image
@@ -202,14 +211,25 @@ export default function EditIssue() {
               border: "0.1px solid $secondary",
             }}
           />
-          {gettingIssue && <AnimatedBox initial={{width:0}} animate={{width:"100%"}} transition={{duration:0.3,ease:"easeOut"}} css={{padding:"$lg",background:"$lightGray",borderRadius:"$md"}}/>}
+          {gettingIssue && (
+            <AnimatedBox
+              initial={{ width: 0 }}
+              animate={{ width: "100%" }}
+              transition={{ duration: 0.3, ease: "easeOut" }}
+              css={{
+                padding: "$lg",
+                background: "$lightGray",
+                borderRadius: "$md",
+              }}
+            />
+          )}
           <Text
             css={{
               width: "50%",
               marginTop: "$lg",
               textAlign: "center",
               fontSize: 20,
-              fontWeight:"bolder"
+              fontWeight: "bolder",
             }}
           >
             {issueName.get()}
