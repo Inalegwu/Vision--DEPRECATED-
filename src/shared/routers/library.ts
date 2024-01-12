@@ -169,7 +169,9 @@ export const libraryRouter = router({
       trackEvent("error_occured", {
         router: "collection",
         function: "addToLibrary",
-        error: e instanceof Error ? e.message : "untraceable",
+        // hacky way of sending the error through
+        // to aptabase
+        error: `${e}`,
       });
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
