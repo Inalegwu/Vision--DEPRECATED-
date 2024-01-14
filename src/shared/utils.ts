@@ -1,21 +1,13 @@
 import { v4 } from "uuid";
 
-
-// is the application in dev mode or not
 export const IS_DEV = process.env.NODE_ENV === "development";
 
-
-// very ,very ,very thin wrap around
-// uuid/v4 to generate random uuid's
 export function generateUUID() {
   const uuid = v4();
 
   return uuid;
 }
 
-// utility function to convert the array buffer data gotten
-// from the archives extracted content to an image as b64 text which
-// allows it to be rendered as a data url in the app
 export function convertToImageUrl(buffer: ArrayBufferLike): string {
   const b64 = Buffer.from(buffer).toString("base64");
   const dataUrl = `data:image/png;base64,${b64}`;
@@ -23,11 +15,6 @@ export function convertToImageUrl(buffer: ArrayBufferLike): string {
   return dataUrl;
 }
 
-// sort the pages/content of an archive.in this case the pages
-// this allows us ensure that pages are stored in the correct order
-// the database so that reading exprience can be maintained
-// this code was kindly borrowed from codedreads kthoom comic book
-// reader
 export function sortPages(a: string, b: string) {
   // Strip off file extension.
   const aName = a.replace(/\.[^/.]+$/, "");
@@ -48,53 +35,29 @@ export function sortPages(a: string, b: string) {
   return a > b ? 1 : -1;
 }
 
-// clamp values within a range
-// used when there are gesture
-// related events in the application
 export function clamp(num: number, min: number, max: number): number {
   return Math.max(Math.min(num, max), min);
 }
 
-// prevent one action from being triggered multiple times
-// takes in a function and a millisecond count
-// the function is the event handler that will be attached to
-// say a button for instance
-// the ms is the time interval for an action to be fired
-// once one action is loaded up , event triggers after will cause the last
-// event to be discarded in favour of the new one
-// see src/web/hooks/useDebounce for React hook definition
 export function debounce<A = unknown[], R = void>(
   fn: (args: A) => R,
   ms: number,
 ): [(args: A) => Promise<R>, () => void] {
-  // declare the timeout function
-  // NodeJS.Timeout , is a reference to the setTimeout function
-  let timer: NodeJS.Timeout;
+  let t: NodeJS.Timeout;
 
-  // this is our debounced function , the core of this functionality
-  // it returns a new promise that is resolved after the timespan passed
-  // in as ms
   const debouncedFn = (args: A): Promise<R> =>
     new Promise((resolve) => {
-      // if there is already a timer
-      // clear it
-      if (timer) {
-        clearTimeout(timer);
+      if (t) {
+        clearTimeout(t);
       }
 
-      // create a timeout to resolve
-      // our function parameter after our ms time
-      timer = setTimeout(() => {
+      t = setTimeout(() => {
         resolve(fn(args));
       }, ms);
     });
 
-    // a global tear down function that clears the timer once
-    // the function has been resolved
-  const tearDown = () => clearTimeout(timer);
+  const tearDown = () => clearTimeout(t);
 
-  // return the debounced function and the tearDown function
-  // to allow for cleanup when used
   return [debouncedFn, tearDown];
 }
 
@@ -116,7 +79,6 @@ export const LOADING_PHRASES = [
   "What is a Batman who Laughs ???",
   "Making sure the writers aren't bullying Peter",
   "Listening to JJJ's Podcast",
-  "Swingin' Through Town",
   "Help!!!",
   "Rebooting the Multiverse",
   "Helping out Awesome Facial Hair Bros",
@@ -136,7 +98,12 @@ export const LOADING_PHRASES = [
   "Excelsior",
   "Alfred is the Real Batman , Trust Me",
   "Fending off Para-Demons",
-  "You can Tell I was Built by a DC Fan , Can't You ?",
+  "You can tell I was built by a DC fan , can't you ?",
+  "I will break the Bat",
+  "I actually quite liked Tom Hardy's Bane",
+  "Kevin Conroy is my Batman",
+  "WonderBat > Bat&Cat , Fight Me",
+  "Miguel had a point though 🤷‍♂️🤔",
 ];
 
 // gives a random index
@@ -157,9 +124,21 @@ export function decodeMetaData(data: ArrayBufferLike | Buffer) {
   const decodedMeta = text.decode(data);
 
   // TODO xml serialization
-  const splitMeta=decodedMeta.split("\n");
+  const splitMeta = decodedMeta.split("\n");
 
   console.log(splitMeta);
 
   return decodedMeta;
+}
+
+export function upsert(array: unknown[], item: unknown) {
+  // check if the element in the array
+  // and the search item match
+  const exists = array.find((v) => v === item);
+
+  if (exists) {
+    array.push([...array.filter((v) => v !== item), item]);
+  }
+
+  array.push([...array, item]);
 }

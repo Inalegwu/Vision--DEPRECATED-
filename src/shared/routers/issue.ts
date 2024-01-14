@@ -3,12 +3,19 @@ import { issues, pages } from "@shared/schema";
 import { publicProcedure, router } from "@src/trpc";
 import { TRPCError } from "@trpc/server";
 import { eq } from "drizzle-orm";
-import z from "zod";
+import * as v from "valibot";
 
 // all actions that can be carried out on an issue
 export const issueRouter = router({
   getIssue: publicProcedure
-    .input(z.object({ id: z.string() }))
+    .input((x) =>
+      v.parse(
+        v.object({
+          id: v.string(),
+        }),
+        x,
+      ),
+    )
     .query(async ({ ctx, input }) => {
       try {
         const issue = await ctx.db.query.issues.findFirst({
@@ -52,7 +59,14 @@ export const issueRouter = router({
       }
     }),
   removeIssue: publicProcedure
-    .input(z.object({ id: z.string() }))
+    .input((x) =>
+      v.parse(
+        v.object({
+          id: v.string(),
+        }),
+        x,
+      ),
+    )
     .mutation(async ({ ctx, input }) => {
       trackEvent("Delete Issue");
       try {
@@ -77,7 +91,14 @@ export const issueRouter = router({
       }
     }),
   getIssueData: publicProcedure
-    .input(z.object({ id: z.string() }))
+    .input((x) =>
+      v.parse(
+        v.object({
+          id: v.string(),
+        }),
+        x,
+      ),
+    )
     .query(async ({ ctx, input }) => {
       try {
         const issue = await ctx.db.query.issues.findFirst({
@@ -123,7 +144,15 @@ export const issueRouter = router({
       }
     }),
   changeIssueName: publicProcedure
-    .input(z.object({ id: z.string(), newName: z.string() }))
+    .input((x) =>
+      v.parse(
+        v.object({
+          newName: v.string(),
+          id: v.string(),
+        }),
+        x,
+      ),
+    )
     .mutation(async ({ ctx, input }) => {
       try {
         await ctx.db
@@ -146,10 +175,13 @@ export const issueRouter = router({
       }
     }),
   getIssuePageLength: publicProcedure
-    .input(
-      z.object({
-        id: z.string(),
-      }),
+    .input((x) =>
+      v.parse(
+        v.object({
+          id: v.string(),
+        }),
+        x,
+      ),
     )
     .query(async ({ ctx, input }) => {
       const pages = await ctx.db.query.pages.findMany({

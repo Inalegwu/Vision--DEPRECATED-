@@ -81,7 +81,7 @@ export default function Library() {
   // change the loading phrase every 4 seconds
   useInterval(() => {
     phraseIndex.set(getRandomIndex(0, LOADING_PHRASES.length - 1));
-  }, 4000);
+  }, 6000);
 
   useEffect(() => {
     // is the the users first launch of the app ???

@@ -32,9 +32,7 @@ export const libraryRouter = router({
         );
 
         const thumbnailUrl = convertToImageUrl(
-          sortedFiles[0]?.data?.buffer ||
-            sortedFiles[1]?.data?.buffer ||
-            sortedFiles[2]?.data.buffer,
+          sortedFiles[0]?.data?.buffer || sortedFiles[1]?.data?.buffer,
         );
 
         // use the filepath to create the name of the
@@ -116,8 +114,7 @@ export const libraryRouter = router({
       // in that folder
       const thumbnailUrl = convertToImageUrl(
         sortedFiles[0]?.extraction?.buffer ||
-          sortedFiles[1]?.extraction?.buffer ||
-          sortedFiles[2]?.extraction?.buffer!,
+          sortedFiles[1]?.extraction?.buffer!,
       );
 
       const name = filePaths[0]

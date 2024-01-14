@@ -11,7 +11,10 @@ const common: Configuration = {
   externals: {
     fsevents: "fsevents",
     "better-sqlite3": "commonjs better-sqlite3",
-    "node-unrar-js":"node-unrar-js"
+  },
+  experiments: {
+    asyncWebAssembly: true,
+    syncWebAssembly: true,
   },
   output: {
     publicPath: "./",
@@ -49,10 +52,6 @@ const common: Configuration = {
   plugins: [
     new CopyPlugin({
       patterns: [
-        {
-          from: "node_modules/better-sqlite3/",
-          to: "node_modules/better-sqlite3/",
-        },
         {
           from: "node_modules/node-unrar-js/",
           to: "node_modules/node-unrar-js/",

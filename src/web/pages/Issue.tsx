@@ -35,29 +35,20 @@ export default function Issue() {
     return;
   }
 
-  // application state
   const { uiState } = globalState$.get();
   const activeLayout = globalState$.uiState.readerLayout.get();
 
-  // if the user has a currently reading state saved, it will
-  // be used to render a progress bar for the users reading progress
-  // this will also enable somethings in the future as well.
   const currentlyReading = readingState.currentlyReading
     .get()
     .find((v) => v.id === issueId);
 
-  // internal state
   const activeIndex = useObservable<number>(currentlyReading?.page || 0);
   const mouseOver = useObservable<boolean>(false);
   const navigationShowing = useObservable<boolean>(false);
 
-  // use these values where it would cause Rules of Hooks errors
-  // i.e conditionals and the rest
   const activeIndexValue = activeIndex.get();
   const navigationShowingValue = navigationShowing.get();
 
-  // debounce the users page navigation keypress
-  // to prevent trigerring events multiple times
   const keyPress = useDebounce((e: KeyboardEvent) => {
     if (e.keyCode === 91 || e.keyCode === 104) {
       handleLeftClick();
@@ -70,7 +61,6 @@ export default function Issue() {
     }
   }, 100);
 
-  // get the issue data
   const { data: issue, isLoading: loadingIssue } =
     trpcReact.issue.getIssue.useQuery(
       {
@@ -83,42 +73,28 @@ export default function Issue() {
       },
     );
 
-  // maximizes the window for either distraction free mode or just activating
-  // fullscreen mode
   const { mutate: maximizeWindow, data: windowStat } =
     trpcReact.window.maximizeWindow.useMutation();
 
-  // show the navigation overlay on mouse move
   useWindow("mousemove", () => {
     if (!navigationShowing.get()) {
       navigationShowing.set(true);
     }
   });
 
-  // Trigger the panel change
-  // when the appropriate navigation keys
-  // are pressed
   useKeyPress(keyPress);
 
-  // hide the navigation view 4 seconds after showing
-  // if the mouse isn't overlapping any action element
   useTimeout(() => {
     if (navigationShowing.get() && !mouseOver.get()) {
       navigationShowing.set(false);
     }
   }, 4000);
 
-  // takes the user to the next
-  // panel
   const handleRightClick = useCallback(() => {
-    // on default layout
     if (activeIndex.get() === issue?.issue?.pages?.length!) {
       return;
     }
 
-    // the users active layout style is double layout
-    // stop the user from moving forward when the next page
-    // is the issues page length + 2
     if (
       activeLayout === "DoublePage" &&
       activeIndex.get() === issue?.issue?.pages?.length! - 2
@@ -126,14 +102,10 @@ export default function Issue() {
       return;
     }
 
-    // if none of the cases above , increment page count
     activeIndex.set(activeIndex.get() + 1);
   }, [activeIndex, issue, activeLayout]);
 
-  // Takes the user back to the previous panel
   const handleLeftClick = useCallback(() => {
-    // if we are currently on the first page , do absolutely nothing
-    // I'll probably make this a wrap around
     if (activeIndex.get() === 0) {
       return;
     }
@@ -141,10 +113,6 @@ export default function Issue() {
     activeIndex.set(activeIndex.get() - 1);
   }, [activeIndex]);
 
-  // turn on distraction free mode
-  // this hides the navigation ui and stops listening for
-  // mouse moves, no distractions
-  // this also takes the app into fullscreen mode for full immersion
   const toggleDistractionFreeMode = useCallback(() => {
     toast.success("You're now in distraction free mode", {
       position: "top-right",
@@ -156,45 +124,28 @@ export default function Issue() {
     maximizeWindow();
   }, [maximizeWindow, windowStat]);
 
-  // turns on or off ambient background for the users reader view
-  // ambient mode basically uses the colors from the image as a background effect
-  // when active.
-  // When inactive , the user has a plain black background
   const toggleAmbientBackground = useCallback(() => {
     globalState$.uiState.ambientBackground.set(!uiState.ambientBackground);
   }, [uiState.ambientBackground]);
 
-  // change the users reader layout
   const toggleReaderLayout = useCallback((layout: ReaderLayout) => {
     globalState$.uiState.readerLayout.set(layout);
   }, []);
 
-  // save the users reading state
-  // this allows the user to jump back into a specific spot
-  // when they leave the issue
-  // also useful for showing reading progress in other parts of the app
   const saveIssueReadingState = useCallback(() => {
-    // update the currently reading list
     // @ts-ignore goes back a page
     router(-1, {
       preventScrollReset: true,
       unstable_viewTransition: true,
     });
-    // check if the issue is already
-    // saved in the reading state list
+
     const found = readingState.currentlyReading
       .get()
       .find((v) => v.id === issueId);
 
-    // if the issue is already saved
     if (found) {
-      // this is currently very mess
-      // I have to find a way to make
-      // cleaner and easier to follow
       readingState.currentlyReading.set([
-        // keep all other issues
         ...readingState.currentlyReading.get().filter((v) => v.id !== issueId),
-        // upsert the current issue
         {
           id: issueId,
           page: activeIndexValue,
@@ -202,18 +153,15 @@ export default function Issue() {
         },
       ]);
     }
-    // if the issues doesn't already exist
     readingState.currentlyReading.set([
-      // the previous issues already saved
       ...readingState.currentlyReading.get(),
-      // the new issue being added
       {
         id: issueId,
         page: activeIndexValue,
         total: issue?.issue.pages.length!,
       },
     ]);
-  }, [activeIndexValue, readingState, issue, readingState, router]);
+  }, [activeIndexValue, issue, router]);
 
   return (
     <Box

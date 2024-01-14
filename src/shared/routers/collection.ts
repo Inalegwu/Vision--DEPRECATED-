@@ -2,17 +2,20 @@ import { trackEvent } from "@aptabase/electron/main";
 import { publicProcedure, router } from "@src/trpc";
 import { TRPCError } from "@trpc/server";
 import { DrizzleError, eq } from "drizzle-orm";
-import { z } from "zod";
+import * as v from "valibot";
 import { collections, issues } from "../schema";
 import { generateUUID } from "../utils";
 
 // all actions that can be carried out on a collection and its contents
 export const collectionRouter = router({
   getIssuesInCollection: publicProcedure
-    .input(
-      z.object({
-        id: z.string().refine((v) => v.trim),
-      }),
+    .input((x) =>
+      v.parse(
+        v.object({
+          id: v.string([v.toTrimmed()]),
+        }),
+        x,
+      ),
     )
     .query(async ({ ctx, input }) => {
       try {
@@ -43,11 +46,14 @@ export const collectionRouter = router({
       }
     }),
   addIssueToCollection: publicProcedure
-    .input(
-      z.object({
-        issueId: z.string().refine((v) => v.trim),
-        collectionId: z.string().refine((v) => v.trim),
-      }),
+    .input((x) =>
+      v.parse(
+        v.object({
+          collectionId: v.string([v.toTrimmed()]),
+          issueId: v.string([v.toTrimmed()]),
+        }),
+        x,
+      ),
     )
     .mutation(async ({ ctx, input }) => {
       try {
@@ -88,10 +94,13 @@ export const collectionRouter = router({
       }
     }),
   deleteCollection: publicProcedure
-    .input(
-      z.object({
-        id: z.string().refine((v) => v.trim),
-      }),
+    .input((x) =>
+      v.parse(
+        v.object({
+          id: v.string([v.toTrimmed()]),
+        }),
+        x,
+      ),
     )
     .mutation(async ({ ctx, input }) => {
       try {
@@ -130,7 +139,14 @@ export const collectionRouter = router({
       }
     }),
   removeIssueFromCollection: publicProcedure
-    .input(z.object({ id: z.string() }))
+    .input((x) =>
+      v.parse(
+        v.object({
+          id: v.string([v.toTrimmed()]),
+        }),
+        x,
+      ),
+    )
     .mutation(async ({ ctx, input }) => {
       try {
         const issue = await ctx.db.query.issues.findFirst({
@@ -171,10 +187,13 @@ export const collectionRouter = router({
       }
     }),
   createCollection: publicProcedure
-    .input(
-      z.object({
-        name: z.string().refine((v) => v.trim),
-      }),
+    .input((x) =>
+      v.parse(
+        v.object({
+          name: v.string([v.toTrimmed()]),
+        }),
+        x,
+      ),
     )
     .mutation(async ({ ctx, input }) => {
       try {
@@ -207,11 +226,14 @@ export const collectionRouter = router({
       }
     }),
   changeCollectionName: publicProcedure
-    .input(
-      z.object({
-        id: z.string(),
-        name: z.string(),
-      }),
+    .input((x) =>
+      v.parse(
+        v.object({
+          name: v.string([v.toTrimmed()]),
+          id: v.string([v.toTrimmed()]),
+        }),
+        x,
+      ),
     )
     .mutation(async ({ ctx, input }) => {
       try {

@@ -356,7 +356,7 @@ export default function Collection() {
             flexWrap: "wrap",
             width: "100%",
             gap: "$xxxl",
-            paddingBottom: "$xxxl",
+            paddingBottom: "$hg",
           }}
         >
           {collection?.collection?.issues?.length === 0 && (

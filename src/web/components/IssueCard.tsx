@@ -1,3 +1,4 @@
+import { event } from "@legendapp/state";
 import { useObservable } from "@legendapp/state/react";
 import { Pencil, Trash } from "@phosphor-icons/react";
 import { Issue, Point } from "@shared/types";
@@ -18,6 +19,13 @@ export default function IssueCard(props: Props) {
   const router = useNavigate();
   const utils = trpcReact.useUtils();
   const contextMenuRef = useRef<ContextMenuRefProps>(null);
+
+  const contextMenuClick = event();
+
+  // ! Test this out
+  contextMenuClick.on(() => {
+    contextMenuRef.current?.show();
+  });
 
   const { colorMode } = globalState$.uiState.get();
 
@@ -58,9 +66,10 @@ export default function IssueCard(props: Props) {
         x: e.pageX,
         y: e.pageY,
       });
-      contextMenuRef.current?.show();
+      // contextMenuRef.current?.show();
+      contextMenuClick.fire();
     },
-    [points],
+    [points, contextMenuClick],
   );
 
   useWindow("click", () => {
@@ -137,84 +146,74 @@ export default function IssueCard(props: Props) {
       </ContextMenu>
       <Box
         onContextMenu={handleContextMenu}
+        onClick={handleClick}
         css={{
-          display: "flex",
-          flexDirection: "column",
-          alignContent: "flex-start",
-          alignItems: "flex-start",
-          gap: "$sm",
+          width: 180,
+          height: 275,
+          cursor: "pointer",
+          borderRadius: "$md",
+          position: "relative",
+          overflow: "hidden",
         }}
       >
-        <Box
-          onClick={handleClick}
+        <Image
+          src={props.issue.thumbnailUrl}
+          alt={props.issue.name}
           css={{
-            width: 165,
-            height: 260,
-            cursor: "pointer",
-            borderRadius: "$md",
-            position: "relative",
-            overflow: "hidden",
+            width: "100%",
+            height: "100%",
+            position: "absolute",
+            zIndex: 0,
+          }}
+        />
+        <Box
+          css={{
+            width: "100%",
+            height: "100%",
+            position: "absolute",
+            zIndex: 1,
+            background: `${
+              colorMode === "dark" ? "rgba(0,0,0,0.5)" : "rgba(0,0,0,0.2)"
+            }`,
+            color: "$white",
+            display: "flex",
+            flexDirection: "column",
+            alignContent: "flex-start",
+            alignItems: "flex-start",
+            justifyContent: "flex-end",
+            padding: "$md",
+            gap: "$sm",
           }}
         >
-          <Image
-            src={props.issue.thumbnailUrl}
-            alt={props.issue.name}
-            css={{
-              width: "100%",
-              height: "100%",
-              position: "absolute",
-              zIndex: 0,
-            }}
-          />
+          <Text css={{ fontSize: 14, fontWeight: "normal", width: "70%" }}>
+            {props.issue.name}
+          </Text>
           <Box
             css={{
               width: "100%",
-              height: "100%",
-              position: "absolute",
-              zIndex: 1,
-              background: `${
-                colorMode === "dark" ? "rgba(0,0,0,0.5)" : "rgba(0,0,0,0.2)"
-              }`,
-              color: "$white",
-              display: "flex",
-              flexDirection: "column",
-              alignContent: "flex-start",
-              alignItems: "flex-start",
-              justifyContent: "flex-end",
-              padding: "$md",
-              gap: "$sm",
+              borderRadius: "$full",
+              background: "$lightGray",
+              backdropFilter: "blur(300px)",
             }}
           >
-            <Text css={{ fontSize: 14, fontWeight: "normal", width: "70%" }}>
-              {props.issue.name}
-            </Text>
-            <Box
-              css={{
-                width: "100%",
-                borderRadius: "$full",
-                background: "$lightGray",
-                backdropFilter: "blur(300px)",
-              }}
-            >
-              {/* ensure the progress bar is only showing when all this information is available , this allows the ui to be rendered only when the user has that information for the app to consume instead of populating the ui with unnecessary elements */}
-              {currentlyReading?.page && currentlyReading.total ? (
-                <AnimatedBox
-                  initial={{ width: 0 }}
-                  animate={{
-                    width: `${
-                      (currentlyReading?.page / currentlyReading?.total) * 100
-                    }%`,
-                  }}
-                  css={{
-                    background: "$secondary",
-                    borderRadius: "$full",
-                    padding: "$sm",
-                  }}
-                />
-              ) : (
-                <></>
-              )}
-            </Box>
+            {/* ensure the progress bar is only showing when all this information is available , this allows the ui to be rendered only when the user has that information for the app to consume instead of populating the ui with unnecessary elements */}
+            {currentlyReading?.page && currentlyReading.total ? (
+              <AnimatedBox
+                initial={{ width: 0 }}
+                animate={{
+                  width: `${
+                    (currentlyReading?.page / currentlyReading?.total) * 100
+                  }%`,
+                }}
+                css={{
+                  background: "$secondary",
+                  borderRadius: "$full",
+                  padding: "$sm",
+                }}
+              />
+            ) : (
+              <></>
+            )}
           </Box>
         </Box>
       </Box>
