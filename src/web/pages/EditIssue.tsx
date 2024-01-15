@@ -1,19 +1,13 @@
 import { useObservable } from "@legendapp/state/react";
-import { CaretLeft, Pencil, X } from "@phosphor-icons/react";
+import { CaretLeftIcon } from "@radix-ui/react-icons";
+import { Badge, Box, Button, Flex, Text } from "@radix-ui/themes";
 import { trpcReact } from "@shared/config";
 import { IssueParams } from "@shared/types";
 import moment from "moment";
 import { useCallback } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { HStack, Layout, VStack } from "../components";
-import {
-  AnimatedBox,
-  Box,
-  Button,
-  Image,
-  Input,
-  Text,
-} from "../components/atoms";
+import { Layout } from "../components";
+import { AnimatedBox, Image } from "../components/atoms";
 
 // TODO implement fetching comic data from comixology
 // and saving it to the database under the metadata table
@@ -76,132 +70,30 @@ export default function EditIssue() {
 
   return (
     <Layout>
-      <Box
-        css={{ width: "100%", height: "100%", display: "flex", padding: "$sm" }}
-      >
+      <Box className="w-full h-screen flex">
         {/* left content/metadata */}
-        <VStack
-          alignContent="flex-start"
-          alignItems="flex-start"
-          justifyContent="space-between"
-          style={{ height: "100%", width: "60%" }}
-        >
-          {/* navigation */}
-          <HStack
-            alignContent="center"
-            alignItems="center"
-            justifyContent="flex-start"
-            style={{ padding: "$xl", borderRadius: "$md" }}
-          >
-            <Button
-              onClick={goBack}
-              css={{
-                display: "flex",
-                alignContent: "center",
-                alignItems: "center",
-                justifyContent: "center",
-                padding: "$lg",
-                background: "$primary",
-                color: "$white",
-                borderRadius: "$md",
-              }}
-            >
-              <CaretLeft size={16} />
+        <Flex gap="3" direction="column" className="h-full w-[60%] p-4">
+          {/* nav */}
+          <Flex align="start" justify="start">
+            <Button onClick={goBack} variant="soft">
+              <CaretLeftIcon />
             </Button>
-          </HStack>
-          {/* edit metaData view */}
-          <VStack
-            alignContent="center"
-            alignItems="center"
-            justifyContent="center"
-            style={{ width: "100%", padding: "$xl" }}
-          >
-            <HStack
-              style={{ width: "100%" }}
-              alignContent="center"
-              alignItems="center"
-              justifyContent="space-between"
-              gap={5}
-            >
-              {editingName.get() ? (
-                <>
-                  <Input
-                    onKeyDown={handleKeyDown}
-                    value={issueName.get()}
-                    onChange={(e) => issueName.set(e.currentTarget.value)}
-                    css={{
-                      width: "80%",
-                      padding: "$md",
-                      borderRadius: "$md",
-                      border: "0.1px solid $lightGray",
-                      background: "$blackMuted",
-                      color: "$white",
-                    }}
-                  />
-                </>
-              ) : (
-                <>
-                  <Text>{issueName.get()}</Text>
-                </>
-              )}
-              <Button
-                onClick={() => editingName.set(!editingName.get())}
-                css={{
-                  color: "$white",
-                  display: "flex",
-                  alignContent: "center",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  background: "$blackMuted",
-                  borderRadius: "$full",
-                  padding: "$lg",
-                  "&:hover": { color: "$primary" },
-                }}
-              >
-                {editingName.get() ? (
-                  <>
-                    <X size={14} />
-                  </>
-                ) : (
-                  <>
-                    <Pencil size={14} />
-                  </>
-                )}
-              </Button>
-            </HStack>
-          </VStack>
-          {/* misc. info */}
-          <HStack
-            style={{ width: "100%", padding: "$xl" }}
-            alignContent="center"
-            alignItems="center"
-            justifyContent="space-between"
-          >
-            <HStack
-              alignContent="center"
-              alignItems="center"
-              justifyContent="flex-start"
-            >
-              <Text css={{ color: "$lightGray", fontSize: 14 }}>
-                Added {moment(issue?.data.dateCreated).fromNow()}
+          </Flex>
+          <Flex>
+            <Flex align="center" justify="between">
+              <Text size="8" weight="bold">
+                {issue?.data.name}
               </Text>
-            </HStack>
-          </HStack>
-        </VStack>
+            </Flex>
+          </Flex>
+          <Flex>
+            <Badge className="p-1" variant="soft" color="amber">
+              Added {moment(issue?.data.dateCreated).fromNow()}
+            </Badge>
+          </Flex>
+        </Flex>
         {/* right content / image */}
-        <Box
-          css={{
-            height: "100%",
-            width: "40%",
-            padding: "$lg",
-            display: "flex",
-            flexDirection: "column",
-            alignContent: "center",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: "$md",
-          }}
-        >
+        <Box className="h-full w-[40%] p-4 flex flex-col items-center content-center justify-center gap-4">
           <Image
             src={issue?.data.thumbnailUrl}
             css={{
@@ -223,17 +115,7 @@ export default function EditIssue() {
               }}
             />
           )}
-          <Text
-            css={{
-              width: "50%",
-              marginTop: "$lg",
-              textAlign: "center",
-              fontSize: 20,
-              fontWeight: "bolder",
-            }}
-          >
-            {issueName.get()}
-          </Text>
+          <Text className="w-[50%]">{issueName.get()}</Text>
         </Box>
       </Box>
     </Layout>

@@ -7,7 +7,7 @@ import {
   VStack,
 } from "@components/index";
 import { useObservable } from "@legendapp/state/react";
-import { LinkNone1Icon, PlusIcon } from "@radix-ui/react-icons";
+import { Link1Icon, PlusIcon } from "@radix-ui/react-icons";
 import {
   Box,
   Button,
@@ -15,7 +15,7 @@ import {
   Heading,
   Popover,
   Text,
-  TextArea,
+  TextField,
 } from "@radix-ui/themes";
 import { trpcReact } from "@shared/config";
 import { Reasons } from "@shared/types";
@@ -30,7 +30,6 @@ export default function Library() {
   const utils = trpcReact.useUtils();
   const router = useNavigate();
   const inputRef = useRef<HTMLInputElement>(null);
-  const mouseOver = useObservable(false);
   const collectionName = useObservable("");
 
   // gets a random index and uses that to select
@@ -44,7 +43,7 @@ export default function Library() {
   // the app state
   // used in useEffect to know where to navigate the user
   // to on first launch
-  const { appState, uiState } = globalState$.get();
+  const { appState } = globalState$.get();
 
   const { mutate: addToLibrary, isLoading: addingToLibrary } =
     trpcReact.library.addToLibrary.useMutation({
@@ -121,18 +120,22 @@ export default function Library() {
             <Popover.Root>
               <Popover.Trigger>
                 <Button variant="soft" color="gray" className="px-4 py-2">
-                  <LinkNone1Icon />
+                  <Link1Icon />
                   <Text>Create Collection</Text>
                 </Button>
               </Popover.Trigger>
-              <Popover.Content className="p-2 rounded-lg border-none">
+              <Popover.Content className="p-2 rounded-lg max-w-70 min-w-60 border-none">
                 <Flex gap="2" direction="column">
-                  <TextArea
-                    placeholder="Collection Name"
-                    onChange={(e) => collectionName.set(e.currentTarget.value)}
-                  />
+                  <TextField.Root>
+                    <TextField.Input
+                      placeholder="Collection Name"
+                      onChange={(e) =>
+                        collectionName.set(e.currentTarget.value)
+                      }
+                    />
+                  </TextField.Root>
                   <Popover.Close>
-                    <Button color="grass" variant="soft" onClick={create}>
+                    <Button color="mint" variant="soft" onClick={create}>
                       <Text>Create Collection</Text>
                     </Button>
                   </Popover.Close>

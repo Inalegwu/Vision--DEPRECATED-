@@ -27,9 +27,13 @@ export const libraryRouter = router({
 
       // handle zip files
       if (filePaths[0].includes("cbz")) {
-        const { sortedFiles, metaDataFile: _md } = await ZipExtractor(
+        const { sortedFiles, metaDataFile: md } = await ZipExtractor(
           filePaths[0],
         );
+
+        if (md) {
+          const _decodedMeta = decodeMetaData(md.data);
+        }
 
         const thumbnailUrl = convertToImageUrl(
           sortedFiles[0]?.data?.buffer || sortedFiles[1]?.data?.buffer,
@@ -100,9 +104,7 @@ export const libraryRouter = router({
       );
 
       if (md) {
-        const decodedMeta = decodeMetaData(md.extraction?.buffer!);
-        const splitMeta = decodedMeta.split("\n");
-        console.log(splitMeta);
+        const _decodedMeta = decodeMetaData(md.extraction?.buffer!);
       }
 
       const thumbnailUrl = convertToImageUrl(

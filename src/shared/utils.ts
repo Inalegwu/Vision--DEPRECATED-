@@ -123,7 +123,7 @@ export function decodeMetaData(data: ArrayBufferLike | Buffer) {
   const builder = new XMLBuilder();
   const xmlContent = builder.build(mObject);
 
-  console.log(xmlContent["ComicInfo"]);
+  console.log(xmlContent);
 
   return xmlContent;
 }

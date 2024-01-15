@@ -1,4 +1,4 @@
-import { AlertDialog, Button, ContextMenu, Flex, Text } from "@radix-ui/themes";
+import { Box, ContextMenu, Flex, Text } from "@radix-ui/themes";
 import { Issue } from "@shared/types";
 import { trpcReact } from "@src/shared/config";
 import { useCallback } from "react";
@@ -15,9 +15,9 @@ export default function IssueCard(props: Props) {
   const router = useNavigate();
   const utils = trpcReact.useUtils();
 
-  const currentlyReading = readingState.currentlyReading
-    .get()
-    .find((v) => v.id === props.issue.id);
+  const currentlyReading = readingState.currentlyReading.get();
+
+  console.log(currentlyReading);
 
   const { mutate, isLoading: _deleting } =
     trpcReact.issue.removeIssue.useMutation({
@@ -52,21 +52,30 @@ export default function IssueCard(props: Props) {
   return (
     <ContextMenu.Root>
       {/* context menu */}
-      <ContextMenu.Trigger onClick={handleClick} style={{ cursor: "pointer" }}>
-        <Flex
-          direction="column"
-          gap="1"
-          width="auto"
-          height="auto"
-          style={{
-            borderRadius: 20,
-          }}
-        >
-          <Image
-            src={props.issue.thumbnailUrl}
-            className="w-44 h-65 overflow-hidden rounded-md"
-          />
-          <Text weight="light">{props.issue.name}</Text>
+      <ContextMenu.Trigger onClick={handleClick} className="cursor-pointer">
+        <Flex direction="column" gap="1" width="auto" height="auto">
+          <Box className="relative overflow-hidden">
+            <Image
+              src={props.issue.thumbnailUrl}
+              className="w-44 h-65 overflow-hidden rounded-md border-1 border-slate-400"
+            />
+            <Box className="absolute z-1 top-0 left-0 bg-black/40 p-2 flex flex-col items-start justify-end w-full h-[98%] rounded-md">
+              <Text weight="light" size="2" className="w-[95%]">
+                {props.issue.name}
+              </Text>
+              {/* {currentlyReading && savedInfo && (
+                <Box className="w-full bg-gray-500/40 rounded-full">
+                  <AnimatedBox
+                    initial={{ width: "0%" }}
+                    animate={{
+                      width: `${(savedInfo.page / savedInfo.total) % 100}%`,
+                    }}
+                    className="p-1 rounded-full bg-purple-300"
+                  />
+                </Box>
+              )} */}
+            </Box>
+          </Box>
         </Flex>
       </ContextMenu.Trigger>
       <ContextMenu.Content
@@ -77,31 +86,8 @@ export default function IssueCard(props: Props) {
         <ContextMenu.Item onClick={editIssue}>
           <Text>Edit Issue Info</Text>
         </ContextMenu.Item>
-        <ContextMenu.Item color="red">
-          <AlertDialog.Root>
-            <AlertDialog.Trigger color="red">
-              <Text>Delete Issue</Text>
-            </AlertDialog.Trigger>
-            <AlertDialog.Content className="p-2 rounded-lg">
-              <AlertDialog.Title>Delete {props.issue.name}</AlertDialog.Title>
-              <AlertDialog.Description>
-                This will remove {props.issue.name} from your Library , are you
-                sure you want to do that
-              </AlertDialog.Description>
-              <Flex align="center" justify="end" gap="3">
-                <AlertDialog.Cancel>
-                  <Button color="gray" size="2">
-                    Cancel
-                  </Button>
-                </AlertDialog.Cancel>
-                <AlertDialog.Action>
-                  <Button color="red" size="2" onClick={deleteIssue}>
-                    Delete {props.issue.name}
-                  </Button>
-                </AlertDialog.Action>
-              </Flex>
-            </AlertDialog.Content>
-          </AlertDialog.Root>
+        <ContextMenu.Item color="red" onClick={deleteIssue}>
+          Delete {props.issue.name}
         </ContextMenu.Item>
       </ContextMenu.Content>
     </ContextMenu.Root>
