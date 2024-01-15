@@ -21,7 +21,7 @@ ReactDom.createRoot(document.getElementById("root") as HTMLElement).render(
       <trpcReact.Provider client={trpcClient} queryClient={queryClient}>
         <QueryClientProvider client={queryClient}>
           <Theme
-            accentColor="mint"
+            accentColor="iris"
             grayColor="slate"
             radius="large"
             scaling="90%"

@@ -39,6 +39,10 @@ export default function IssueCard(props: Props) {
     router(`/${props.issue.id}`);
   }, [props.issue, router]);
 
+  const editIssue = useCallback(() => {
+    router(`/editIssue/${props.issue.id}`);
+  }, [props.issue, router]);
+
   const deleteIssue = useCallback(() => {
     mutate({
       id: props.issue.id,
@@ -54,25 +58,29 @@ export default function IssueCard(props: Props) {
           gap="1"
           width="auto"
           height="auto"
-          style={{ borderRadius: 20 }}
+          style={{
+            borderRadius: 20,
+          }}
         >
           <Image
             src={props.issue.thumbnailUrl}
             css={{
-              width: 180,
+              width: 183,
+              height: 265,
               borderRadius: "$md",
+              border: "0.1px solid rgba(0,0,0,0.2)",
+              overflow: "hidden",
             }}
           />
           <Text weight="light">{props.issue.name}</Text>
         </Flex>
       </ContextMenu.Trigger>
-      <ContextMenu.Content variant="soft" size="1">
-        <ContextMenu.Item onClick={deleteIssue}>
-          <Text>Delete Issue</Text>
-        </ContextMenu.Item>
-        <ContextMenu.Separator />
-        <ContextMenu.Item>
+      <ContextMenu.Content variant="soft" size="2">
+        <ContextMenu.Item onClick={editIssue}>
           <Text>Edit Issue Info</Text>
+        </ContextMenu.Item>
+        <ContextMenu.Item color="red" onClick={deleteIssue}>
+          <Text>Delete Issue</Text>
         </ContextMenu.Item>
       </ContextMenu.Content>
     </ContextMenu.Root>
