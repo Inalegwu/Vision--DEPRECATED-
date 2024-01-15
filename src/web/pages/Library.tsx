@@ -1,12 +1,4 @@
-import {
-  AnimatedBox,
-  AnimatedButton,
-  AnimatedText,
-  Box,
-  Button,
-  Input,
-  Text,
-} from "@components/atoms";
+import { AnimatedBox, AnimatedText, Box, Input } from "@components/atoms";
 import {
   CollectionCard,
   HStack,
@@ -17,7 +9,15 @@ import {
   VStack,
 } from "@components/index";
 import { useObservable } from "@legendapp/state/react";
-import { Plus } from "@phosphor-icons/react";
+import { LinkNone1Icon, PlusIcon } from "@radix-ui/react-icons";
+import {
+  Button,
+  Flex,
+  Heading,
+  Popover,
+  Text,
+  TextArea,
+} from "@radix-ui/themes";
 import { trpcReact } from "@shared/config";
 import { LibraryFilters, Reasons } from "@shared/types";
 import { LOADING_PHRASES, getRandomIndex } from "@src/shared/utils";
@@ -169,9 +169,7 @@ export default function Library() {
         </AnimatedBox>
         {/* header */}
         <VStack gap={6} style={{ padding: "$xxxl" }}>
-          <Text css={{ fontSize: 30, fontWeight: 400, letterSpacing: 0.4 }}>
-            My Library
-          </Text>
+          <Heading size="7">My Library</Heading>
           <HStack
             width="100%"
             justifyContent="space-between"
@@ -238,20 +236,7 @@ export default function Library() {
                     onChange={(e) => collectionName.set(e.currentTarget.value)}
                     placeholder="Collection Name"
                   />
-                  <Button
-                    onClick={create}
-                    css={{
-                      width: "100%",
-                      padding: "$lg",
-                      borderRadius: "$md",
-                      background: "$primary",
-                      display: "flex",
-                      alignContent: "center",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      color: "$white",
-                    }}
-                  >
+                  <Button onClick={create}>
                     <Text>Create Collection</Text>
                   </Button>
                 </AnimatedBox>
@@ -263,63 +248,37 @@ export default function Library() {
               justifyContent="flex-end"
               gap={5}
             >
+              <Popover.Root>
+                <Popover.Trigger>
+                  <Button variant="soft" radius="full">
+                    <LinkNone1Icon />
+                    <Text>Create Collection</Text>
+                  </Button>
+                </Popover.Trigger>
+                <Popover.Content>
+                  <Flex gap="2" direction="column">
+                    <TextArea
+                      placeholder="Collection Name"
+                      onChange={(e) =>
+                        collectionName.set(e.currentTarget.value)
+                      }
+                    />
+                    <Popover.Close>
+                      <Button variant="soft" onClick={create}>
+                        <Text>Create Collection</Text>
+                      </Button>
+                    </Popover.Close>
+                  </Flex>
+                </Popover.Content>
+              </Popover.Root>
               <Button
-                css={{
-                  color: `${
-                    uiState.colorMode === "dark" ? "$white" : "$black"
-                  }`,
-                  background: `${
-                    uiState.colorMode === "dark" ? "$gray" : "$lightGray"
-                  }`,
-                  padding: "$lg",
-                  borderRadius: "$full",
-                  display: "flex",
-                  alignContent: "center",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  "&:hover": {
-                    background: "$primary",
-                    color: "$white",
-                  },
-                }}
-                onClick={toggleCreateModal}
-              >
-                <Text css={{ fontSize: 12 }}>Create Collection</Text>
-              </Button>
-              <AnimatedButton
-                css={{
-                  color: `${
-                    uiState.colorMode === "dark" ? "$white" : "$black"
-                  }`,
-                  background: `${
-                    uiState.colorMode === "dark" ? "$gray" : "$lightGray"
-                  }`,
-                  padding: "$lg",
-                  borderRadius: "$full",
-                  transition: "0.5s ease-in-out",
-                  display: "flex",
-                  alignContent: "center",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  gap: "$sm",
-                  "&:hover": {
-                    background: "$primary",
-                    color: "$white",
-                  },
-                }}
+                radius="full"
+                variant="soft"
                 onClick={() => addToLibrary()}
               >
-                <Text
-                  css={{
-                    fontSize: 12,
-                    letterSpacing: 0.3,
-                    fontWeight: "lighter",
-                  }}
-                >
-                  Add To Library
-                </Text>
-                <Plus size={11} />
-              </AnimatedButton>
+                <PlusIcon width="12" height="12" />
+                <Text>Add To Library</Text>
+              </Button>
             </HStack>
           </HStack>
         </VStack>
@@ -356,20 +315,11 @@ export default function Library() {
                 justifyContent="center"
                 gap={2}
               >
-                <Text css={{ fontSize: 20, fontWeight: "bold" }}>
+                <Text>
                   It's a bit lonely here , Add Some Issues or Create a
                   Collection
                 </Text>
-                <Button
-                  css={{
-                    background: "$primary",
-                    color: "$white",
-                    borderRadius: "$md",
-                    padding: "$md",
-                    fontSize: 16,
-                  }}
-                  onClick={() => addToLibrary()}
-                >
+                <Button variant="soft" onClick={() => addToLibrary()}>
                   <Text>Add To Library</Text>
                 </Button>
               </VStack>

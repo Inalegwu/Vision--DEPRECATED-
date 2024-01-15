@@ -9,6 +9,9 @@ import { Theme } from "@radix-ui/themes";
 import "@radix-ui/themes/styles.css";
 import { App } from "./App";
 import "./App.css";
+import { globalState$ } from "./state";
+
+const { colorMode } = globalState$.uiState.get();
 
 ReactDom.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
@@ -17,7 +20,13 @@ ReactDom.createRoot(document.getElementById("root") as HTMLElement).render(
     >
       <trpcReact.Provider client={trpcClient} queryClient={queryClient}>
         <QueryClientProvider client={queryClient}>
-          <Theme>
+          <Theme
+            accentColor="mint"
+            grayColor="slate"
+            radius="large"
+            scaling="90%"
+            appearance={colorMode === "dark" ? "dark" : "light"}
+          >
             <App />
           </Theme>
         </QueryClientProvider>

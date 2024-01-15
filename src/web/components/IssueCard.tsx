@@ -1,15 +1,11 @@
-import { event } from "@legendapp/state";
-import { useObservable } from "@legendapp/state/react";
-import { Pencil, Trash } from "@phosphor-icons/react";
-import { Issue, Point } from "@shared/types";
+import { ContextMenu, Flex, Text } from "@radix-ui/themes";
+import { Issue } from "@shared/types";
 import { trpcReact } from "@src/shared/config";
-import { useCallback, useRef } from "react";
+import { useCallback } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-import { useWindow } from "../hooks";
-import { globalState$, readingState } from "../state";
-import ContextMenu, { ContextMenuRefProps } from "./ContextMenu";
-import { AnimatedBox, Box, Button, Image, LinkButton, Text } from "./atoms";
+import { readingState } from "../state";
+import { Image } from "./atoms";
 
 type Props = {
   issue: Issue;
@@ -18,23 +14,6 @@ type Props = {
 export default function IssueCard(props: Props) {
   const router = useNavigate();
   const utils = trpcReact.useUtils();
-  const contextMenuRef = useRef<ContextMenuRefProps>(null);
-
-  const contextMenuClick = event();
-
-  // ! Test this out
-  contextMenuClick.on(() => {
-    contextMenuRef.current?.show();
-  });
-
-  const { colorMode } = globalState$.uiState.get();
-
-  const points = useObservable<Point>({
-    x: 0,
-    y: 0,
-  });
-
-  const contextVisible = contextMenuRef.current?.isVisible();
 
   const currentlyReading = readingState.currentlyReading
     .get()
@@ -60,163 +39,42 @@ export default function IssueCard(props: Props) {
     router(`/${props.issue.id}`);
   }, [props.issue, router]);
 
-  const handleContextMenu = useCallback(
-    (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-      points.set({
-        x: e.pageX,
-        y: e.pageY,
-      });
-      // contextMenuRef.current?.show();
-      contextMenuClick.fire();
-    },
-    [points, contextMenuClick],
-  );
-
-  useWindow("click", () => {
-    if (contextVisible) {
-      contextMenuRef.current?.hide();
-    }
-  });
-
   const deleteIssue = useCallback(() => {
-    contextMenuRef.current?.hide();
     mutate({
       id: props.issue.id,
     });
   }, [props.issue, mutate]);
 
   return (
-    <>
+    <ContextMenu.Root>
       {/* context menu */}
-      <ContextMenu
-        style={{
-          border: "0.12px solid $lightGray",
-          background: "$blackMuted",
-          borderRadius: "$md",
-          backdropFilter: "blur(100px)",
-          display: "flex",
-          flexDirection: "column",
-          alignContent: "center",
-          alignItems: "center",
-          justifyContent: "center",
-          width: 170,
-          height: 70,
-        }}
-        ref={contextMenuRef}
-        points={points.get()}
-      >
-        <LinkButton
-          css={{
-            color: "$white",
-            fontSize: 14,
-            padding: "$lg",
-            borderBottom: "0.1px solid $lightGray",
-            width: "100%",
-            display: "flex",
-            alignContent: "center",
-            alignItems: "center",
-            justifyContent: "flex-start",
-            gap: "$md",
-          }}
-          to={`/editIssue/${props.issue?.id}`}
+      <ContextMenu.Trigger onClick={handleClick} style={{ cursor: "pointer" }}>
+        <Flex
+          direction="column"
+          gap="1"
+          width="auto"
+          height="auto"
+          style={{ borderRadius: 20 }}
         >
-          <Pencil size={14} />
-          <Text css={{ fontSize: 13, fontWeight: "lighter" }}>
-            Edit Issue Info
-          </Text>
-        </LinkButton>
-        <Button
-          onClick={deleteIssue}
-          css={{
-            color: "$danger",
-            padding: "$lg",
-            width: "100%",
-            display: "flex",
-            alignContent: "center",
-            alignItems: "center",
-            justifyContent: "flex-start",
-            gap: "$md",
-          }}
-        >
-          <Trash size={14} />
-          <Text css={{ fontSize: 13, fontWeight: "lighter" }}>
-            Delete Issue
-          </Text>
-        </Button>
-      </ContextMenu>
-      <Box
-        onContextMenu={handleContextMenu}
-        onClick={handleClick}
-        css={{
-          width: 180,
-          height: 275,
-          cursor: "pointer",
-          borderRadius: "$md",
-          position: "relative",
-          overflow: "hidden",
-        }}
-      >
-        <Image
-          src={props.issue.thumbnailUrl}
-          alt={props.issue.name}
-          css={{
-            width: "100%",
-            height: "100%",
-            position: "absolute",
-            zIndex: 0,
-          }}
-        />
-        <Box
-          css={{
-            width: "100%",
-            height: "100%",
-            position: "absolute",
-            zIndex: 1,
-            background: `${
-              colorMode === "dark" ? "rgba(0,0,0,0.5)" : "rgba(0,0,0,0.2)"
-            }`,
-            color: "$white",
-            display: "flex",
-            flexDirection: "column",
-            alignContent: "flex-start",
-            alignItems: "flex-start",
-            justifyContent: "flex-end",
-            padding: "$md",
-            gap: "$sm",
-          }}
-        >
-          <Text css={{ fontSize: 14, fontWeight: "normal", width: "70%" }}>
-            {props.issue.name}
-          </Text>
-          <Box
+          <Image
+            src={props.issue.thumbnailUrl}
             css={{
-              width: "100%",
-              borderRadius: "$full",
-              background: "$lightGray",
-              backdropFilter: "blur(300px)",
+              width: 180,
+              borderRadius: "$md",
             }}
-          >
-            {/* ensure the progress bar is only showing when all this information is available , this allows the ui to be rendered only when the user has that information for the app to consume instead of populating the ui with unnecessary elements */}
-            {currentlyReading?.page && currentlyReading.total ? (
-              <AnimatedBox
-                initial={{ width: 0 }}
-                animate={{
-                  width: `${
-                    (currentlyReading?.page / currentlyReading?.total) * 100
-                  }%`,
-                }}
-                css={{
-                  background: "$secondary",
-                  borderRadius: "$full",
-                  padding: "$sm",
-                }}
-              />
-            ) : (
-              <></>
-            )}
-          </Box>
-        </Box>
-      </Box>
-    </>
+          />
+          <Text weight="light">{props.issue.name}</Text>
+        </Flex>
+      </ContextMenu.Trigger>
+      <ContextMenu.Content variant="soft" size="1">
+        <ContextMenu.Item onClick={deleteIssue}>
+          <Text>Delete Issue</Text>
+        </ContextMenu.Item>
+        <ContextMenu.Separator />
+        <ContextMenu.Item>
+          <Text>Edit Issue Info</Text>
+        </ContextMenu.Item>
+      </ContextMenu.Content>
+    </ContextMenu.Root>
   );
 }

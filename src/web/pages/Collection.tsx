@@ -1,23 +1,20 @@
-import {
-  AnimatedBox,
-  Box,
-  Button,
-  Image,
-  Input,
-  LinkButton,
-  Text,
-} from "@components/atoms";
+import { AnimatedBox, Box, Image } from "@components/atoms";
 import {
   HStack,
   IssueCard,
   IssueSkeleton,
   Layout,
-  Skeleton,
   Spinner,
   VStack,
 } from "@components/index";
 import { useObservable } from "@legendapp/state/react";
-import { CaretLeft, PencilCircle, Plus, Trash, X } from "@phosphor-icons/react";
+import {
+  CaretLeftIcon,
+  Pencil1Icon,
+  PlusIcon,
+  TrashIcon,
+} from "@radix-ui/react-icons";
+import { AlertDialog, Button, Flex, Text } from "@radix-ui/themes";
 import { trpcReact } from "@src/shared/config";
 import { CollectionParams } from "@src/shared/types";
 import { AnimatePresence } from "framer-motion";
@@ -100,6 +97,14 @@ export default function Collection() {
     changeName({ id: collectionId, name: name.get() });
   }, [name, collectionId, changeName]);
 
+  const goBack = useCallback(() => {
+    // @ts-ignore go back
+    router(-1, {
+      preventScrollReset: true,
+      unstable_viewTransition: true,
+    });
+  }, []);
+
   // delete this collection from the database
   // this however doens't delete the issues in said collection
   // because the user might want to hold onto those
@@ -121,117 +126,12 @@ export default function Collection() {
 
   return (
     <Layout>
-      {deleteModalVisible.get() && (
-        <AnimatePresence>
-          <AnimatedBox
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{
-              ease: "easeInOut",
-            }}
-            css={{
-              width: "100%",
-              height: "100%",
-              padding: "$lg",
-              position: "absolute",
-              zIndex: 99999,
-              display: "flex",
-              alignContent: "center",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <VStack
-              alignContent="center"
-              alignItems="center"
-              justifyContent="space-between"
-              style={{
-                background: "$gray",
-                padding: "$lg",
-                borderRadius: "$lg",
-                gap: "$lg",
-                width: "25%",
-                height: "20%",
-              }}
-            >
-              <VStack
-                alignContent="flex-start"
-                alignItems="flex-start"
-                justifyContent="center"
-                style={{ width: "100%" }}
-              >
-                <Text css={{ fontSize: 16, fontWeight: "bold" }}>
-                  Are You Sure You Want To Delete
-                </Text>
-                <Text
-                  css={{ fontSize: 20, fontWeight: "bold", color: "$white" }}
-                >
-                  {collection?.collection?.name}
-                </Text>
-              </VStack>
-              <HStack
-                alignContent="center"
-                alignItems="center"
-                justifyContent="center"
-                style={{ gap: "$sm", width: "100%" }}
-              >
-                <Button
-                  css={{
-                    width: "50%",
-                    padding: "$md",
-                    display: "flex",
-                    alignContent: "center",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    color: "$white",
-                    background: "$danger",
-                    borderRadius: "$md",
-                  }}
-                  disabled={deletingCollection}
-                  onClick={deleteCollection}
-                >
-                  <Text css={{ fontSize: 15 }}>Yes , I'm Sure</Text>
-                </Button>
-                <Button
-                  css={{
-                    background: "$gray",
-                    color: "$white",
-                    borderRadius: "$md",
-                    padding: "$md",
-                    display: "flex",
-                    alignContent: "center",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    width: "50%",
-                  }}
-                  onClick={() => deleteModalVisible.set(false)}
-                >
-                  <Text css={{ fontSize: 15 }}>Cancel</Text>
-                </Button>
-              </HStack>
-            </VStack>
-          </AnimatedBox>
-        </AnimatePresence>
-      )}
       <Box css={{ width: "100%", height: "100%", padding: "$lg" }}>
         <VStack style={{ width: "100%", padding: "$md", gap: "$lg" }}>
           <HStack>
-            <LinkButton
-              to="/"
-              css={{
-                background: "$primary",
-                padding: "$lg",
-                borderRadius: "$md",
-                display: "flex",
-                alignContent: "center",
-                alignItems: "center",
-                justifyContent: "center",
-                color: "$white",
-              }}
-            >
-              <CaretLeft size={16} />
-            </LinkButton>
+            <Button onClick={goBack} size="2" variant="soft">
+              <CaretLeftIcon width="16" height="16" />
+            </Button>
           </HStack>
           <HStack
             alignContent="center"
@@ -239,106 +139,61 @@ export default function Collection() {
             justifyContent="space-between"
             style={{ width: "100%" }}
           >
-            {editingName.get() ? (
-              <>
-                <Input
-                  ref={inputRef}
-                  css={{
-                    padding: "$md",
-                    border: "0.2px solid $gray",
-                    color: "$white",
-                    borderRadius: "$md",
-                    background: "$background",
-                    fontSize: 22,
-                    flex: 0.7,
-                  }}
-                  disabled={changingName}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") {
-                      updateName();
-                    }
-                  }}
-                  value={name.get()}
-                  onChange={(e) => name.set(e.currentTarget.value)}
-                />
-              </>
-            ) : (
-              <>
-                {getting && (
-                  <Skeleton
-                    initial={{ width: "0%" }}
-                    animate={{
-                      width: "80%",
-                    }}
-                    exit={{ width: "0%" }}
-                    transition={{
-                      duration: 0.1,
-                      ease: "easeInOut",
-                      repeat: Infinity,
-                    }}
-                    css={{
-                      padding: "$xxxl",
-                      borderRadius: "$md",
-                      background: "$gray",
-                    }}
-                  />
-                )}
-                <Text
-                  css={{
-                    fontSize: 30,
-                    fontWeight: "normal",
-                    letterSpacing: 0.3,
-                  }}
-                >
-                  {name.get()}
-                </Text>
-              </>
-            )}
+            <Text size="7" weight="medium">
+              {name.get()}
+            </Text>
             <HStack
               alignContent="center"
               alignItems="center"
               justifyContent="flex-end"
               gap={6}
             >
-              <Button
-                css={{
-                  color: "$secondary",
-                  padding: "$lg",
-                  borderRadius: "$full",
-                  background: "$gray",
-                  display: "flex",
-                  alignContent: "center",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  transition: "0.5s ease-in-out",
-                  "&:hover": {
-                    background: "$secondary",
-                    color: "$white",
-                  },
-                }}
-                onClick={handleEditClick}
-              >
-                <PencilCircle size={15} />
+              <Button color="amber" variant="soft" radius="full">
+                <PlusIcon />
+                Add Issue
               </Button>
-              <Button
-                css={{
-                  color: "$danger",
-                  display: "flex",
-                  alignContent: "center",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  background: "$gray",
-                  padding: "$lg",
-                  borderRadius: "$full",
-                  "&:hover": {
-                    background: "$danger",
-                    color: "$white",
-                  },
-                }}
-                onClick={() => deleteModalVisible.set(true)}
-              >
-                <Trash size={15} />
+              <Button variant="soft" radius="full" onClick={handleEditClick}>
+                <Text>Edit Collection</Text>
+                <Pencil1Icon size={15} />
               </Button>
+              <AlertDialog.Root>
+                <AlertDialog.Trigger>
+                  <Button color="red" variant="soft" radius="full">
+                    <Text>Delete Collection</Text>
+                    <TrashIcon size={15} />
+                  </Button>
+                </AlertDialog.Trigger>
+                <AlertDialog.Content style={{ maxWidth: 400 }}>
+                  <AlertDialog.Title size="6">
+                    Delete Collection
+                  </AlertDialog.Title>
+                  <AlertDialog.Description>
+                    <Text size="5">
+                      Are you sure you want to delete{" "}
+                      <Text weight="medium" color="red">
+                        {collection?.collection?.name}
+                      </Text>
+                    </Text>
+                  </AlertDialog.Description>
+                  <Flex gap="3" mt="4">
+                    <AlertDialog.Cancel>
+                      <Button size="2" variant="soft" color="gray">
+                        Cancel
+                      </Button>
+                    </AlertDialog.Cancel>
+                    <AlertDialog.Action>
+                      <Button
+                        size="2"
+                        onClick={deleteCollection}
+                        variant="soft"
+                        color="red"
+                      >
+                        Delete
+                      </Button>
+                    </AlertDialog.Action>
+                  </Flex>
+                </AlertDialog.Content>
+              </AlertDialog.Root>
             </HStack>
           </HStack>
         </VStack>
@@ -372,24 +227,13 @@ export default function Collection() {
                 justifyContent: "center",
               }}
             >
-              <Text css={{ fontSize: 25 }}>Such Empty 😣</Text>
+              <Text>Such Empty 😣</Text>
               <Button
-                css={{
-                  color: "$white",
-                  padding: "$md",
-                  borderRadius: "$md",
-                  background: `${saving ? "gray" : "$secondary"}`,
-                  display: "flex",
-                  alignContent: "center",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  gap: "$md",
-                }}
                 disabled={saving}
                 onClick={() => issuesListVisible.set(true)}
               >
                 <Text>Add To Collection</Text>
-                <Plus />
+                <PlusIcon />
               </Button>
             </Box>
           )}
@@ -487,32 +331,6 @@ export default function Collection() {
           })}
           {getting &&
             [...Array(10)].map((_, idx) => <IssueSkeleton key={`${idx}`} />)}
-          <Button
-            onClick={() => issuesListVisible.set(true)}
-            css={{
-              position: "absolute",
-              zIndex: 1,
-              padding: "$xxl",
-              background: "$gray",
-              backdropFilter: "blur(200px)",
-              display: "flex",
-              alignContent: "center",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: "$md",
-              color: "$white",
-              borderRadius: "$full",
-              transition: "0.5s ease-in-out",
-              top: "92%",
-              left: "96%",
-              boxShadow: "0px 30px 80px 0px $gray",
-              "&:hover": {
-                background: "$secondary",
-              },
-            }}
-          >
-            <Plus size={17} />
-          </Button>
         </HStack>
       </Box>
     </Layout>

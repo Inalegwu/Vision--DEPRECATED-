@@ -3,6 +3,10 @@
   src: url("../assets/fonts/bricolage.ttf");
 }
 
+.radix-themes {
+  --default-font-family: Bricolage
+}
+
 * {
   margin: 0;
   padding: 0;
