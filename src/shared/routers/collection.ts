@@ -9,6 +9,8 @@ import { generateUUID } from "../utils";
 // all actions that can be carried out on a collection and its contents
 export const collectionRouter = router({
   getIssuesInCollection: publicProcedure
+    // valibots' parse exists outside the constructor
+    // which leads to this callback method
     .input((x) =>
       v.parse(
         v.object({

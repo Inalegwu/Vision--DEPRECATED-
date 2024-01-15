@@ -35,19 +35,22 @@ export const libraryRouter = router({
           sortedFiles[0]?.data?.buffer || sortedFiles[1]?.data?.buffer,
         );
 
-        // use the filepath to create the name of the
-        // issue , as the image content cannot be trusted
-        // to have the appropriate name
+        // !use the filepath to create the name of the
+        // !issue , as the image content cannot be trusted
+        // !to have the appropriate name
         const name = filePaths[0]
           .replace(/^.*[\\\/]/, "")
           .replace(/\.[^/.]+$/, "")
           .replace(/(\d+)$/g, "")
           .replace("-", " ");
 
+        // ! ensure the issue isn't already saved
         const issueExists = await ctx.db.query.issues.findFirst({
           where: (issues, { eq }) => eq(issues.name, name),
         });
 
+        // ! Inform the user that this issue already exists
+        // ! this ensure space savings in the local database
         if (issueExists) {
           throw new TRPCError({
             code: "INTERNAL_SERVER_ERROR",
@@ -56,7 +59,6 @@ export const libraryRouter = router({
           });
         }
 
-        // the issue just created
         const createdIssue = await ctx.db
           .insert(issues)
           .values({
@@ -70,10 +72,9 @@ export const libraryRouter = router({
           });
 
         for (const file of sortedFiles) {
-          // ignore extraction contents that are flagged as directories
-          // as such the entire folder and as such it's contents won't be
-          // serialized into a string
-          // else you'll get a text content too large error somewhere else
+          // ! ignore directories
+          // ! sometimes the directory
+          // ! is converted and the app crashes
           if (file.isDir) {
             continue;
           }
@@ -82,10 +83,6 @@ export const libraryRouter = router({
 
           await ctx.db.insert(pages).values({
             id: generateUUID(),
-            // use the id of the issue just created
-            // as the pages issue id
-            // this allows for an issue and it's pages to remain
-            // related
             issueId: createdIssue[0].id,
             content,
             name: `${createdIssue[0].name}-${file.name}`,
@@ -108,10 +105,6 @@ export const libraryRouter = router({
         console.log(splitMeta);
       }
 
-      // in the event the first item is a folder
-      // the buffer will be undefined , so we can move on
-      // to the next item , this will be the first image file
-      // in that folder
       const thumbnailUrl = convertToImageUrl(
         sortedFiles[0]?.extraction?.buffer ||
           sortedFiles[1]?.extraction?.buffer!,
@@ -179,12 +172,10 @@ export const libraryRouter = router({
   }),
   getLibrary: publicProcedure.query(async ({ ctx }) => {
     try {
-      // find all the users saved issues
       const issues = await ctx.db.query.issues.findMany({
         orderBy: (issues, { asc }) => asc(issues.name),
       });
 
-      // get all the users collections from storage
       const collections = await ctx.db.query.collections.findMany({
         with: {
           issues: {
@@ -193,8 +184,8 @@ export const libraryRouter = router({
         },
       });
 
-      // filter out all issues that are already included
-      // within collections
+      // if an issue is already in a collection
+      // don't include it in the issues list
       const merged = issues.filter(
         (issues) =>
           !collections.find((collection) =>

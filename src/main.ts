@@ -1,7 +1,7 @@
 import { initialize } from "@aptabase/electron/main";
 import { BrowserWindow, app, screen } from "electron";
 import { createIPCHandler } from "electron-trpc/main";
-import path from "path";
+import { join } from "path";
 import { createContext } from "./shared/context";
 import { appRouter } from "./shared/routers/_app";
 
@@ -23,7 +23,7 @@ const createWindow = () => {
     show: false,
     webPreferences: {
       sandbox: false,
-      preload: path.resolve(__dirname, "preload.js"),
+      preload: join(__dirname, "../preload/preload.js"),
     },
   });
 
@@ -38,6 +38,12 @@ const createWindow = () => {
   });
 
   mainWindow.loadFile("dist/index.html");
+
+  if (import.meta.env.DEV) {
+    mainWindow.loadURL("http://localhost:5173");
+  } else {
+    mainWindow.loadFile(join(__dirname, "../renderer/index.html"));
+  }
 
   // mainWindow.webContents.openDevTools({ mode: "right" });
 };

@@ -7,9 +7,11 @@ import Layout from "./Layout";
 import Pulse from "./Pulse";
 import { DoublePage, SinglePage } from "./ReaderLayouts";
 import SettingsView from "./SettingsView";
-import Skeleton, { SkeletonProps } from "./Skeleton";
+import type { SkeletonProps } from "./Skeleton";
+import Skeleton from "./Skeleton";
 import Spinner from "./Spinner";
-import Switch, { SwitchProps, SwitchRefProps } from "./Switch";
+import type { SwitchProps, SwitchRefProps } from "./Switch";
+import Switch from "./Switch";
 import VStack from "./VStack";
 
 export {

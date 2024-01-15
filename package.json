@@ -8,12 +8,11 @@
   "repository": {
     "url": "https://github.com/studiopc/Vision.git"
   },
-  "main": "dist/main.js",
+  "main": "out/main/main.js",
   "scripts": {
-    "dev": "rimraf dist && run-p dev:webpack dev:electron",
-    "build": "rimraf dist && cross-env NODE_ENV=\"production\" webpack --progress",
-    "dev:webpack": "cross-env NODE_ENV=\"development\" webpack --progress",
-    "dev:electron": "wait-on dist/main.js dist/index.html && electronmon .",
+    "start": "electron-vite preview",
+    "dev": "electron-vite dev",
+    "build": "electron-vite build",
     "db:generate": "drizzle-kit generate:sqlite",
     "db:push": "drizzle-kit push:sqlite",
     "postinstall": "electron-rebuild",
@@ -26,7 +25,7 @@
     "buildDependenciesFromSource": true,
     "icon": "assets/icon.png",
     "files": [
-      "dist/**/*"
+      "out/**/*"
     ],
     "directories": {
       "output": "release/"
@@ -59,11 +58,6 @@
       "deleteAppDataOnUninstall": true
     }
   },
-  "electronmon": {
-    "patterns": [
-      "dist/**/*"
-    ]
-  },
   "dependencies": {
     "@aptabase/electron": "^0.3.1",
     "@electron/rebuild": "^3.3.0",
@@ -81,6 +75,7 @@
     "core-util-is": "^1.0.3",
     "drizzle-orm": "^0.28.6",
     "electron-trpc": "^0.5.2",
+    "electron-vite": "^2.0.0",
     "framer-motion": "^10.16.4",
     "localforage": "^1.10.0",
     "match-sorter": "^6.3.1",
@@ -91,7 +86,6 @@
     "react-error-boundary": "^4.0.12",
     "react-hot-toast": "^2.4.1",
     "react-router-dom": "^6.17.0",
-    "sort-by": "^1.2.0",
     "uuid": "^9.0.1",
     "valibot": "^0.25.0"
   },
@@ -102,22 +96,13 @@
     "@types/react": "^18.2.35",
     "@types/react-dom": "^18.2.14",
     "@types/uuid": "^9.0.6",
-    "copy-webpack-plugin": "^11.0.0",
-    "cross-env": "^7.0.3",
-    "css-loader": "^6.8.1",
+    "@vitejs/plugin-react": "^4.2.1",
     "drizzle-kit": "^0.19.13",
     "electron": "^27.0.3",
     "electron-builder": "^24.9.1",
     "electronmon": "^2.0.2",
-    "html-webpack-plugin": "^5.5.3",
-    "mini-css-extract-plugin": "^2.7.6",
     "npm-run-all": "^4.1.5",
-    "rimraf": "^5.0.5",
-    "ts-loader": "^9.5.0",
-    "ts-node": "^10.9.1",
     "typescript": "^5.2.2",
-    "wait-on": "^7.1.0",
-    "webpack": "^5.89.0",
-    "webpack-cli": "^5.1.4"
+    "vite": "^5.0.11"
   }
 }

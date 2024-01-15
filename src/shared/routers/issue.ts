@@ -11,7 +11,7 @@ export const issueRouter = router({
     .input((x) =>
       v.parse(
         v.object({
-          id: v.string(),
+          id: v.string([v.toTrimmed()]),
         }),
         x,
       ),

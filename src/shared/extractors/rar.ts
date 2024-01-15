@@ -1,13 +1,13 @@
 import { sortPages } from "@shared/utils";
-import { readFileSync } from "fs";
+import fs from "fs";
 import { createExtractorFromData } from "node-unrar-js";
 
 export default async function RarExtractor(filePath: string) {
-  const wasmBinary = readFileSync(
+  const wasmBinary = fs.readFileSync(
     require.resolve("node-unrar-js/dist/js/unrar.wasm"),
   );
 
-  const file = readFileSync(filePath);
+  const file = fs.readFileSync(filePath);
 
   const data = Uint8Array.from(file).buffer;
 
