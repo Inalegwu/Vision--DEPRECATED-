@@ -3,7 +3,6 @@ import { Box, Button, Flex, Text } from "@radix-ui/themes";
 import { useKeyPress } from "@src/web/hooks";
 import { trpcReact } from "../../shared/config";
 import { globalState$ } from "../state";
-import HStack from "./HStack";
 
 type LayoutProps = {
   children: React.ReactNode;
@@ -26,29 +25,39 @@ export default function Layout(props: LayoutProps) {
   });
 
   return (
-    <Flex width="100%" height="100%" direction="column">
+    <Flex className="w-full h-screen" direction="column">
       {/* titlebar */}
-      <Flex align="center" justify="between" width="100%" px="3" py="2">
+      <Flex align="center" justify="between" width="100%" px="4" py="2">
         <Box>
           <Text weight="light">Vision</Text>
         </Box>
         <Flex grow="1" p="4" id="drag-region" />
-        <HStack
-          gap={10}
-          alignContent="center"
-          alignItems="center"
-          justifyContent="flex-end"
-        >
-          <Button variant="ghost" size="1" onClick={() => minimizeWindow()}>
+        <Flex gap="4" align="center" justify="end">
+          <Button
+            variant="ghost"
+            size="1"
+            color="gray"
+            onClick={() => minimizeWindow()}
+          >
             <MinusIcon />
           </Button>
-          <Button variant="ghost" size="1" onClick={() => maximizeWindow()}>
+          <Button
+            variant="ghost"
+            color="gray"
+            size="1"
+            onClick={() => maximizeWindow()}
+          >
             <CornersIcon />
           </Button>
-          <Button variant="ghost" size="1" onClick={() => closeWindow()}>
+          <Button
+            variant="ghost"
+            color="gray"
+            size="1"
+            onClick={() => closeWindow()}
+          >
             <Cross2Icon />
           </Button>
-        </HStack>
+        </Flex>
       </Flex>
       {/* body */}
       <Box>{props.children}</Box>

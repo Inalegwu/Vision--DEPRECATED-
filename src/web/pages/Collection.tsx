@@ -10,11 +10,19 @@ import {
 import { useObservable } from "@legendapp/state/react";
 import {
   CaretLeftIcon,
+  Cross1Icon,
   Pencil1Icon,
   PlusIcon,
   TrashIcon,
 } from "@radix-ui/react-icons";
-import { AlertDialog, Button, Flex, Text } from "@radix-ui/themes";
+import {
+  AlertDialog,
+  Button,
+  Dialog,
+  Flex,
+  IconButton,
+  Text,
+} from "@radix-ui/themes";
 import { trpcReact } from "@src/shared/config";
 import { CollectionParams } from "@src/shared/types";
 import { AnimatePresence } from "framer-motion";
@@ -126,19 +134,14 @@ export default function Collection() {
 
   return (
     <Layout>
-      <Box css={{ width: "100%", height: "100%", padding: "$lg" }}>
-        <VStack style={{ width: "100%", padding: "$md", gap: "$lg" }}>
+      <Box className="w-full h-screen">
+        <Flex direction="column" p="2" gap="2" className="w-full">
           <HStack>
-            <Button onClick={goBack} size="2" variant="soft">
+            <IconButton onClick={goBack} size="3" variant="soft">
               <CaretLeftIcon width="16" height="16" />
-            </Button>
+            </IconButton>
           </HStack>
-          <HStack
-            alignContent="center"
-            alignItems="center"
-            justifyContent="space-between"
-            style={{ width: "100%" }}
-          >
+          <Flex align="center" justify="between" className="w-full mt-2">
             <Text size="7" weight="medium">
               {name.get()}
             </Text>
@@ -148,31 +151,79 @@ export default function Collection() {
               justifyContent="flex-end"
               gap={6}
             >
-              <Button color="amber" variant="soft" radius="full">
-                <PlusIcon />
-                Add Issue
-              </Button>
-              <Button variant="soft" radius="full" onClick={handleEditClick}>
+              <Dialog.Root>
+                <Dialog.Trigger>
+                  <Button color="gray" variant="soft">
+                    Add Issue
+                    <PlusIcon height={15} width={15} />
+                  </Button>
+                </Dialog.Trigger>
+                <Dialog.Content>
+                  <Dialog.Title>
+                    Add an Issue to {collection?.collection?.name}
+                  </Dialog.Title>
+                  <Dialog.Description>
+                    any issue selected here will be added to the collection ,
+                    don't worry , you can always remove it
+                  </Dialog.Description>
+                  <Flex
+                    direction="column"
+                    gap="2"
+                    align="start"
+                    justify="start"
+                    className="mt-2"
+                  >
+                    {issues?.issues.map((v) => {
+                      return (
+                        <Dialog.Close>
+                          <Button
+                            key={v.id}
+                            className="p-4 w-[95%]"
+                            variant="ghost"
+                            color="gray"
+                            onClick={() => addToLibrary(v.id)}
+                          >
+                            <Flex grow="1" align="end" gap="4" justify="start">
+                              <img
+                                className="w-13 h-20 rounded-sm"
+                                src={v.thumbnailUrl}
+                                alt={v.name}
+                              />
+                              <Text size="3">{v.name}</Text>
+                            </Flex>
+                          </Button>
+                        </Dialog.Close>
+                      );
+                    })}
+                  </Flex>
+                </Dialog.Content>
+              </Dialog.Root>
+              <Button variant="soft" color="gray" onClick={handleEditClick}>
                 <Text>Edit Collection</Text>
-                <Pencil1Icon size={15} />
+                <Pencil1Icon width={15} height={15} />
               </Button>
               <AlertDialog.Root>
                 <AlertDialog.Trigger>
-                  <Button color="red" variant="soft" radius="full">
+                  <Button color="red" variant="soft">
                     <Text>Delete Collection</Text>
-                    <TrashIcon size={15} />
+                    <TrashIcon width={15} height={15} />
                   </Button>
                 </AlertDialog.Trigger>
-                <AlertDialog.Content style={{ maxWidth: 400 }}>
+                <AlertDialog.Content
+                  className="rounded-md px-5 py-5"
+                  style={{ maxWidth: 400 }}
+                >
                   <AlertDialog.Title size="6">
-                    Delete Collection
+                    Delete {collection?.collection?.name}
                   </AlertDialog.Title>
                   <AlertDialog.Description>
-                    <Text size="5">
+                    <Text size="3">
                       Are you sure you want to delete{" "}
-                      <Text weight="medium" color="red">
+                      <Text weight="bold" color="red">
                         {collection?.collection?.name}
-                      </Text>
+                      </Text>{" "}
+                      This will not delete your issues but they will be
+                      Disorganized
                     </Text>
                   </AlertDialog.Description>
                   <Flex gap="3" mt="4">
@@ -195,8 +246,8 @@ export default function Collection() {
                 </AlertDialog.Content>
               </AlertDialog.Root>
             </HStack>
-          </HStack>
-        </VStack>
+          </Flex>
+        </Flex>
         <HStack
           alignContent="flex-start"
           alignItems="flex-start"
@@ -272,11 +323,8 @@ export default function Collection() {
                     justifyContent: "flex-end",
                   }}
                 >
-                  <Button
-                    css={{ color: "$danger" }}
-                    onClick={() => issuesListVisible.set(false)}
-                  >
-                    <X size={16} />
+                  <Button onClick={() => issuesListVisible.set(false)}>
+                    <Cross1Icon width={16} height={16} />
                   </Button>
                 </Box>
                 {gettingIssues && <Spinner size={20} />}
@@ -313,12 +361,8 @@ export default function Collection() {
                           height: 50,
                         }}
                       >
-                        <Text css={{ fontSize: 15, color: "$white" }}>
-                          {v.name}
-                        </Text>
-                        <Text css={{ fontSize: 12, color: "$gray" }}>
-                          {moment(v.dateCreated).fromNow()}
-                        </Text>
+                        <Text>{v.name}</Text>
+                        <Text>{moment(v.dateCreated).fromNow()}</Text>
                       </VStack>
                     </Box>
                   );

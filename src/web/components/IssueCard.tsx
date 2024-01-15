@@ -1,4 +1,4 @@
-import { ContextMenu, Flex, Text } from "@radix-ui/themes";
+import { AlertDialog, Button, ContextMenu, Flex, Text } from "@radix-ui/themes";
 import { Issue } from "@shared/types";
 import { trpcReact } from "@src/shared/config";
 import { useCallback } from "react";
@@ -64,23 +64,44 @@ export default function IssueCard(props: Props) {
         >
           <Image
             src={props.issue.thumbnailUrl}
-            css={{
-              width: 183,
-              height: 265,
-              borderRadius: "$md",
-              border: "0.1px solid rgba(0,0,0,0.2)",
-              overflow: "hidden",
-            }}
+            className="w-44 h-65 overflow-hidden rounded-md"
           />
           <Text weight="light">{props.issue.name}</Text>
         </Flex>
       </ContextMenu.Trigger>
-      <ContextMenu.Content variant="soft" size="2">
+      <ContextMenu.Content
+        className="p-0 rounded-sm gap-2"
+        variant="soft"
+        size="2"
+      >
         <ContextMenu.Item onClick={editIssue}>
           <Text>Edit Issue Info</Text>
         </ContextMenu.Item>
-        <ContextMenu.Item color="red" onClick={deleteIssue}>
-          <Text>Delete Issue</Text>
+        <ContextMenu.Item color="red">
+          <AlertDialog.Root>
+            <AlertDialog.Trigger color="red">
+              <Text>Delete Issue</Text>
+            </AlertDialog.Trigger>
+            <AlertDialog.Content className="p-2 rounded-lg">
+              <AlertDialog.Title>Delete {props.issue.name}</AlertDialog.Title>
+              <AlertDialog.Description>
+                This will remove {props.issue.name} from your Library , are you
+                sure you want to do that
+              </AlertDialog.Description>
+              <Flex align="center" justify="end" gap="3">
+                <AlertDialog.Cancel>
+                  <Button color="gray" size="2">
+                    Cancel
+                  </Button>
+                </AlertDialog.Cancel>
+                <AlertDialog.Action>
+                  <Button color="red" size="2" onClick={deleteIssue}>
+                    Delete {props.issue.name}
+                  </Button>
+                </AlertDialog.Action>
+              </Flex>
+            </AlertDialog.Content>
+          </AlertDialog.Root>
         </ContextMenu.Item>
       </ContextMenu.Content>
     </ContextMenu.Root>

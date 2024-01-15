@@ -1,7 +1,5 @@
-import { AnimatedBox, AnimatedText, Box, Input } from "@components/atoms";
 import {
   CollectionCard,
-  HStack,
   IssueCard,
   IssueSkeleton,
   Layout,
@@ -11,6 +9,7 @@ import {
 import { useObservable } from "@legendapp/state/react";
 import { LinkNone1Icon, PlusIcon } from "@radix-ui/react-icons";
 import {
+  Box,
   Button,
   Flex,
   Heading,
@@ -19,33 +18,28 @@ import {
   TextArea,
 } from "@radix-ui/themes";
 import { trpcReact } from "@shared/config";
-import { LibraryFilters, Reasons } from "@shared/types";
+import { Reasons } from "@shared/types";
 import { LOADING_PHRASES, getRandomIndex } from "@src/shared/utils";
 import { globalState$ } from "@src/web/state";
-import { AnimatePresence } from "framer-motion";
 import { useCallback, useEffect, useRef } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-import { useInterval, useTimeout } from "../hooks";
-
-const filter_map: LibraryFilters[] = ["All", "Collections", "Issues"];
+import { useInterval } from "../hooks";
 
 export default function Library() {
   const utils = trpcReact.useUtils();
   const router = useNavigate();
   const inputRef = useRef<HTMLInputElement>(null);
-  const createModalVisible = useObservable(false);
   const mouseOver = useObservable(false);
   const collectionName = useObservable("");
-
-  // TODO implement filtering the library view
-  const filter = useObservable<LibraryFilters>("All");
 
   // gets a random index and uses that to select
   // a loading phrase
   const phraseIndex = useObservable<number>(
     getRandomIndex(0, LOADING_PHRASES.length - 1),
   );
+
+  const phraseIndexValue = phraseIndex.get();
 
   // the app state
   // used in useEffect to know where to navigate the user
@@ -67,16 +61,6 @@ export default function Library() {
         toast.error(err.message);
       },
     });
-
-  // hide the create collection view if the
-  // mouse isn't over element
-  // TODO also implement hiding the view
-  // when focus is lost
-  useTimeout(() => {
-    if (!mouseOver) {
-      createModalVisible.set(false);
-    }
-  }, 6000);
 
   // change the loading phrase every 4 seconds
   useInterval(() => {
@@ -109,206 +93,74 @@ export default function Library() {
   const create = useCallback(() => {
     createCollection({ name: collectionName.get() });
     inputRef.current?.blur();
-
-    createModalVisible.set(false);
-  }, [collectionName, createCollection, createModalVisible]);
-
-  const toggleCreateModal = useCallback(() => {
-    createModalVisible.set(true);
-    inputRef.current?.focus();
-  }, [createModalVisible]);
+  }, [collectionName, createCollection]);
 
   return (
     <Layout>
-      <Box css={{ width: "100%", height: "100%" }}>
-        {/* add to library loading overlay */}
-        <AnimatedBox
-          initial={{ opacity: 0, display: "none" }}
-          animate={{
-            opacity: addingToLibrary ? 1 : 0,
-            display: addingToLibrary ? "flex" : "none",
-          }}
-          css={{
-            position: "absolute",
-            zIndex: 99999,
-            width: "100%",
-            height: "100%",
-            display: "flex",
-            alignItems: "center",
-            alignContent: "center",
-            justifyContent: "center",
-            background: `${
-              uiState.colorMode === "dark" ? "$blackMuted" : "rgba(0,0,0,0.2)"
-            }`,
-            backdropFilter: "blur(1000px)",
-          }}
+      {addingToLibrary && (
+        <Flex
+          align="center"
+          justify="center"
+          className="p-1 absolute z-10 top-0 left-0 backdrop-blur-2xl w-full h-screen bg-black/20"
         >
-          <Box
-            css={{
-              display: "flex",
-              flexDirection: "column",
-              alignContent: "center",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: "$xxxl",
-              color: "$lightGray",
-            }}
+          <Flex
+            direction="column"
+            className="justify-center items-center"
+            gap="3"
           >
             <Spinner />
-            <AnimatePresence>
-              <AnimatedText
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ ease: "anticipate" }}
-              >
-                {LOADING_PHRASES[phraseIndex.get()]}
-              </AnimatedText>
-            </AnimatePresence>
-          </Box>
-        </AnimatedBox>
+            <Text>{LOADING_PHRASES[phraseIndexValue]}</Text>
+          </Flex>
+        </Flex>
+      )}
+      <Box className="w-full h-screen">
         {/* header */}
-        <VStack gap={6} style={{ padding: "$xxxl" }}>
+        <Flex align="center" justify="between" p="4" className="mt-2">
           <Heading size="7">My Library</Heading>
-          <HStack
-            width="100%"
-            justifyContent="space-between"
-            alignContent="center"
-            alignItems="center"
-          >
-            <HStack
-              justifyContent="flex-start"
-              alignContent="center"
-              alignItems="center"
-              gap={6}
-            />
-            <AnimatePresence>
-              {createModalVisible.get() && (
-                <AnimatedBox
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  css={{
-                    background: `${
-                      uiState.colorMode === "dark"
-                        ? "$blackMuted"
-                        : "$lightGray"
-                    }`,
-                    borderRadius: "$md",
-                    padding: "$md",
-                    backdropFilter: "blur(500px)",
-                    border: "0.3px solid $gray",
-                    position: "absolute",
-                    zIndex: 10,
-                    left: "80%",
-                    top: "17%",
-                    display: "flex",
-                    flexDirection: "column",
-                    alignContent: "center",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    boxShadow: "0px 0.1px 40px 0px rgba(255,255,255,0.1)",
-                    gap: "$md",
-                  }}
-                >
-                  <Input
-                    ref={inputRef}
-                    onMouseOver={() => mouseOver.set(true)}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter") {
-                        create();
-                      }
-                    }}
-                    onFocus={() => mouseOver.set(true)}
-                    onBlur={() => mouseOver.set(false)}
-                    css={{
-                      opacity: 0.5,
-                      borderRadius: "$md",
-                      padding: "$lg",
-                      color: "$white",
-                      background: `${
-                        uiState.colorMode === "dark"
-                          ? "$blackMuted"
-                          : "$lightGray"
-                      }`,
-                      border: "0.1px solid $lightGray",
-                    }}
-                    onChange={(e) => collectionName.set(e.currentTarget.value)}
+          <Flex className="flex-1" gap="2" justify="end" align="center">
+            <Popover.Root>
+              <Popover.Trigger>
+                <Button variant="soft" color="gray" className="px-4 py-2">
+                  <LinkNone1Icon />
+                  <Text>Create Collection</Text>
+                </Button>
+              </Popover.Trigger>
+              <Popover.Content className="p-2 rounded-lg border-none">
+                <Flex gap="2" direction="column">
+                  <TextArea
                     placeholder="Collection Name"
+                    onChange={(e) => collectionName.set(e.currentTarget.value)}
                   />
-                  <Button onClick={create}>
-                    <Text>Create Collection</Text>
-                  </Button>
-                </AnimatedBox>
-              )}
-            </AnimatePresence>
-            <HStack
-              alignContent="center"
-              alignItems="center"
-              justifyContent="flex-end"
-              gap={5}
+                  <Popover.Close>
+                    <Button color="grass" variant="soft" onClick={create}>
+                      <Text>Create Collection</Text>
+                    </Button>
+                  </Popover.Close>
+                </Flex>
+              </Popover.Content>
+            </Popover.Root>
+            <Button
+              className="px-4 py-2"
+              variant="soft"
+              onClick={() => addToLibrary()}
             >
-              <Popover.Root>
-                <Popover.Trigger>
-                  <Button variant="soft" radius="full">
-                    <LinkNone1Icon />
-                    <Text>Create Collection</Text>
-                  </Button>
-                </Popover.Trigger>
-                <Popover.Content>
-                  <Flex gap="2" direction="column">
-                    <TextArea
-                      placeholder="Collection Name"
-                      onChange={(e) =>
-                        collectionName.set(e.currentTarget.value)
-                      }
-                    />
-                    <Popover.Close>
-                      <Button variant="soft" onClick={create}>
-                        <Text>Create Collection</Text>
-                      </Button>
-                    </Popover.Close>
-                  </Flex>
-                </Popover.Content>
-              </Popover.Root>
-              <Button
-                radius="full"
-                variant="soft"
-                onClick={() => addToLibrary()}
-              >
-                <PlusIcon width="12" height="12" />
-                <Text>Add To Library</Text>
-              </Button>
-            </HStack>
-          </HStack>
-        </VStack>
+              <PlusIcon width="12" height="12" />
+              <Text>Add To Library</Text>
+            </Button>
+          </Flex>
+        </Flex>
         {/* body */}
-        <Box
-          css={{
-            display: "flex",
-            alignContent: "flex-start",
-            alignItems: "flex-start",
-            justifyContent: "flex-start",
-            flexWrap: "wrap",
-            overflowY: "scroll",
-            gap: "$xxxl",
-            padding: "$xxxl",
-            width: "100%",
-            height: "90%",
-            paddingBottom: "$hg",
-          }}
+        <Flex
+          align="start"
+          justify="start"
+          p="4"
+          wrap="wrap"
+          height="9"
+          gap="3"
+          className="overflow-y-scroll w-full h-full"
         >
           {library?.collections.length === 0 && library.issues.length === 0 ? (
-            <Box
-              css={{
-                width: "100%",
-                height: "100%",
-                display: "flex",
-                alignContent: "center",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
+            <Flex align="center" justify="center" width="100%" height="100%">
               <VStack
                 alignContent="center"
                 alignItems="center"
@@ -323,7 +175,7 @@ export default function Library() {
                   <Text>Add To Library</Text>
                 </Button>
               </VStack>
-            </Box>
+            </Flex>
           ) : (
             <></>
           )}
@@ -343,7 +195,7 @@ export default function Library() {
           {/* Optimistic Loading */}
           {addingToLibrary &&
             [...Array(1)].map((_, idx) => <IssueSkeleton key={`${idx}`} />)}
-        </Box>
+        </Flex>
       </Box>
     </Layout>
   );

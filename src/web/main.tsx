@@ -7,6 +7,7 @@ import { ErrorBoundaryFallback } from "./pages";
 
 import { Theme } from "@radix-ui/themes";
 import "@radix-ui/themes/styles.css";
+import "virtual:uno.css";
 import { App } from "./App";
 import "./App.css";
 import { globalState$ } from "./state";
