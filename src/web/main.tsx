@@ -5,6 +5,8 @@ import ReactDom from "react-dom/client";
 import { ErrorBoundary } from "react-error-boundary";
 import { ErrorBoundaryFallback } from "./pages";
 
+import { Theme } from "@radix-ui/themes";
+import "@radix-ui/themes/styles.css";
 import { App } from "./App";
 import "./App.css";
 
@@ -15,7 +17,9 @@ ReactDom.createRoot(document.getElementById("root") as HTMLElement).render(
     >
       <trpcReact.Provider client={trpcClient} queryClient={queryClient}>
         <QueryClientProvider client={queryClient}>
-          <App />
+          <Theme>
+            <App />
+          </Theme>
         </QueryClientProvider>
       </trpcReact.Provider>
     </ErrorBoundary>

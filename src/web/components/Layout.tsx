@@ -2,9 +2,7 @@ import { CornersOut, Minus, X } from "@phosphor-icons/react";
 import { useKeyPress } from "@src/web/hooks";
 import { trpcReact } from "../../shared/config";
 import { globalState$ } from "../state";
-import FloatingNavigation from "./FloatingNavigation";
 import HStack from "./HStack";
-import SettingsView from "./SettingsView";
 import { Box, Button, Text } from "./atoms";
 
 type LayoutProps = {

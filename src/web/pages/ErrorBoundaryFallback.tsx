@@ -1,12 +1,10 @@
 import { trackEvent } from "@aptabase/electron/renderer";
 import { Box, Button, Text } from "@components/atoms";
-import { IS_DEV } from "@src/shared/utils";
 import { useCallback } from "react";
 import { FallbackProps } from "react-error-boundary";
 import pkg from "../../../package.json";
 import { HStack, VStack } from "../components";
 import { globalState$ } from "../state";
-
 
 function ErrorBoundaryFallback(props: FallbackProps) {
   const state = globalState$.get();
@@ -27,7 +25,7 @@ function ErrorBoundaryFallback(props: FallbackProps) {
     // what version of the app is the user
     // on , to know whether or not to tell the user
     // to update
-    appVer:pkg.version
+    appVer: pkg.version,
   });
 
   // this is used to reset the app
@@ -95,7 +93,7 @@ function ErrorBoundaryFallback(props: FallbackProps) {
           <Text css={{ fontWeight: "bold" }}>Reset App</Text>
         </Button>
         {/* show the error inline when in development */}
-        {IS_DEV && (
+        {import.meta.env.DEV && (
           <Box
             css={{
               width: "100%",

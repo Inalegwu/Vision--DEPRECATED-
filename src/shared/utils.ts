@@ -1,6 +1,5 @@
+import { XMLBuilder, XMLParser } from "fast-xml-parser";
 import { v4 } from "uuid";
-
-export const IS_DEV = process.env.NODE_ENV === "development";
 
 export function generateUUID() {
   const uuid = v4();
@@ -33,10 +32,6 @@ export function sortPages(a: string, b: string) {
   }
 
   return a > b ? 1 : -1;
-}
-
-export function clamp(num: number, min: number, max: number): number {
-  return Math.max(Math.min(num, max), min);
 }
 
 export function debounce<A = unknown[], R = void>(
@@ -120,15 +115,17 @@ export function getRandomIndex(min: number, max: number): number {
 // TODO find a way to convert this to an object that can be
 // accessed as md["property"] to allow for saving things
 export function decodeMetaData(data: ArrayBufferLike | Buffer) {
-  const text = new TextDecoder("utf-8");
-  const decodedMeta = text.decode(data);
+  const dataBuf = Buffer.from(data);
+  const parser = new XMLParser();
 
-  // TODO xml serialization
-  const splitMeta = decodedMeta.split("\n");
+  const mObject = parser.parse(dataBuf);
 
-  console.log(splitMeta);
+  const builder = new XMLBuilder();
+  const xmlContent = builder.build(mObject);
 
-  return decodedMeta;
+  console.log(xmlContent["ComicInfo"]);
+
+  return xmlContent;
 }
 
 export function upsert(array: unknown[], item: unknown) {
