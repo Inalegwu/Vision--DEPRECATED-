@@ -4,7 +4,6 @@ import {
   IssueSkeleton,
   Layout,
   Spinner,
-  VStack,
 } from "@components/index";
 import { useObservable } from "@legendapp/state/react";
 import { Link1Icon, PlusIcon } from "@radix-ui/react-icons";
@@ -160,16 +159,17 @@ export default function Library() {
           wrap="wrap"
           height="9"
           gap="3"
-          className="overflow-y-scroll w-full h-full"
+          className="overflow-y-scroll w-full h-[85%]"
         >
           {library?.collections.length === 0 && library.issues.length === 0 ? (
-            <Flex align="center" justify="center" width="100%" height="100%">
-              <VStack
-                alignContent="center"
-                alignItems="center"
-                justifyContent="center"
-                gap={2}
-              >
+            <Flex
+              align="center"
+              grow="1"
+              justify="center"
+              width="100%"
+              height="100%"
+            >
+              <Flex direction="column" align="center" justify="start" gap="2">
                 <Text>
                   It's a bit lonely here , Add Some Issues or Create a
                   Collection
@@ -177,7 +177,7 @@ export default function Library() {
                 <Button variant="soft" onClick={() => addToLibrary()}>
                   <Text>Add To Library</Text>
                 </Button>
-              </VStack>
+              </Flex>
             </Flex>
           ) : (
             <></>

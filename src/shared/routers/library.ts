@@ -165,11 +165,13 @@ export const libraryRouter = router({
         // to aptabase
         error: `${e}`,
       });
-      throw new TRPCError({
-        code: "INTERNAL_SERVER_ERROR",
-        cause: e,
-        message: "Error occured",
-      });
+      if (e instanceof TRPCError) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          cause: e,
+          message: e.message,
+        });
+      }
     }
   }),
   getLibrary: publicProcedure.query(async ({ ctx }) => {

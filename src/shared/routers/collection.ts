@@ -259,4 +259,23 @@ export const collectionRouter = router({
         });
       }
     }),
+  getCollectionById: publicProcedure
+    .input((x) =>
+      v.parse(
+        v.object({
+          id: v.string([v.toTrimmed()]),
+        }),
+        x,
+      ),
+    )
+    .query(async ({ ctx, input }) => {
+      const collection = await ctx.db.query.collections.findFirst({
+        where: (fields, { eq }) => eq(fields.id, input.id),
+        with: {
+          issues: true,
+        },
+      });
+
+      return collection;
+    }),
 });

@@ -52,15 +52,24 @@ export default function IssueCard(props: Props) {
   return (
     <ContextMenu.Root>
       {/* context menu */}
-      <ContextMenu.Trigger onClick={handleClick} className="cursor-pointer">
-        <Flex direction="column" gap="1" width="auto" height="auto">
+      <ContextMenu.Trigger
+        onClick={handleClick}
+        className="cursor-pointer ml-1"
+      >
+        <Flex
+          direction="column"
+          gap="1"
+          width="auto"
+          height="auto"
+          className="overflow-hidden"
+        >
           <Box className="relative overflow-hidden">
             <Image
               src={props.issue.thumbnailUrl}
               className="w-44 h-65 overflow-hidden rounded-md border-1 border-slate-400"
             />
-            <Box className="absolute z-1 top-0 left-0 bg-black/40 p-2 flex flex-col items-start justify-end w-full h-[98%] rounded-md">
-              <Text weight="light" size="2" className="w-[95%]">
+            <Box className="absolute z-1 top-0 left-0 bg-black/70 p-2 flex flex-col items-start justify-end w-full h-[98%] rounded-md">
+              <Text weight="light" size="2" className="w-full">
                 {props.issue.name}
               </Text>
               {/* {currentlyReading && savedInfo && (

@@ -123,14 +123,8 @@ export default function Collection() {
 
   // handle clicking the edit button
   const handleEditClick = useCallback(() => {
-    if (editingName.get() === false) {
-      inputRef.current?.focus();
-      editingName.set(true);
-    } else {
-      inputRef.current?.blur();
-      editingName.set(false);
-    }
-  }, [editingName]);
+    router(`/collections/edit/${collection?.collection?.id}`);
+  }, [router, collection]);
 
   return (
     <Layout>
@@ -141,7 +135,7 @@ export default function Collection() {
               <CaretLeftIcon width="16" height="16" />
             </IconButton>
           </HStack>
-          <Flex align="center" justify="between" className="w-full mt-2">
+          <Flex align="center" justify="between" className="w-full mt-2 px-1">
             <Text size="7" weight="medium">
               {name.get()}
             </Text>
@@ -158,13 +152,13 @@ export default function Collection() {
                     <PlusIcon height={15} width={15} />
                   </Button>
                 </Dialog.Trigger>
-                <Dialog.Content>
+                <Dialog.Content size="4">
                   <Dialog.Title>
                     Add an Issue to {collection?.collection?.name}
                   </Dialog.Title>
-                  <Dialog.Description>
-                    any issue selected here will be added to the collection ,
-                    don't worry , you can always remove it
+                  <Dialog.Description size="3">
+                    any issue selected will be added to the collection , don't
+                    worry , you can always remove it
                   </Dialog.Description>
                   <Flex
                     direction="column"
@@ -248,22 +242,12 @@ export default function Collection() {
             </HStack>
           </Flex>
         </Flex>
-        <HStack
-          alignContent="flex-start"
-          alignItems="flex-start"
-          justifyContent="flex-start"
-          gap={8}
-          style={{
-            height: "90%",
-            paddingTop: "$xxl",
-            padding: "$lg",
-            overflowY: "scroll",
-            display: "flex",
-            flexWrap: "wrap",
-            width: "100%",
-            gap: "$xxxl",
-            paddingBottom: "$hg",
-          }}
+        <Flex
+          align="start"
+          justify="start"
+          gap="4"
+          wrap="wrap"
+          className="h-[90%] p-3 pt-4 overflow-y-scroll pb-20"
         >
           {collection?.collection?.issues?.length === 0 && (
             <Box
@@ -375,7 +359,7 @@ export default function Collection() {
           })}
           {getting &&
             [...Array(10)].map((_, idx) => <IssueSkeleton key={`${idx}`} />)}
-        </HStack>
+        </Flex>
       </Box>
     </Layout>
   );

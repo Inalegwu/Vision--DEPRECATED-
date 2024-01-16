@@ -99,6 +99,10 @@ export const LOADING_PHRASES = [
   "Kevin Conroy is my Batman",
   "WonderBat > Bat&Cat , Fight Me",
   "Miguel had a point though 🤷‍♂️🤔",
+  "To be fair to Batman , prep time is necessary for someone without powers",
+  "With Great Power Comes Great Responsibilty",
+  "RIP Stan Lee , Excelsior",
+  "Stan Lee showed us that anyone can be a hero",
 ];
 
 // gives a random index
@@ -110,10 +114,6 @@ export function getRandomIndex(min: number, max: number): number {
   return Math.floor(Math.random() * (newMax - newMin + 1)) + newMin;
 }
 
-// decode the xml metadata file that is included in the
-// archive
-// TODO find a way to convert this to an object that can be
-// accessed as md["property"] to allow for saving things
 export function decodeMetaData(data: ArrayBufferLike | Buffer) {
   const dataBuf = Buffer.from(data);
   const parser = new XMLParser();

@@ -1,9 +1,8 @@
-import { AnimatedBox, Box, Button, Text } from "@components/atoms";
-import { DoublePage, SinglePage, Spinner, VStack } from "@components/index";
+import { AnimatedBox, Box, Text } from "@components/atoms";
+import { DoublePage, SinglePage, Spinner } from "@components/index";
 import { useObservable } from "@legendapp/state/react";
 import {
   CaretLeft,
-  CaretRight,
   CornersOut,
   Eye,
   EyeSlash,
@@ -12,6 +11,7 @@ import {
   Square,
   SquareSplitHorizontal,
 } from "@phosphor-icons/react";
+import { Button, Flex } from "@radix-ui/themes";
 import { trpcReact } from "@shared/config";
 import { IssueParams, ReaderLayout } from "@shared/types";
 import { LOADING_PHRASES, getRandomIndex } from "@shared/utils";
@@ -244,16 +244,8 @@ export default function Issue() {
                 onMouseOver={() => mouseOver.set(true)}
                 onMouseLeave={() => mouseOver.set(false)}
                 onClick={saveIssueReadingState}
-                css={{
-                  padding: "$lg",
-                  background: "$primary",
-                  color: "$white",
-                  borderRadius: "$md",
-                  display: "flex",
-                  alignContent: "center",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
+                color="iris"
+                variant="soft"
               >
                 <CaretLeft size={16} />
               </Button>
@@ -282,20 +274,10 @@ export default function Issue() {
                 <Button
                   onMouseOver={() => mouseOver.set(true)}
                   onMouseLeave={() => mouseOver.set(false)}
-                  css={{
-                    color: "$primary",
-                    padding: "$lg",
-                    display: "flex",
-                    alignContent: "center",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    borderRadius: "$md",
-                    background: "$blackMuted",
-                    "&:hover": {
-                      background: "$primary",
-                      color: "$white",
-                    },
-                  }}
+                  variant="soft"
+                  color="gray"
+                  size="3"
+                  className="flex w-10 h-10 items-center justify-center"
                   onClick={toggleAmbientBackground}
                 >
                   {uiState.ambientBackground ? (
@@ -307,20 +289,10 @@ export default function Issue() {
                 <Button
                   onMouseOver={() => mouseOver.set(true)}
                   onMouseLeave={() => mouseOver.set(false)}
-                  css={{
-                    color: "$primary",
-                    padding: "$lg",
-                    display: "flex",
-                    alignContent: "center",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    borderRadius: "$md",
-                    background: "$blackMuted",
-                    "&:hover": {
-                      background: "$primary",
-                      color: "$white",
-                    },
-                  }}
+                  size="3"
+                  variant="soft"
+                  color="gray"
+                  className="flex w-10 h-10 items-center content-center"
                   title="Turn on Distraction Free Mode"
                   onClick={toggleDistractionFreeMode}
                 >
@@ -331,44 +303,20 @@ export default function Issue() {
                   )}
                 </Button>
                 <Button
-                  css={{
-                    color: "$primary",
-                    padding: "$lg",
-                    display: "flex",
-                    alignContent: "center",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    borderRadius: "$md",
-                    background: `${
-                      activeLayout === "DoublePage" ? "$primary" : "$blackMuted"
-                    }`,
-                    "&:hover": {
-                      background: "$primary",
-                      color: "$white",
-                    },
-                  }}
+                  color="gray"
+                  variant="soft"
+                  size="3"
+                  className="flex w-10 h-10 items-center justify-center"
                   title="Activate Double Page View"
                   onClick={() => toggleReaderLayout("DoublePage")}
                 >
                   <SquareSplitHorizontal size={16} />
                 </Button>
                 <Button
-                  css={{
-                    color: "$primary",
-                    padding: "$lg",
-                    display: "flex",
-                    alignContent: "center",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    borderRadius: "$md",
-                    background: `${
-                      activeLayout === "SinglePage" ? "$primary" : "$blackMuted"
-                    }`,
-                    "&:hover": {
-                      background: "$primary",
-                      color: "$white",
-                    },
-                  }}
+                  color="gray"
+                  size="3"
+                  variant="soft"
+                  className="flex w-10 h-10 items-center justify-center"
                   title="Activate Single Page View"
                   onClick={() => toggleReaderLayout("SinglePage")}
                 >
@@ -378,130 +326,45 @@ export default function Issue() {
                   onMouseOver={() => mouseOver.set(true)}
                   onMouseLeave={() => mouseOver.set(false)}
                   onClick={() => maximizeWindow()}
-                  css={{
-                    color: "$primary",
-                    padding: "$lg",
-                    display: "flex",
-                    alignContent: "center",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    borderRadius: "$md",
-                    background: "$blackMuted",
-                    "&:hover": {
-                      background: "$primary",
-                      color: "$white",
-                    },
-                  }}
+                  size="3"
+                  variant="soft"
+                  color="gray"
+                  className="flex w-10 h-10 items-center justify-center"
                   title="Toggle Fullscreen"
                 >
                   <CornersOut size={16} />
                 </Button>
               </Box>
             </Box>
-            {/* track view */}
-            <VStack style={{ width: "100%" }} gap={6}>
+            {/* thumbnail view */}
+            <Flex
+              className="w-full bg-black/50 backdrop-blur-2xl p-2 rounded-md"
+              direction="column"
+              align="start"
+              gap="3"
+            >
               {!loadingIssue && (
                 <Text css={{ fontSize: 15, color: "$gray" }}>
                   {activeIndexValue} / {issue?.issue.pages.length!}
                 </Text>
               )}
-              <Box
-                onMouseOver={() => mouseOver.set(true)}
-                onMouseDown={() => mouseOver.set(false)}
-                css={{
-                  background: "$blackMuted",
-                  backdropFilter: "blur(50px)",
-                  borderRadius: "$md",
-                  width: "100%",
-                  display: "flex",
-                  alignContent: "center",
-                  alignItems: "center",
-                  lineHeight: 80,
-                  overflowY: "hidden",
-                }}
-              >
-                <Button
-                  css={{
-                    display: "flex",
-                    alignContent: "center",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    color: "$white",
-                    padding: "$sm",
-                    height: "100%",
-                    width: "5%",
-                    background: "$blackMuted",
-                    backdropFilter: "blur(400px)",
-                    borderTopLeftRadius: "$md",
-                    borderBottomLeftRadius: "$md",
-                  }}
-                  onClick={handleLeftClick}
-                  disabled={activeIndexValue === 0}
-                >
-                  <CaretLeft />
-                </Button>
-                <Box
-                  css={{
-                    width: "90%",
-                    height: "100%",
-                    display: "flex",
-                    alignContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <AnimatedBox
-                    initial={{
-                      width: 0,
-                    }}
-                    transition={{
-                      duration: 0.3,
-                      bounce: true,
-                      ease: "easeOut",
-                    }}
-                    animate={{
-                      width: `${
-                        (activeIndexValue / issue?.issue.pages.length!) * 100
-                      }%`,
-                    }}
-                    css={{
-                      display: "flex",
-                      alignContent: "center",
-                      alignItems: "center",
-                      gap: "$md",
-                      height: "80%",
-                      padding: "$sm",
-                      borderTopRightRadius: "$md",
-                      borderBottomRightRadius: "$md",
-                      overflowY: "scroll",
-                      background: "$primary",
-                    }}
-                  />
-                </Box>
-                <Button
-                  onMouseOver={() => mouseOver.set(true)}
-                  onMouseLeave={() => mouseOver.set(false)}
-                  css={{
-                    display: "flex",
-                    alignContent: "center",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    color: "$white",
-                    padding: "$sm",
-                    background: "$blackMuted",
-                    backdropFilter: "blur(400px)",
-                    left: "95%",
-                    height: "100%",
-                    width: "5%",
-                    borderTopRightRadius: "$md",
-                    borderBottomRightRadius: "$md",
-                  }}
-                  disabled={activeIndexValue === issue?.issue.pages.length! - 1}
-                  onClick={handleRightClick}
-                >
-                  <CaretRight />
-                </Button>
-              </Box>
-            </VStack>
+              <Flex gap="1" grow="1" className="overflow-x-scroll w-full">
+                {issue?.issue.pages.map((v, idx) => {
+                  return (
+                    // biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
+                    <img
+                      onClick={() => activeIndex.set(idx)}
+                      src={v.content}
+                      className={`w-20 h-25 rounded-md ${
+                        activeIndexValue === idx &&
+                        "border-[1] border-solid border-purple-700"
+                      } cursor-pointer`}
+                      alt={v.id}
+                    />
+                  );
+                })}
+              </Flex>
+            </Flex>
           </AnimatedBox>
         </>
       )}
@@ -509,22 +372,9 @@ export default function Issue() {
       {uiState.distractionFreeMode && (
         <Button
           title="Turn off Distraction free mode"
+          radius="full"
           onClick={() => globalState$.uiState.distractionFreeMode.set(false)}
-          css={{
-            position: "absolute",
-            top: "93%",
-            left: "96.3%",
-            zIndex: 9999,
-            borderRadius: "$full",
-            padding: "$xxl",
-            background: "$blackMuted",
-            backdropFilter: "blur(400px)",
-            color: "$primary",
-            display: "flex",
-            alignContent: "center",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
+          className="absolute top-[93%] left-[96.3%] w-10 cursor-pointer h-10 bg-black/60 flex items-center justify-center backdrop-blur-lg shadow-lg z-[9999]"
         >
           <EyeSlash size={16} />
         </Button>

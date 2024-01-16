@@ -3,7 +3,14 @@ import { configureObservablePersistence } from "@legendapp/state/persist";
 import { ObservablePersistLocalStorage } from "@legendapp/state/persist-plugins/local-storage";
 import { Toaster } from "react-hot-toast";
 import { Route, HashRouter as Router, Routes } from "react-router-dom";
-import { Collection, EditIssue, FirstLaunch, Issue, Library } from "./pages";
+import {
+  Collection,
+  EditCollection,
+  EditIssue,
+  FirstLaunch,
+  Issue,
+  Library,
+} from "./pages";
 
 enableReactTracking({ auto: true, warnUnobserved: true });
 
@@ -20,9 +27,13 @@ export const App = () => {
         <Route path="/editIssue/:issueId" element={<EditIssue />} />
         <Route path="/collections/:collectionId" element={<Collection />} />
         <Route path="/first_launch" element={<FirstLaunch />} />
+        <Route
+          path="/collections/edit/:collectionId"
+          element={<EditCollection />}
+        />
       </Routes>
       <Toaster
-        position="bottom-center"
+        position="bottom-right"
         containerStyle={{
           top: 30,
         }}

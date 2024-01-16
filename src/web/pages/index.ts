@@ -1,4 +1,5 @@
 import Collection from "./Collection";
+import EditCollection from "./EditCollection";
 import EditIssue from "./EditIssue";
 import ErrorBoundaryFallback from "./ErrorBoundaryFallback";
 import FirstLaunch from "./FirstLaunch";
@@ -7,6 +8,7 @@ import Library from "./Library";
 
 export {
   Collection,
+  EditCollection,
   EditIssue,
   ErrorBoundaryFallback,
   FirstLaunch,

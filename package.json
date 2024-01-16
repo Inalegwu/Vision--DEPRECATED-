@@ -28,7 +28,7 @@
       "out/**/*"
     ],
     "directories": {
-      "output": "release/"
+      "output": "release/${version}"
     },
     "mac": {
       "target": [

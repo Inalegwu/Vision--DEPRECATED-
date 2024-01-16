@@ -40,7 +40,7 @@ export default function CollectionCard({ collection }: CollectionCardProps) {
       <Box
         onMouseOver={() => mouseOver.set(true)}
         onClick={handleClick}
-        className="w-40 h-60 relative rounded-md cursor-pointer ml-1"
+        className="w-44 h-65 overflow-hidden relative rounded-md cursor-pointer ml-1"
       >
         {/* if the collection has more than 1 issue , render the rest of the stack , to give the scattered stack effec */}
         {collection.issues.length > 1 && (
@@ -77,7 +77,7 @@ export default function CollectionCard({ collection }: CollectionCardProps) {
           alt={collection.issues[collection.issues.length - 1]?.name}
           className="w-full h-full absolute z-3 rounded-md"
         />
-        <Box className="w-full h-full p-1 bg-black/20 absolute z-4 flex flex-col items-start content-start justify-end rounded-md">
+        <Box className="w-full h-full p-1 bg-black/65 absolute z-4 flex flex-col items-start content-start justify-end rounded-md">
           <AnimatedText
             layout
             css={{
