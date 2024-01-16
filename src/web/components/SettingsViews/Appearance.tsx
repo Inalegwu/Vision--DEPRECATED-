@@ -1,122 +1,45 @@
 import { observer } from "@legendapp/state/react";
+import { Box, Flex, Switch, Text } from "@radix-ui/themes";
 import { globalState$ } from "@src/web/state";
-import { useCallback, useRef } from "react";
-import HStack from "../HStack";
-import Switch, { SwitchRefProps } from "../Switch";
-import VStack from "../VStack";
-import { Box, Text } from "../atoms";
+import { useCallback } from "react";
 
 const Appearance = observer(() => {
-  const ambientModeSwitch = useRef<SwitchRefProps>(null);
-  const colorModeSwitch = useRef<SwitchRefProps>(null);
-
   const { colorMode } = globalState$.uiState.get();
 
-  const handleAmbientBackgroundClick = useCallback(() => {
-    ambientModeSwitch.current?.toggle();
-
-    const newState = ambientModeSwitch.current?.state();
-
-    // if for some reason newState
-    // returns undefined , I want to know about it
-    if (newState === undefined) {
-      console.log("New State Returned Undefined");
-      return;
+  const changeColorMode = useCallback(() => {
+    if (colorMode === "dark") {
+      document.body.classList.remove("dark");
+      globalState$.uiState.colorMode.set("light");
+    } else {
+      document.body.classList.add("dark");
+      globalState$.uiState.colorMode.set("dark");
     }
-
-    globalState$.uiState.layoutBackground.set(newState);
-  }, []);
-
-  const handleColorModeChange = useCallback(() => {
-    colorModeSwitch.current?.toggle();
-
-    const newState = colorModeSwitch.current?.state();
-
-    globalState$.uiState.colorMode.set(newState ? "dark" : "light");
-  }, []);
+  }, [colorMode]);
 
   return (
-    <Box
-      css={{
-        width: "100%",
-        height: "100%",
-        padding: "$lg",
-        display: "flex",
-        flexDirection: "column",
-        alignContent: "flex-start",
-        alignItems: "flex-start",
-        justifyContent: "flex-start",
-        overflowY: "scroll",
-        gap: "$md",
-      }}
-    >
+    <Box className="w-full h-full p-4 flex flex-col items-start justify-start overflow-y-scroll gap-4">
       {/* ambient background setting */}
-      <VStack
-        alignContent="flex-start"
-        alignItems="flex-start"
-        style={{ gap: "$md", width: "100%", padding: "$md" }}
-      >
-        <HStack
-          alignContent="center"
-          alignItems="center"
-          justifyContent="space-between"
-          style={{ width: "100%" }}
-        >
-          <Text css={{ fontSize: 13, fontWeight: "normal" }}>
-            Ambient Background
-          </Text>
-          <Switch
-            initial={globalState$.uiState.layoutBackground.get()}
-            onClick={handleAmbientBackgroundClick}
-            ref={ambientModeSwitch}
-          />
-        </HStack>
-        <Text
-          css={{
-            fontSize: 11,
-            color: `${colorMode === "dark" ? "$lightGray" : "$blackMuted"}`,
-            fontWeight: "lighter",
-          }}
-        >
+      <Flex align="start" direction="column" className="gap-3 w-full p-1">
+        <Flex align="center" className="w-full" justify="between">
+          <Text size="3">Ambient Background</Text>
+          <Switch size="2" />
+        </Flex>
+        <Text size="2">
           Enable/Disable Ambient Background in the app. The reader ignores this
           setting
         </Text>
-      </VStack>
-      <VStack
-        alignContent="flex-start"
-        alignItems="flex-start"
-        style={{ gap: "$md", width: "100%", padding: "$md" }}
-      >
-        <HStack
-          alignContent="center"
-          alignItems="center"
-          justifyContent="space-between"
-          style={{ width: "100%" }}
-        >
-          <Text css={{ fontSize: 13, fontWeight: "normal" }}>Dark Mode</Text>
-          <Switch
-            // set the intial value of the colormode switch based
-            // of the current state of the color mode
-            // if the ui is dark , it is switch on , otherwise it is off
-            initial={
-              globalState$.uiState.colorMode.get() === "dark" ? true : false
-            }
-            onClick={handleColorModeChange}
-            ref={colorModeSwitch}
-          />
-        </HStack>
-        <Text
-          css={{
-            fontSize: 11,
-            color: `${colorMode === "dark" ? "$lightGray" : "$blackMuted"}`,
-            fontWeight: "lighter",
-          }}
-        >
+      </Flex>
+      <Flex direction="column" align="start" className="w-full p-1 gap-3">
+        <Flex align="center" justify="between" className="w-full">
+          <Text size="3">Dark Mode</Text>
+          <Switch onClick={changeColorMode} size="2" />
+        </Flex>
+        <Text size="2" className="text-slate-100">
           Tired of the dark side ? Make your way to the light side , or
           vice-versa. Be careful in the dark though , there's a guy dressed like
           a giant Bat there and I don't know why
         </Text>
-      </VStack>
+      </Flex>
     </Box>
   );
 });

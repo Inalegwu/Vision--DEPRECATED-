@@ -5,7 +5,7 @@ import { useCallback } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { readingState } from "../state";
-import { Image } from "./atoms";
+import { AnimatedBox } from "./atoms";
 
 type Props = {
   issue: Issue;
@@ -17,7 +17,7 @@ export default function IssueCard(props: Props) {
 
   const currentlyReading = readingState.currentlyReading.get();
 
-  console.log(currentlyReading);
+  const savedInfo = currentlyReading.find((v) => v.id === props.issue.id);
 
   const { mutate, isLoading: _deleting } =
     trpcReact.issue.removeIssue.useMutation({
@@ -64,25 +64,26 @@ export default function IssueCard(props: Props) {
           className="overflow-hidden"
         >
           <Box className="relative overflow-hidden">
-            <Image
+            <img
               src={props.issue.thumbnailUrl}
-              className="w-44 h-65 overflow-hidden rounded-md border-1 border-slate-400"
+              alt={props.issue.name}
+              className="w-44 h-65 overflow-hidden  rounded-md border-[0.1px] border-solid border-slate-400"
             />
-            <Box className="absolute z-1 top-0 left-0 bg-black/70 p-2 flex flex-col items-start justify-end w-full h-[98%] rounded-md">
+            <Box className="absolute z-1 top-0 left-0 bg-black/70 p-2 flex flex-col space-y-2  items-start justify-end w-full h-[98%] rounded-md">
               <Text weight="light" size="2" className="w-full">
                 {props.issue.name}
               </Text>
-              {/* {currentlyReading && savedInfo && (
+              {currentlyReading && savedInfo && (
                 <Box className="w-full bg-gray-500/40 rounded-full">
                   <AnimatedBox
                     initial={{ width: "0%" }}
                     animate={{
-                      width: `${(savedInfo.page / savedInfo.total) % 100}%`,
+                      width: `${(savedInfo.page / savedInfo.total) * 100}%`,
                     }}
-                    className="p-1 rounded-full bg-purple-300"
+                    className="p-[2.4px] rounded-full bg-purple-300"
                   />
                 </Box>
-              )} */}
+              )}
             </Box>
           </Box>
         </Flex>

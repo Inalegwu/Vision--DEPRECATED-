@@ -10,8 +10,6 @@ import SettingsView from "./SettingsView";
 import type { SkeletonProps } from "./Skeleton";
 import Skeleton from "./Skeleton";
 import Spinner from "./Spinner";
-import type { SwitchProps, SwitchRefProps } from "./Switch";
-import Switch from "./Switch";
 import VStack from "./VStack";
 
 export {
@@ -28,8 +26,5 @@ export {
   Skeleton,
   SkeletonProps,
   Spinner,
-  Switch,
-  SwitchProps,
-  SwitchRefProps,
   VStack,
 };

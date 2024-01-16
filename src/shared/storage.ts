@@ -11,5 +11,3 @@ process.env = {
 const sqlite = new Database(process.env.STORAGE_LOCATION!);
 
 export const db = drizzle(sqlite, { schema });
-
-migrate(db, { migrationsFolder: ".drizzle" });

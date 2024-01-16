@@ -106,17 +106,6 @@ export const issueRouter = router({
         });
 
         if (!issue) {
-          /**
-           * TODO something like this will be implemented
-           * when the metadata files are being saved
-           *
-           * const metadata=await ctx.db.query.meta.findFirst({
-           *  where:(meta,{eq})=>eq(meta.issueId.input.id),
-           * });
-           *
-           *
-           */
-
           trackEvent("Fetch issue error", {
             issue_id: input.id,
           });

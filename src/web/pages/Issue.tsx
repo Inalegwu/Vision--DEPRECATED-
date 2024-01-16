@@ -11,6 +11,7 @@ import {
   Square,
   SquareSplitHorizontal,
 } from "@phosphor-icons/react";
+import { CaretLeftIcon, CaretRightIcon } from "@radix-ui/react-icons";
 import { Button, Flex } from "@radix-ui/themes";
 import { trpcReact } from "@shared/config";
 import { IssueParams, ReaderLayout } from "@shared/types";
@@ -246,6 +247,7 @@ export default function Issue() {
                 onClick={saveIssueReadingState}
                 color="iris"
                 variant="soft"
+                size="3"
               >
                 <CaretLeft size={16} />
               </Button>
@@ -338,7 +340,7 @@ export default function Issue() {
             </Box>
             {/* thumbnail view */}
             <Flex
-              className="w-full bg-black/50 backdrop-blur-2xl p-2 rounded-md"
+              className="w-full p-2 rounded-md"
               direction="column"
               align="start"
               gap="3"
@@ -348,21 +350,34 @@ export default function Issue() {
                   {activeIndexValue} / {issue?.issue.pages.length!}
                 </Text>
               )}
-              <Flex gap="1" grow="1" className="overflow-x-scroll w-full">
-                {issue?.issue.pages.map((v, idx) => {
-                  return (
-                    // biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
-                    <img
-                      onClick={() => activeIndex.set(idx)}
-                      src={v.content}
-                      className={`w-20 h-25 rounded-md ${
-                        activeIndexValue === idx &&
-                        "border-[1] border-solid border-purple-700"
-                      } cursor-pointer`}
-                      alt={v.id}
-                    />
-                  );
-                })}
+              <Flex align="center" gap="4" className="w-full">
+                <Button
+                  onClick={handleLeftClick}
+                  variant="ghost"
+                  radius="full"
+                  color="gray"
+                >
+                  <CaretLeftIcon />
+                </Button>
+                <Box className="bg-white/10 backdrop-blur-2xl w-full rounded-full">
+                  <AnimatedBox
+                    className="p-1 bg-purple-500 rounded-full"
+                    initial={{ width: "0%" }}
+                    animate={{
+                      width: `${
+                        (activeIndexValue / issue?.issue.pages.length!) * 100
+                      }%`,
+                    }}
+                  />
+                </Box>
+                <Button
+                  onClick={handleRightClick}
+                  variant="ghost"
+                  radius="full"
+                  color="gray"
+                >
+                  <CaretRightIcon />
+                </Button>
               </Flex>
             </Flex>
           </AnimatedBox>

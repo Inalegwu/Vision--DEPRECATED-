@@ -114,7 +114,7 @@ export default function Library() {
       <Box className="w-full h-screen">
         {/* header */}
         <Flex align="center" justify="between" p="4" className="mt-2">
-          <Heading size="7">My Library</Heading>
+          <Heading size="8">My Library</Heading>
           <Flex className="flex-1" gap="2" justify="end" align="center">
             <Popover.Root>
               <Popover.Trigger>
@@ -158,7 +158,7 @@ export default function Library() {
           p="4"
           wrap="wrap"
           height="9"
-          gap="3"
+          gap="2"
           className="overflow-y-scroll w-full h-[85%]"
         >
           {library?.collections.length === 0 && library.issues.length === 0 ? (

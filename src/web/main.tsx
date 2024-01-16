@@ -22,11 +22,11 @@ ReactDom.createRoot(document.getElementById("root") as HTMLElement).render(
       <trpcReact.Provider client={trpcClient} queryClient={queryClient}>
         <QueryClientProvider client={queryClient}>
           <Theme
+            appearance="dark"
             accentColor="iris"
-            grayColor="slate"
+            grayColor="mauve"
             radius="large"
             scaling="90%"
-            appearance={colorMode === "dark" ? "dark" : "light"}
           >
             <App />
           </Theme>

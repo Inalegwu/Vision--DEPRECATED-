@@ -2,7 +2,6 @@ import { CornersIcon, Cross2Icon, MinusIcon } from "@radix-ui/react-icons";
 import { Box, Button, Flex, Text } from "@radix-ui/themes";
 import { useKeyPress } from "@src/web/hooks";
 import { trpcReact } from "../../shared/config";
-import { globalState$ } from "../state";
 
 type LayoutProps = {
   children: React.ReactNode;
@@ -15,8 +14,6 @@ export default function Layout(props: LayoutProps) {
   const { mutate: minimizeWindow } =
     trpcReact.window.minimizeWindow.useMutation();
 
-  const { layoutBackground, colorMode } = globalState$.uiState.get();
-
   // use ctrl/cmd key + q for quitting the app
   useKeyPress((e) => {
     if (e.ctrlKey && e.key === "q") {
@@ -27,7 +24,14 @@ export default function Layout(props: LayoutProps) {
   return (
     <Flex className="w-full h-screen" direction="column">
       {/* titlebar */}
-      <Flex align="center" justify="between" width="100%" px="4" py="2">
+      <Flex
+        align="center"
+        justify="between"
+        width="100%"
+        px="4"
+        py="2"
+        className="border-b-[0.1px] border-b-solid border-b-slate-100/10"
+      >
         <Box>
           <Text weight="light">Vision</Text>
         </Box>
@@ -61,8 +65,6 @@ export default function Layout(props: LayoutProps) {
       </Flex>
       {/* body */}
       <Box>{props.children}</Box>
-      {/* <SettingsView />
-        <FloatingNavigation /> */}
     </Flex>
   );
 }

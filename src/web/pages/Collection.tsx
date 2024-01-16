@@ -11,14 +11,15 @@ import { useObservable } from "@legendapp/state/react";
 import {
   CaretLeftIcon,
   Cross1Icon,
+  DotsHorizontalIcon,
   Pencil1Icon,
   PlusIcon,
   TrashIcon,
 } from "@radix-ui/react-icons";
 import {
-  AlertDialog,
   Button,
   Dialog,
+  DropdownMenu,
   Flex,
   IconButton,
   Text,
@@ -136,7 +137,7 @@ export default function Collection() {
             </IconButton>
           </HStack>
           <Flex align="center" justify="between" className="w-full mt-2 px-1">
-            <Text size="7" weight="medium">
+            <Text size="8" weight="medium">
               {name.get()}
             </Text>
             <HStack
@@ -167,6 +168,11 @@ export default function Collection() {
                     justify="start"
                     className="mt-2"
                   >
+                    {issues?.issues.length === 0 && (
+                      <Text color="red" weight="medium" size="3">
+                        No Issues to add
+                      </Text>
+                    )}
                     {issues?.issues.map((v) => {
                       return (
                         <Dialog.Close>
@@ -192,60 +198,40 @@ export default function Collection() {
                   </Flex>
                 </Dialog.Content>
               </Dialog.Root>
-              <Button variant="soft" color="gray" onClick={handleEditClick}>
-                <Text>Edit Collection</Text>
-                <Pencil1Icon width={15} height={15} />
-              </Button>
-              <AlertDialog.Root>
-                <AlertDialog.Trigger>
-                  <Button color="red" variant="soft">
-                    <Text>Delete Collection</Text>
-                    <TrashIcon width={15} height={15} />
+              <DropdownMenu.Root>
+                <DropdownMenu.Trigger>
+                  <Button variant="soft" color="gray">
+                    <DotsHorizontalIcon />
                   </Button>
-                </AlertDialog.Trigger>
-                <AlertDialog.Content
-                  className="rounded-md px-5 py-5"
-                  style={{ maxWidth: 400 }}
+                </DropdownMenu.Trigger>
+                <DropdownMenu.Content
+                  variant="soft"
+                  className="p-0 mt-3 space-y-3"
                 >
-                  <AlertDialog.Title size="6">
-                    Delete {collection?.collection?.name}
-                  </AlertDialog.Title>
-                  <AlertDialog.Description>
-                    <Text size="3">
-                      Are you sure you want to delete{" "}
-                      <Text weight="bold" color="red">
-                        {collection?.collection?.name}
-                      </Text>{" "}
-                      This will not delete your issues but they will be
-                      Disorganized
-                    </Text>
-                  </AlertDialog.Description>
-                  <Flex gap="3" mt="4">
-                    <AlertDialog.Cancel>
-                      <Button size="2" variant="soft" color="gray">
-                        Cancel
-                      </Button>
-                    </AlertDialog.Cancel>
-                    <AlertDialog.Action>
-                      <Button
-                        size="2"
-                        onClick={deleteCollection}
-                        variant="soft"
-                        color="red"
-                      >
-                        Delete
-                      </Button>
-                    </AlertDialog.Action>
-                  </Flex>
-                </AlertDialog.Content>
-              </AlertDialog.Root>
+                  <DropdownMenu.Item
+                    onClick={handleEditClick}
+                    className="gap-3"
+                  >
+                    Edit Collection
+                    <Pencil1Icon />
+                  </DropdownMenu.Item>
+                  <DropdownMenu.Item
+                    color="red"
+                    onClick={deleteCollection}
+                    className="gap-3 mt-2"
+                  >
+                    Delete Collection
+                    <TrashIcon />
+                  </DropdownMenu.Item>
+                </DropdownMenu.Content>
+              </DropdownMenu.Root>
             </HStack>
           </Flex>
         </Flex>
         <Flex
           align="start"
           justify="start"
-          gap="4"
+          gap="3"
           wrap="wrap"
           className="h-[90%] p-3 pt-4 overflow-y-scroll pb-20"
         >
