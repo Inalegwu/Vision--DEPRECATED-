@@ -28,7 +28,7 @@ import { trpcReact } from "@src/shared/config";
 import { CollectionParams } from "@src/shared/types";
 import { AnimatePresence } from "framer-motion";
 import moment from "moment";
-import { useCallback, useRef } from "react";
+import { useCallback } from "react";
 import toast from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -42,10 +42,7 @@ export default function Collection() {
     return;
   }
 
-  const inputRef = useRef<HTMLInputElement>(null);
   const issuesListVisible = useObservable(false);
-  const editingName = useObservable(false);
-  const deleteModalVisible = useObservable(false);
   const name = useObservable("");
 
   const { data: collection, isLoading: getting } =
@@ -74,15 +71,7 @@ export default function Collection() {
       },
     });
 
-  const { mutate: changeName, isLoading: changingName } =
-    trpcReact.collection.changeCollectionName.useMutation({
-      onSuccess: () => {
-        utils.library.invalidate();
-        editingName.set(false);
-      },
-    });
-
-  const { mutate: deleteCollectionFromDB, isLoading: deletingCollection } =
+  const { mutate: deleteCollectionFromDB } =
     trpcReact.collection.deleteCollection.useMutation({
       onSuccess: () => {
         utils.library.getLibrary.invalidate();
@@ -96,15 +85,10 @@ export default function Collection() {
   // add an issue to the collection
   const addToLibrary = useCallback(
     (v: string) => {
-      addIssueToLibrary({ issueId: v, collectionId: collectionId || "" });
+      addIssueToLibrary({ childId: v, ownerId: collectionId || "" });
     },
     [collectionId, addIssueToLibrary],
   );
-
-  // change the name of the collection
-  const updateName = useCallback(() => {
-    changeName({ id: collectionId, name: name.get() });
-  }, [name, collectionId, changeName]);
 
   const goBack = useCallback(() => {
     // @ts-ignore go back
@@ -112,7 +96,7 @@ export default function Collection() {
       preventScrollReset: true,
       unstable_viewTransition: true,
     });
-  }, []);
+  }, [router]);
 
   // delete this collection from the database
   // this however doens't delete the issues in said collection

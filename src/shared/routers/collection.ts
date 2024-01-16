@@ -2,7 +2,7 @@ import { trackEvent } from "@aptabase/electron/main";
 import { collections, issues } from "@shared/schema";
 import { generateUUID } from "@shared/utils";
 import {
-  AddIssueSchema,
+  AddSchema,
   ChangeNameSchema,
   CreateCollectionSchema,
   IdSchema,
@@ -47,12 +47,11 @@ export const collectionRouter = router({
       }
     }),
   addIssueToCollection: publicProcedure
-    .input((x) => v.parse(AddIssueSchema, x))
+    .input((x) => v.parse(AddSchema, x))
     .mutation(async ({ ctx, input }) => {
       try {
         const collection = await ctx.db.query.collections.findFirst({
-          where: (collections, { eq }) =>
-            eq(collections.id, input.collectionId),
+          where: (collections, { eq }) => eq(collections.id, input.ownerId),
         });
 
         if (!collection) {
@@ -67,7 +66,7 @@ export const collectionRouter = router({
           .set({
             collectionId: collection.id,
           })
-          .where(eq(issues.id, input.issueId))
+          .where(eq(issues.id, input.childId))
           .returning({ name: issues.name });
 
         return {

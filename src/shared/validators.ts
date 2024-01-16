@@ -8,9 +8,11 @@ export const IdSchema = object({
   id: string([toTrimmed()]),
 });
 
-export const AddIssueSchema = object({
-  collectionId: string([toTrimmed()]),
-  issueId: string([toTrimmed()]),
+export const AddSchema = object({
+  // who you're adding to
+  ownerId: string([toTrimmed()]),
+  // who is being added
+  childId: string([toTrimmed()]),
 });
 
 export const ChangeNameSchema = object({
