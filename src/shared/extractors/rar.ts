@@ -4,6 +4,8 @@ import { createExtractorFromData } from "node-unrar-js";
 
 export default async function RarExtractor(filePath: string) {
   const wasmBinary = fs.readFileSync(
+    // this line is needed for some resolutions to
+    // work , mostly because of pnpm
     require.resolve("node-unrar-js/dist/js/unrar.wasm"),
   );
 

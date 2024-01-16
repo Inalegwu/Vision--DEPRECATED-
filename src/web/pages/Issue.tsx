@@ -89,7 +89,7 @@ export default function Issue() {
     if (navigationShowing.get() && !mouseOver.get()) {
       navigationShowing.set(false);
     }
-  }, 4000);
+  }, 3000);
 
   const handleRightClick = useCallback(() => {
     if (activeIndex.get() === issue?.issue?.pages?.length!) {
