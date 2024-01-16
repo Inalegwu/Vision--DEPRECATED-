@@ -66,7 +66,7 @@ export default function EditIssue() {
   const saveChanges = useCallback(() => {
     updateIssueName({
       id: issueId,
-      newName: issueName.get(),
+      name: issueName.get(),
     });
   }, [issueName]);
 

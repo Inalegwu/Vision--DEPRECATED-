@@ -1,5 +1,6 @@
 import { trackEvent } from "@aptabase/electron/main";
 import { issues, pages } from "@shared/schema";
+import { ChangeNameSchema, IdSchema } from "@shared/validators";
 import { publicProcedure, router } from "@src/trpc";
 import { TRPCError } from "@trpc/server";
 import { eq } from "drizzle-orm";
@@ -8,14 +9,7 @@ import * as v from "valibot";
 // all actions that can be carried out on an issue
 export const issueRouter = router({
   getIssue: publicProcedure
-    .input((x) =>
-      v.parse(
-        v.object({
-          id: v.string([v.toTrimmed()]),
-        }),
-        x,
-      ),
-    )
+    .input((x) => v.parse(IdSchema, x))
     .query(async ({ ctx, input }) => {
       try {
         const issue = await ctx.db.query.issues.findFirst({
@@ -59,14 +53,7 @@ export const issueRouter = router({
       }
     }),
   removeIssue: publicProcedure
-    .input((x) =>
-      v.parse(
-        v.object({
-          id: v.string(),
-        }),
-        x,
-      ),
-    )
+    .input((x) => v.parse(IdSchema, x))
     .mutation(async ({ ctx, input }) => {
       trackEvent("Delete Issue");
       try {
@@ -91,14 +78,7 @@ export const issueRouter = router({
       }
     }),
   getIssueData: publicProcedure
-    .input((x) =>
-      v.parse(
-        v.object({
-          id: v.string(),
-        }),
-        x,
-      ),
-    )
+    .input((x) => v.parse(IdSchema, x))
     .query(async ({ ctx, input }) => {
       try {
         const issue = await ctx.db.query.issues.findFirst({
@@ -133,21 +113,13 @@ export const issueRouter = router({
       }
     }),
   changeIssueName: publicProcedure
-    .input((x) =>
-      v.parse(
-        v.object({
-          newName: v.string(),
-          id: v.string(),
-        }),
-        x,
-      ),
-    )
+    .input((x) => v.parse(ChangeNameSchema, x))
     .mutation(async ({ ctx, input }) => {
       try {
         await ctx.db
           .update(issues)
           .set({
-            name: input.newName,
+            name: input.name,
           })
           .where(eq(issues.id, input.id));
       } catch (e) {
@@ -164,14 +136,7 @@ export const issueRouter = router({
       }
     }),
   getIssuePageLength: publicProcedure
-    .input((x) =>
-      v.parse(
-        v.object({
-          id: v.string(),
-        }),
-        x,
-      ),
-    )
+    .input((x) => v.parse(IdSchema, x))
     .query(async ({ ctx, input }) => {
       const pages = await ctx.db.query.pages.findMany({
         where: (page, { eq }) => eq(page.issueId, input.id),

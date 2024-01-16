@@ -39,22 +39,16 @@ export const libraryRouter = router({
           sortedFiles[0]?.data?.buffer || sortedFiles[1]?.data?.buffer,
         );
 
-        // !use the filepath to create the name of the
-        // !issue , as the image content cannot be trusted
-        // !to have the appropriate name
         const name = filePaths[0]
           .replace(/^.*[\\\/]/, "")
           .replace(/\.[^/.]+$/, "")
           .replace(/(\d+)$/g, "")
           .replace("-", " ");
 
-        // ! ensure the issue isn't already saved
         const issueExists = await ctx.db.query.issues.findFirst({
           where: (issues, { eq }) => eq(issues.name, name),
         });
 
-        // ! Inform the user that this issue already exists
-        // ! this ensure space savings in the local database
         if (issueExists) {
           throw new TRPCError({
             code: "INTERNAL_SERVER_ERROR",
@@ -76,9 +70,7 @@ export const libraryRouter = router({
           });
 
         for (const file of sortedFiles) {
-          // ! ignore directories
-          // ! sometimes the directory
-          // ! is converted and the app crashes
+          // ignore directories
           if (file.isDir) {
             continue;
           }
@@ -140,6 +132,7 @@ export const libraryRouter = router({
         .returning({ id: issues.id, name: issues.name });
 
       for (const file of sortedFiles) {
+        // ignore directories
         if (file.fileHeader.flags.directory) {
           continue;
         }

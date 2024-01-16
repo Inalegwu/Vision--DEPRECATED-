@@ -1,24 +1,23 @@
 import { trackEvent } from "@aptabase/electron/main";
+import { collections, issues } from "@shared/schema";
+import { generateUUID } from "@shared/utils";
+import {
+  AddIssueSchema,
+  ChangeNameSchema,
+  CreateCollectionSchema,
+  IdSchema,
+} from "@src/shared/validators";
 import { publicProcedure, router } from "@src/trpc";
 import { TRPCError } from "@trpc/server";
 import { DrizzleError, eq } from "drizzle-orm";
 import * as v from "valibot";
-import { collections, issues } from "../schema";
-import { generateUUID } from "../utils";
 
 // all actions that can be carried out on a collection and its contents
 export const collectionRouter = router({
   getIssuesInCollection: publicProcedure
     // valibots' parse exists outside the constructor
     // which leads to this callback method
-    .input((x) =>
-      v.parse(
-        v.object({
-          id: v.string([v.toTrimmed()]),
-        }),
-        x,
-      ),
-    )
+    .input((x) => v.parse(IdSchema, x))
     .query(async ({ ctx, input }) => {
       try {
         const collection = await ctx.db.query.collections.findFirst({
@@ -48,15 +47,7 @@ export const collectionRouter = router({
       }
     }),
   addIssueToCollection: publicProcedure
-    .input((x) =>
-      v.parse(
-        v.object({
-          collectionId: v.string([v.toTrimmed()]),
-          issueId: v.string([v.toTrimmed()]),
-        }),
-        x,
-      ),
-    )
+    .input((x) => v.parse(AddIssueSchema, x))
     .mutation(async ({ ctx, input }) => {
       try {
         const collection = await ctx.db.query.collections.findFirst({
@@ -96,14 +87,7 @@ export const collectionRouter = router({
       }
     }),
   deleteCollection: publicProcedure
-    .input((x) =>
-      v.parse(
-        v.object({
-          id: v.string([v.toTrimmed()]),
-        }),
-        x,
-      ),
-    )
+    .input((x) => v.parse(IdSchema, x))
     .mutation(async ({ ctx, input }) => {
       try {
         const collection = await ctx.db.query.collections.findFirst({
@@ -141,14 +125,7 @@ export const collectionRouter = router({
       }
     }),
   removeIssueFromCollection: publicProcedure
-    .input((x) =>
-      v.parse(
-        v.object({
-          id: v.string([v.toTrimmed()]),
-        }),
-        x,
-      ),
-    )
+    .input((x) => v.parse(IdSchema, x))
     .mutation(async ({ ctx, input }) => {
       try {
         const issue = await ctx.db.query.issues.findFirst({
@@ -189,14 +166,7 @@ export const collectionRouter = router({
       }
     }),
   createCollection: publicProcedure
-    .input((x) =>
-      v.parse(
-        v.object({
-          name: v.string([v.toTrimmed()]),
-        }),
-        x,
-      ),
-    )
+    .input((x) => v.parse(CreateCollectionSchema, x))
     .mutation(async ({ ctx, input }) => {
       try {
         const created = await ctx.db
@@ -228,15 +198,7 @@ export const collectionRouter = router({
       }
     }),
   changeCollectionName: publicProcedure
-    .input((x) =>
-      v.parse(
-        v.object({
-          name: v.string([v.toTrimmed()]),
-          id: v.string([v.toTrimmed()]),
-        }),
-        x,
-      ),
-    )
+    .input((x) => v.parse(ChangeNameSchema, x))
     .mutation(async ({ ctx, input }) => {
       try {
         await ctx.db
