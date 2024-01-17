@@ -31,7 +31,6 @@ export default function EditIssue() {
   }
 
   const issueName = useObservable("");
-  const editingName = useObservable(false);
 
   // navigate backwards
   const goBack = useCallback(() => {
@@ -68,7 +67,7 @@ export default function EditIssue() {
       id: issueId,
       name: issueName.get(),
     });
-  }, [issueName]);
+  }, [issueName, updateIssueName, issueId]);
 
   return (
     <Layout>
