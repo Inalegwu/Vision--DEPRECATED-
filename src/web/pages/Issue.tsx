@@ -14,7 +14,7 @@ import {
 import { CaretLeftIcon, CaretRightIcon } from "@radix-ui/react-icons";
 import { Button, Flex } from "@radix-ui/themes";
 import { trpcReact } from "@shared/config";
-import { IssueParams, ReaderLayout } from "@shared/types";
+import { IssueParams } from "@shared/types";
 import { LOADING_PHRASES, getRandomIndex } from "@shared/utils";
 import {
   useDebounce,
@@ -23,6 +23,7 @@ import {
   useWindow,
 } from "@src/web/hooks";
 import { globalState$, readingState } from "@src/web/state";
+import { AnimatePresence } from "framer-motion";
 import { useCallback } from "react";
 import toast from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
@@ -129,8 +130,12 @@ export default function Issue() {
     globalState$.uiState.ambientBackground.set(!uiState.ambientBackground);
   }, [uiState.ambientBackground]);
 
-  const toggleReaderLayout = useCallback((layout: ReaderLayout) => {
-    globalState$.uiState.readerLayout.set(layout);
+  const toggleReaderLayout = useCallback(() => {
+    if (globalState$.uiState.readerLayout.get() === "SinglePage") {
+      globalState$.uiState.readerLayout.set("DoublePage");
+    } else {
+      globalState$.uiState.readerLayout.set("SinglePage");
+    }
   }, []);
 
   const saveIssueReadingState = useCallback(() => {
@@ -203,186 +208,185 @@ export default function Issue() {
           </Box>
         </Box>
       )}
-      {/* navigation overlay */}
-      {navigationShowing.get() && !uiState.distractionFreeMode && (
-        <>
-          <AnimatedBox
-            transition={{
-              duration: 0.5,
-              ease: "easeInOut",
-            }}
-            initial={{
-              opacity: 0,
-            }}
-            animate={{
-              opacity: navigationShowingValue ? 1 : 0,
-            }}
-            css={{
-              width: "100%",
-              height: "100vh",
-              position: "absolute",
-              zIndex: 99999,
-              padding: "$xl",
-              display: "flex",
-              flexDirection: "column",
-              alignContent: "center",
-              alignItems: "center",
-              justifyContent: "space-between",
-              background: "$blackMuted",
-            }}
-          >
-            <Box
+      <AnimatePresence>
+        {/* navigation overlay */}
+        {navigationShowing.get() && !uiState.distractionFreeMode && (
+          <>
+            <AnimatedBox
+              transition={{
+                duration: 0.5,
+                ease: "easeInOut",
+              }}
+              initial={{
+                opacity: 0,
+              }}
+              animate={{
+                opacity: navigationShowingValue ? 1 : 0,
+              }}
+              exit={{ opacity: 0 }}
               css={{
                 width: "100%",
+                height: "100vh",
+                position: "absolute",
+                zIndex: 99999,
+                padding: "$xl",
                 display: "flex",
+                flexDirection: "column",
                 alignContent: "center",
                 alignItems: "center",
-                justifyContent: "flex-start",
-                gap: "$xxxl",
+                justifyContent: "space-between",
+                background: "$blackMuted",
               }}
             >
-              <Button
-                onMouseOver={() => mouseOver.set(true)}
-                onMouseLeave={() => mouseOver.set(false)}
-                onClick={saveIssueReadingState}
-                color="iris"
-                variant="soft"
-                size="3"
-              >
-                <CaretLeft size={16} />
-              </Button>
-              <Text css={{ color: "$white", fontSize: 15 }}>
-                {issue?.issue?.name}
-              </Text>
-              {/* keep the window draggable */}
               <Box
                 css={{
-                  flex: 1,
-                  padding: "$md",
-                  height: 50,
-                  cursor: "grabbing",
-                }}
-                id="drag-region"
-              />
-              {/* actions */}
-              <Box
-                css={{
+                  width: "100%",
                   display: "flex",
                   alignContent: "center",
                   alignItems: "center",
-                  gap: "$md",
+                  justifyContent: "flex-start",
+                  gap: "$xxxl",
                 }}
               >
                 <Button
                   onMouseOver={() => mouseOver.set(true)}
                   onMouseLeave={() => mouseOver.set(false)}
-                  variant="soft"
-                  color="gray"
-                  size="3"
-                  className="flex w-10 h-10 items-center justify-center"
-                  onClick={toggleAmbientBackground}
-                >
-                  {uiState.ambientBackground ? (
-                    <LightbulbFilament size={16} />
-                  ) : (
-                    <Lightbulb size={16} />
-                  )}
-                </Button>
-                <Button
-                  onMouseOver={() => mouseOver.set(true)}
-                  onMouseLeave={() => mouseOver.set(false)}
-                  size="3"
-                  variant="soft"
-                  color="gray"
-                  className="flex w-10 h-10 items-center content-center"
-                  title="Turn on Distraction Free Mode"
-                  onClick={toggleDistractionFreeMode}
-                >
-                  {uiState.distractionFreeMode ? (
-                    <EyeSlash size={16} />
-                  ) : (
-                    <Eye size={16} />
-                  )}
-                </Button>
-                <Button
-                  color="gray"
+                  onClick={saveIssueReadingState}
                   variant="soft"
                   size="3"
-                  className="flex w-10 h-10 items-center justify-center"
-                  title="Activate Double Page View"
-                  onClick={() => toggleReaderLayout("DoublePage")}
+                  className="p-2.5"
                 >
-                  <SquareSplitHorizontal size={16} />
+                  <CaretLeft size={16} />
                 </Button>
-                <Button
-                  color="gray"
-                  size="3"
-                  variant="soft"
-                  className="flex w-10 h-10 items-center justify-center"
-                  title="Activate Single Page View"
-                  onClick={() => toggleReaderLayout("SinglePage")}
-                >
-                  <Square />
-                </Button>
-                <Button
-                  onMouseOver={() => mouseOver.set(true)}
-                  onMouseLeave={() => mouseOver.set(false)}
-                  onClick={() => maximizeWindow()}
-                  size="3"
-                  variant="soft"
-                  color="gray"
-                  className="flex w-10 h-10 items-center justify-center"
-                  title="Toggle Fullscreen"
-                >
-                  <CornersOut size={16} />
-                </Button>
-              </Box>
-            </Box>
-            {/* thumbnail view */}
-            <Flex
-              className="w-full p-2 rounded-md"
-              direction="column"
-              align="start"
-              gap="3"
-            >
-              {!loadingIssue && (
-                <Text css={{ fontSize: 15, color: "$gray" }}>
-                  {activeIndexValue} / {issue?.issue.pages.length!}
+                <Text css={{ color: "$white", fontSize: 15 }}>
+                  {issue?.issue?.name}
                 </Text>
-              )}
-              <Flex align="center" gap="4" className="w-full">
-                <Button
-                  onClick={handleLeftClick}
-                  variant="ghost"
-                  radius="full"
-                  color="gray"
+                {/* keep the window draggable */}
+                <Box
+                  css={{
+                    flex: 1,
+                    padding: "$md",
+                    height: 50,
+                    cursor: "grabbing",
+                  }}
+                  id="drag-region"
+                />
+                {/* actions */}
+                <Box
+                  css={{
+                    display: "flex",
+                    alignContent: "center",
+                    alignItems: "center",
+                    gap: "$md",
+                  }}
                 >
-                  <CaretLeftIcon />
-                </Button>
-                <Box className="bg-white/10 backdrop-blur-2xl w-full rounded-full">
-                  <AnimatedBox
-                    className="p-1 bg-purple-500 rounded-full"
-                    initial={{ width: "0%" }}
-                    animate={{
-                      width: `${
-                        (activeIndexValue / issue?.issue.pages.length!) * 100
-                      }%`,
-                    }}
-                  />
+                  <Button
+                    onMouseOver={() => mouseOver.set(true)}
+                    onMouseLeave={() => mouseOver.set(false)}
+                    variant="soft"
+                    color="gray"
+                    size="3"
+                    className="flex w-10 h-10 items-center justify-center"
+                    onClick={toggleAmbientBackground}
+                  >
+                    {uiState.ambientBackground ? (
+                      <LightbulbFilament size={16} />
+                    ) : (
+                      <Lightbulb size={16} />
+                    )}
+                  </Button>
+                  <Button
+                    onMouseOver={() => mouseOver.set(true)}
+                    onMouseLeave={() => mouseOver.set(false)}
+                    size="3"
+                    variant="soft"
+                    color="gray"
+                    className="flex w-10 h-10 items-center content-center"
+                    title="Turn on Distraction Free Mode"
+                    onClick={toggleDistractionFreeMode}
+                  >
+                    {uiState.distractionFreeMode ? (
+                      <EyeSlash size={16} />
+                    ) : (
+                      <Eye size={16} />
+                    )}
+                  </Button>
+                  <Button
+                    color="gray"
+                    variant="soft"
+                    size="3"
+                    className="flex w-10 h-10 items-center justify-center"
+                    title="Activate Double Page View"
+                    onClick={toggleReaderLayout}
+                  >
+                    {uiState.readerLayout === "DoublePage" ? (
+                      <Square />
+                    ) : (
+                      <SquareSplitHorizontal />
+                    )}
+                  </Button>
+                  <Button
+                    onMouseOver={() => mouseOver.set(true)}
+                    onMouseLeave={() => mouseOver.set(false)}
+                    onClick={() => maximizeWindow()}
+                    size="3"
+                    variant="soft"
+                    color="gray"
+                    className="flex w-10 h-10 items-center justify-center"
+                    title="Toggle Fullscreen"
+                  >
+                    <CornersOut size={16} />
+                  </Button>
                 </Box>
-                <Button
-                  onClick={handleRightClick}
-                  variant="ghost"
-                  radius="full"
-                  color="gray"
-                >
-                  <CaretRightIcon />
-                </Button>
+              </Box>
+              {/* thumbnail view */}
+              <Flex
+                className="w-full p-2 rounded-md"
+                direction="column"
+                align="start"
+                gap="3"
+              >
+                {!loadingIssue && (
+                  <Text css={{ fontSize: 15, color: "$gray" }}>
+                    {activeIndexValue} / {issue?.issue.pages.length!}
+                  </Text>
+                )}
+                <Box className="w-full flex space-x-4 items-center content-center">
+                  <Button
+                    onClick={handleLeftClick}
+                    variant="ghost"
+                    radius="full"
+                    color="gray"
+                    className="p-1"
+                  >
+                    <CaretLeftIcon />
+                  </Button>
+                  <Box className="bg-white/10 backdrop-blur-2xl w-full rounded-full">
+                    <AnimatedBox
+                      className="p-1 bg-purple-500 rounded-full"
+                      initial={{ width: "0%" }}
+                      animate={{
+                        width: `${
+                          (activeIndexValue / issue?.issue.pages.length!) * 100
+                        }%`,
+                      }}
+                    />
+                  </Box>
+                  <Button
+                    onClick={handleRightClick}
+                    variant="ghost"
+                    radius="full"
+                    color="gray"
+                    className="p-1"
+                  >
+                    <CaretRightIcon />
+                  </Button>
+                </Box>
               </Flex>
-            </Flex>
-          </AnimatedBox>
-        </>
-      )}
+            </AnimatedBox>
+          </>
+        )}
+      </AnimatePresence>
       {/* Panel View */}
       {uiState.distractionFreeMode && (
         <Button

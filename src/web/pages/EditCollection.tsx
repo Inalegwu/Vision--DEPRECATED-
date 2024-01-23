@@ -58,7 +58,7 @@ export default function EditCollection() {
   return (
     <Layout>
       <Flex direction="column" grow="1" className="w-full h-full">
-        <Flex align="center" p="4" gap="3">
+        <Flex align="center" p="3" gap="3">
           <Button onClick={goBack} variant="soft" className="w-9 h-9">
             <CaretLeftIcon width={20} height={20} />
           </Button>
@@ -72,7 +72,7 @@ export default function EditCollection() {
           <Button>Save</Button>
         </Flex> */}
         <Flex
-          p="4"
+          p="1"
           direction="column"
           gap="2"
           className="overflow-y-scroll h-[50%] p-2 pb-400"
@@ -80,7 +80,7 @@ export default function EditCollection() {
           {data?.issues.map((v) => {
             return (
               <Flex
-                align="center"
+                align="end"
                 gap="4"
                 justify="between"
                 mb="2"
@@ -89,10 +89,10 @@ export default function EditCollection() {
               >
                 <img
                   src={v.thumbnailUrl}
-                  className="w-30 h-35 rounded-md border-solid border-[0.1px] border-slate-500"
+                  className="w-32 h-45 rounded-md"
                   alt={v.name}
                 />
-                <Flex direction="column" align="start" gap="1">
+                <Flex direction="column" align="start" gap="2">
                   <Text size="7" weight="medium">
                     {v.name}
                   </Text>
@@ -100,7 +100,7 @@ export default function EditCollection() {
                     Added {moment(v.dateCreated).fromNow()}
                   </Badge>
                 </Flex>
-                <Flex grow="1" align="start" p="3" gap="2" justify="end">
+                <Flex grow="1" align="start" p="3" gap="3" justify="end">
                   <Button variant="soft" onClick={() => editIssue(v.id)}>
                     Edit Issue
                     <Pencil1Icon />

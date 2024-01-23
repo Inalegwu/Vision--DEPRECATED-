@@ -8,6 +8,13 @@ export enum Reasons {
   NONE = "000",
 }
 
+export enum Filter {
+  DATE_ASC = "0",
+  DATE_DESC = "1",
+  NAME_ASC = "2",
+  NAME_DESC = "3",
+}
+
 // Style Types
 export type ThemeState = "dark" | "light";
 
@@ -56,6 +63,8 @@ export type LibraryFilters = "All" | "Collections" | "Issues";
 // State Types
 
 export type ApplicationState = {
+  // how to filter the library
+  filter: Filter;
   // tracks whether or not
   // it's the users first time launching the app
   // to give them a sweet surprise for their first time

@@ -1,11 +1,23 @@
 import { trackEvent } from "@aptabase/electron/main";
 import { RarExtractor, ZipExtractor } from "@shared/extractors";
 import { issues, pages } from "@shared/schema";
-import { Reasons } from "@shared/types";
+import { Filter, Reasons } from "@shared/types";
 import { convertToImageUrl, decodeMetaData, generateUUID } from "@shared/utils";
 import { publicProcedure, router } from "@src/trpc";
 import { TRPCError } from "@trpc/server";
+import { asc, desc } from "drizzle-orm";
 import { dialog } from "electron";
+import { enum_, object, parse } from "valibot";
+
+const switchFilter = (filter: Filter) => {
+  switch (filter) {
+    case Filter.DATE_ASC || Filter.NAME_ASC:
+      return asc;
+
+    case Filter.DATE_DESC || Filter.NAME_DESC:
+      return desc;
+  }
+};
 
 export const libraryRouter = router({
   addToLibrary: publicProcedure.mutation(async ({ ctx }) => {
@@ -33,6 +45,7 @@ export const libraryRouter = router({
 
         if (md) {
           const _decodedMeta = decodeMetaData(md.data);
+          console.log(_decodedMeta);
         }
 
         const thumbnailUrl = convertToImageUrl(
@@ -167,44 +180,86 @@ export const libraryRouter = router({
       }
     }
   }),
-  getLibrary: publicProcedure.query(async ({ ctx }) => {
-    try {
-      const issues = await ctx.db.query.issues.findMany({
-        orderBy: (issues, { asc }) => asc(issues.name),
-      });
+  getLibrary: publicProcedure
+    .input((x) =>
+      parse(
+        object({
+          filter: enum_(Filter, "Invalid Filter Provided"),
+        }),
+        x,
+      ),
+    )
+    .query(async ({ ctx, input }) => {
+      try {
+        const issues = await ctx.db.query.issues.findMany({
+          orderBy: (issues, { asc, desc }) => {
+            if (input.filter === Filter.DATE_ASC) {
+              return asc(issues.dateCreated);
+            }
+            if (input.filter === Filter.DATE_DESC) {
+              return desc(issues.dateCreated);
+            }
+            if (input.filter === Filter.NAME_ASC) {
+              return asc(issues.name);
+            }
 
-      const collections = await ctx.db.query.collections.findMany({
-        with: {
-          issues: {
-            orderBy: (issues, { desc }) => [desc(issues.name)],
+            if (input.filter === Filter.NAME_DESC) {
+              return desc(issues.name);
+            }
+
+            return asc(issues.name);
           },
-        },
-      });
+        });
 
-      // if an issue is already in a collection
-      // don't include it in the issues list
-      const merged = issues.filter(
-        (issues) =>
-          !collections.find((collection) =>
-            collection.issues.find((issue) => issue.id === issues.id),
-          ),
-      );
+        const collections = await ctx.db.query.collections.findMany({
+          with: {
+            issues: {
+              orderBy: (issues, { desc }) => [desc(issues.name)],
+            },
+          },
+          orderBy: (collection, { asc }) => {
+            if (input.filter === Filter.DATE_ASC) {
+              return asc(collection.dateCreated);
+            }
+            if (input.filter === Filter.DATE_DESC) {
+              return desc(collection.dateCreated);
+            }
+            if (input.filter === Filter.NAME_ASC) {
+              return asc(collection.name);
+            }
 
-      return {
-        issues: merged,
-        collections,
-      };
-    } catch (e) {
-      trackEvent("error_occured", {
-        router: "collection",
-        function: "getLibrary",
-        error: `${e}`,
-      });
-      throw new TRPCError({
-        code: "INTERNAL_SERVER_ERROR",
-        cause: e,
-        message: "Error occured",
-      });
-    }
-  }),
+            if (input.filter === Filter.NAME_DESC) {
+              return desc(collection.name);
+            }
+
+            return asc(collection.name);
+          },
+        });
+
+        // if an issue is already in a collection
+        // don't include it in the issues list
+        const merged = issues.filter(
+          (issues) =>
+            !collections.find((collection) =>
+              collection.issues.find((issue) => issue.id === issues.id),
+            ),
+        );
+
+        return {
+          issues: merged,
+          collections,
+        };
+      } catch (e) {
+        trackEvent("error_occured", {
+          router: "collection",
+          function: "getLibrary",
+          error: `${e}`,
+        });
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          cause: e,
+          message: "Error occured",
+        });
+      }
+    }),
 });

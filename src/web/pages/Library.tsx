@@ -6,10 +6,12 @@ import {
   Spinner,
 } from "@components/index";
 import { useObservable } from "@legendapp/state/react";
+import { CaretDown } from "@phosphor-icons/react";
 import { Link1Icon, PlusIcon } from "@radix-ui/react-icons";
 import {
   Box,
   Button,
+  DropdownMenu,
   Flex,
   Heading,
   Popover,
@@ -17,7 +19,7 @@ import {
   TextField,
 } from "@radix-ui/themes";
 import { trpcReact } from "@shared/config";
-import { Reasons } from "@shared/types";
+import { Filter, Reasons } from "@shared/types";
 import { LOADING_PHRASES, getRandomIndex } from "@src/shared/utils";
 import { globalState$ } from "@src/web/state";
 import { useCallback, useEffect, useRef } from "react";
@@ -78,7 +80,9 @@ export default function Library() {
   }, [router, appState]);
 
   const { data: library, isLoading: fetchingLibraryContent } =
-    trpcReact.library.getLibrary.useQuery();
+    trpcReact.library.getLibrary.useQuery({
+      filter: appState.filter,
+    });
 
   const { mutate: createCollection, isLoading: _creating } =
     trpcReact.collection.createCollection.useMutation({
@@ -92,6 +96,10 @@ export default function Library() {
     createCollection({ name: collectionName.get() });
     inputRef.current?.blur();
   }, [collectionName, createCollection]);
+
+  const changeFilter = useCallback((newFilter: Filter) => {
+    globalState$.appState.filter.set(newFilter);
+  }, []);
 
   return (
     <Layout>
@@ -113,42 +121,92 @@ export default function Library() {
       )}
       <Box className="w-full h-screen">
         {/* header */}
-        <Flex align="center" justify="between" p="4" className="mt-2">
-          <Heading size="8">My Library</Heading>
-          <Flex className="flex-1" gap="2" justify="end" align="center">
-            <Popover.Root>
-              <Popover.Trigger>
-                <Button variant="soft" color="gray" className="px-4 py-2">
-                  <Link1Icon />
-                  <Text>Create Collection</Text>
+        <Flex
+          align="center"
+          direction="column"
+          justify="between"
+          p="4"
+          className="mt-2"
+          gap="2"
+        >
+          {/* main content */}
+          <Flex align="center" justify="between" width="100%">
+            <Heading size="8">My Library</Heading>
+            <Flex className="flex-1" gap="2" justify="end" align="center">
+              <Popover.Root>
+                <Popover.Trigger>
+                  <Button variant="soft" color="gray" className="px-4 py-2">
+                    <Link1Icon />
+                    <Text>Create Collection</Text>
+                  </Button>
+                </Popover.Trigger>
+                <Popover.Content className="p-2 rounded-lg max-w-70 min-w-60 border-none">
+                  <Flex gap="2" direction="column">
+                    <TextField.Root>
+                      <TextField.Input
+                        placeholder="Collection Name"
+                        onChange={(e) =>
+                          collectionName.set(e.currentTarget.value)
+                        }
+                      />
+                    </TextField.Root>
+                    <Popover.Close>
+                      <Button color="mint" variant="soft" onClick={create}>
+                        <Text>Create Collection</Text>
+                      </Button>
+                    </Popover.Close>
+                  </Flex>
+                </Popover.Content>
+              </Popover.Root>
+              <Button
+                className="px-4 py-2"
+                variant="soft"
+                onClick={() => addToLibrary()}
+              >
+                <PlusIcon width="12" height="12" />
+                <Text>Add To Library</Text>
+              </Button>
+            </Flex>
+          </Flex>
+          {/* filters */}
+          <Flex align="center" justify="start" gap="3" className="w-full mt-3">
+            <DropdownMenu.Root>
+              <DropdownMenu.Trigger>
+                <Button variant="soft" color="gray" className="" size="2">
+                  Sort By
+                  <CaretDown />
                 </Button>
-              </Popover.Trigger>
-              <Popover.Content className="p-2 rounded-lg max-w-70 min-w-60 border-none">
-                <Flex gap="2" direction="column">
-                  <TextField.Root>
-                    <TextField.Input
-                      placeholder="Collection Name"
-                      onChange={(e) =>
-                        collectionName.set(e.currentTarget.value)
-                      }
-                    />
-                  </TextField.Root>
-                  <Popover.Close>
-                    <Button color="mint" variant="soft" onClick={create}>
-                      <Text>Create Collection</Text>
-                    </Button>
-                  </Popover.Close>
-                </Flex>
-              </Popover.Content>
-            </Popover.Root>
-            <Button
-              className="px-4 py-2"
-              variant="soft"
-              onClick={() => addToLibrary()}
-            >
-              <PlusIcon width="12" height="12" />
-              <Text>Add To Library</Text>
-            </Button>
+              </DropdownMenu.Trigger>
+              <DropdownMenu.Content
+                align="start"
+                className="mt-1 p-0 rounded-md"
+                variant="soft"
+              >
+                <DropdownMenu.Label>Name</DropdownMenu.Label>
+                <DropdownMenu.RadioGroup
+                  onValueChange={(e) => changeFilter(e as Filter)}
+                >
+                  <DropdownMenu.RadioItem value={Filter.NAME_ASC}>
+                    <Text>A-Z</Text>
+                  </DropdownMenu.RadioItem>
+                  <DropdownMenu.RadioItem value={Filter.NAME_DESC}>
+                    <Text>Z-A</Text>
+                  </DropdownMenu.RadioItem>
+                </DropdownMenu.RadioGroup>
+                <DropdownMenu.Separator />
+                <DropdownMenu.Label>Date Created</DropdownMenu.Label>
+                <DropdownMenu.RadioGroup
+                  onValueChange={(e) => changeFilter(e as Filter)}
+                >
+                  <DropdownMenu.RadioItem value={Filter.DATE_ASC}>
+                    <Text>Newest First</Text>
+                  </DropdownMenu.RadioItem>
+                  <DropdownMenu.RadioItem value={Filter.DATE_DESC}>
+                    <Text>Oldest First</Text>
+                  </DropdownMenu.RadioItem>
+                </DropdownMenu.RadioGroup>
+              </DropdownMenu.Content>
+            </DropdownMenu.Root>
           </Flex>
         </Flex>
         {/* body */}

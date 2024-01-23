@@ -37,8 +37,6 @@ const createWindow = () => {
     mainWindow.show();
   });
 
-  mainWindow.loadFile("dist/index.html");
-
   if (import.meta.env.DEV) {
     mainWindow.loadURL("http://localhost:5173");
   } else {

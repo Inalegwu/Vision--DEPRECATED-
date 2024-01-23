@@ -28,9 +28,9 @@ export default function Layout(props: LayoutProps) {
         align="center"
         justify="between"
         width="100%"
-        px="4"
-        py="2"
-        className="border-b-[0.1px] border-b-solid border-b-slate-100/10"
+        px="3"
+        py="1"
+        className="border-b-[0.09px] border-b-solid border-b-slate-100/10"
       >
         <Box>
           <Text weight="light">Vision</Text>
