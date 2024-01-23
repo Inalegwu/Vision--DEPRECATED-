@@ -5,19 +5,8 @@ import { Filter, Reasons } from "@shared/types";
 import { convertToImageUrl, decodeMetaData, generateUUID } from "@shared/utils";
 import { publicProcedure, router } from "@src/trpc";
 import { TRPCError } from "@trpc/server";
-import { asc, desc } from "drizzle-orm";
 import { dialog } from "electron";
 import { enum_, object, parse } from "valibot";
-
-const switchFilter = (filter: Filter) => {
-  switch (filter) {
-    case Filter.DATE_ASC || Filter.NAME_ASC:
-      return asc;
-
-    case Filter.DATE_DESC || Filter.NAME_DESC:
-      return desc;
-  }
-};
 
 export const libraryRouter = router({
   addToLibrary: publicProcedure.mutation(async ({ ctx }) => {
@@ -217,7 +206,7 @@ export const libraryRouter = router({
               orderBy: (issues, { desc }) => [desc(issues.name)],
             },
           },
-          orderBy: (collection, { asc }) => {
+          orderBy: (collection, { asc, desc }) => {
             if (input.filter === Filter.DATE_ASC) {
               return asc(collection.dateCreated);
             }
