@@ -283,8 +283,8 @@ export default function Issue() {
                   <Button
                     onMouseOver={() => mouseOver.set(true)}
                     onMouseLeave={() => mouseOver.set(false)}
-                    variant="soft"
-                    color="gray"
+                    variant={uiState.ambientBackground ? "solid" : "soft"}
+                    color={uiState.ambientBackground ? "iris" : "gray"}
                     size="3"
                     className="flex w-10 h-10 items-center justify-center"
                     onClick={toggleAmbientBackground}

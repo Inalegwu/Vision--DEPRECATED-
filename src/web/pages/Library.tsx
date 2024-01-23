@@ -98,6 +98,8 @@ export default function Library() {
     globalState$.appState.filter.set(newFilter);
   }, []);
 
+  const filterValue = globalState$.appState.filter.get();
+
   return (
     <Layout>
       {addingToLibrary && (
@@ -169,8 +171,21 @@ export default function Library() {
           <Flex align="center" justify="start" gap="3" className="w-full mt-3">
             <DropdownMenu.Root>
               <DropdownMenu.Trigger>
-                <Button variant="soft" color="gray" className="" size="2">
-                  Sort By
+                <Button
+                  variant="soft"
+                  color="gray"
+                  className="space-x-4 flex items-center justify-center"
+                  size="2"
+                >
+                  {filterValue === Filter.DATE_ASC
+                    ? "Newest First"
+                    : filterValue === Filter.DATE_DESC
+                      ? "Oldest First"
+                      : filterValue === Filter.NAME_ASC
+                        ? "A-Z"
+                        : filterValue === Filter.NAME_DESC
+                          ? "Z-A"
+                          : ""}
                   <CaretDown />
                 </Button>
               </DropdownMenu.Trigger>

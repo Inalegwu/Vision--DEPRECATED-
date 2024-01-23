@@ -5,6 +5,7 @@ import ErrorBoundaryFallback from "./ErrorBoundaryFallback";
 import FirstLaunch from "./FirstLaunch";
 import Issue from "./Issue";
 import Library from "./Library";
+import Settings from "./Settings";
 
 export {
   Collection,
@@ -14,4 +15,5 @@ export {
   FirstLaunch,
   Issue,
   Library,
+  Settings,
 };

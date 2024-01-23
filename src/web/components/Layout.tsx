@@ -1,6 +1,8 @@
 import { CornersIcon, Cross2Icon, MinusIcon } from "@radix-ui/react-icons";
 import { Box, Button, Flex, Text } from "@radix-ui/themes";
 import { useKeyPress } from "@src/web/hooks";
+import { useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import { trpcReact } from "../../shared/config";
 
 type LayoutProps = {
@@ -8,6 +10,7 @@ type LayoutProps = {
 };
 
 export default function Layout(props: LayoutProps) {
+  const router = useNavigate();
   const { mutate: closeWindow } = trpcReact.window.closeWindow.useMutation();
   const { mutate: maximizeWindow } =
     trpcReact.window.maximizeWindow.useMutation();
@@ -20,6 +23,13 @@ export default function Layout(props: LayoutProps) {
       closeWindow();
     }
   });
+
+  const goToSettings = useCallback(() => {
+    router("/settings", {
+      preventScrollReset: true,
+      unstable_viewTransition: true,
+    });
+  }, [router]);
 
   return (
     <Flex className="w-full h-screen" direction="column">
@@ -37,6 +47,14 @@ export default function Layout(props: LayoutProps) {
         </Box>
         <Flex grow="1" p="4" id="drag-region" />
         <Flex gap="4" align="center" justify="end">
+          {/* <Button
+            onClick={goToSettings}
+            variant="ghost"
+            className="py-1.5"
+            size="1"
+          >
+            <GearFine size={13} />
+          </Button> */}
           <Button
             variant="ghost"
             size="1"

@@ -121,3 +121,7 @@ export type CurrentlyReading = {
 export type ReadingState = {
   currentlyReading: CurrentlyReading[];
 };
+
+export type KeyboardShortcutState = {
+  shortcuts: Map<string, string>;
+};

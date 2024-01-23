@@ -10,6 +10,7 @@ import {
   FirstLaunch,
   Issue,
   Library,
+  Settings,
 } from "./pages";
 
 enableReactTracking({ auto: true, warnUnobserved: true });
@@ -31,6 +32,7 @@ export const App = () => {
           path="/collections/edit/:collectionId"
           element={<EditCollection />}
         />
+        <Route path="/settings" element={<Settings />} />
       </Routes>
       <Toaster
         position="bottom-right"
