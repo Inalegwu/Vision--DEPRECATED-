@@ -68,10 +68,7 @@ export default function Library() {
   }, 6000);
 
   useEffect(() => {
-    // is the the users first launch of the app ???
     if (appState.firstLaunch) {
-      // go to the first launch page if the application firstLaunch is false
-      // which is the default
       router("/first_launch", {
         preventScrollReset: true,
         replace: true,

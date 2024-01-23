@@ -59,7 +59,7 @@ export default function Collection() {
 
   // use this to populate the list of issues to add to the collection
   const { data: issues, isLoading: gettingIssues } =
-    trpcReact.library.getLibrary.useQuery();
+    trpcReact.library.getIssues.useQuery();
 
   const { mutate: addIssueToLibrary, isLoading: saving } =
     trpcReact.collection.addIssueToCollection.useMutation({

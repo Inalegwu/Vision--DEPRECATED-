@@ -6,7 +6,7 @@ import { convertToImageUrl, decodeMetaData, generateUUID } from "@shared/utils";
 import { publicProcedure, router } from "@src/trpc";
 import { TRPCError } from "@trpc/server";
 import { dialog } from "electron";
-import { enum_, object, parse } from "valibot";
+import { enum_, object, optional, parse } from "valibot";
 
 export const libraryRouter = router({
   addToLibrary: publicProcedure.mutation(async ({ ctx }) => {
@@ -173,7 +173,7 @@ export const libraryRouter = router({
     .input((x) =>
       parse(
         object({
-          filter: enum_(Filter, "Invalid Filter Provided"),
+          filter: optional(enum_(Filter, "Invalid Filter Provided")),
         }),
         x,
       ),
@@ -182,6 +182,10 @@ export const libraryRouter = router({
       try {
         const issues = await ctx.db.query.issues.findMany({
           orderBy: (issues, { asc, desc }) => {
+            if (!input.filter) {
+              return asc(issues.name);
+            }
+
             if (input.filter === Filter.DATE_ASC) {
               return asc(issues.dateCreated);
             }
@@ -207,6 +211,10 @@ export const libraryRouter = router({
             },
           },
           orderBy: (collection, { asc, desc }) => {
+            if (!input.filter) {
+              return asc(collection.name);
+            }
+
             if (input.filter === Filter.DATE_ASC) {
               return asc(collection.dateCreated);
             }
@@ -251,4 +259,26 @@ export const libraryRouter = router({
         });
       }
     }),
+  getIssues: publicProcedure.query(async ({ ctx }) => {
+    try {
+      const issues = await ctx.db.query.issues.findMany({
+        where: (issue, { eq }) => eq(issue.collectionId, ""),
+      });
+
+      return {
+        issues,
+      };
+    } catch (e) {
+      trackEvent("error_occured", {
+        router: "collection",
+        function: "getIssues",
+        error: `${e}`,
+      });
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        cause: e,
+        message: "An Error Occured",
+      });
+    }
+  }),
 });
