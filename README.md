@@ -8,17 +8,17 @@ Vision is currently being built by one person and is focused on delivering on th
 - Advanced Library : Allow the user manage a library of issues and collections , like folders on their PC , giving them greater control over their organization , like your physical comic bookshelf
 <br>
 <br>
-[Library](/screenshots/library.png)
+[Library](https://github.com/Inalegwu/Vision/tree/master/screenshots/library.png)
 Library
 <br>
 <br>
-[Collection](/screenshots/collection.png)
+[Collection](https://github.com/Inalegwu/Vision/tree/master/screenshots/collection.png)
 Collections
 
 - Sleek and Modern Reader : A reader experience redesigned and focused on immersing the reader into their content by reducing clutter and only providing necessary information , opting for a trackbar instead of a thumbnail view and focusing on Keyboard Shortcut based navigation
 <br>
 <br>
-[Reader](https://github.com/Inalegwu/Vision/screenshots/reader.png)
+[Reader](https://github.com/Inalegwu/Vision/tree/master/screenshots/reader.png)
 Reader
 
 ### Tech Stack
