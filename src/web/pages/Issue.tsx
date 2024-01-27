@@ -40,6 +40,8 @@ export default function Issue() {
   const { uiState } = globalState$.get();
   const activeLayout = globalState$.uiState.readerLayout.get();
 
+  // find the issue in the saved reading
+  // list
   const currentlyReading = readingState.currentlyReading
     .get()
     .find((v) => v.id === issueId);

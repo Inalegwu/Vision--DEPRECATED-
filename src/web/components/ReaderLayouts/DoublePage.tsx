@@ -1,7 +1,8 @@
 import { observer } from "@legendapp/state/react";
+import { AspectRatio, Box } from "@radix-ui/themes";
 import { globalState$ } from "@src/web/state";
 import { LayoutProps } from "../../../shared/types";
-import { AnimatedImage, Box } from "../atoms";
+import { AnimatedImage } from "../atoms";
 
 const DoublePage = observer(({ pages, activeIndex }: LayoutProps) => {
   const ambientMode = globalState$.uiState.ambientBackground.get();
@@ -24,44 +25,23 @@ const DoublePage = observer(({ pages, activeIndex }: LayoutProps) => {
           }}
         />
       )}
-      <Box
-        css={{
-          width: "100%",
-          height: "100%",
-          display: "flex",
-          alignContent: "center",
-          alignItems: "center",
-          justifyContent: "center",
-          padding: "$xxxl",
-          gap: "$lg",
-          background: "transparent",
-          backdropFilter: "blur(400px)",
-        }}
-      >
-        <AnimatedImage
-          src={pages[activeIndex]?.content}
-          alt={pages[activeIndex]?.name}
-          css={{
-            width: "50%",
-            height: "100%",
-            margin: "auto",
-            aspectRatio: 1,
-            borderRadius: "$lg",
-            border: "0.1px solid $lightGray",
-          }}
-        />
-       {pages[activeIndex+1].content!==""&& <AnimatedImage
-          src={pages[activeIndex + 1]?.content}
-          alt={pages[activeIndex + 1]?.content}
-          css={{
-            width: "50%",
-            height: "100%",
-            margin: "auto",
-            aspectRatio: 1,
-            borderRadius: "$lg",
-            border: "0.1px solid $lightGray",
-          }}
-        />}
+      <Box className="w-full h-screen flex items-center justify-center gap-4 bg-transparent backdrop-blur-2xl p-15">
+        <AspectRatio ratio={16 / 9}>
+          <img
+            src={pages[activeIndex]?.content}
+            alt={pages[activeIndex]?.name}
+            className="w-full h-full m-auto rounded-md border-solid border-gray-300"
+          />
+        </AspectRatio>
+        {pages[activeIndex + 1].content !== "" && (
+          <AspectRatio ratio={16 / 9}>
+            <img
+              src={pages[activeIndex + 1]?.content}
+              alt={pages[activeIndex + 1]?.content}
+              className="w-full h-full rounded-md border-solid border-gray-300"
+            />
+          </AspectRatio>
+        )}
       </Box>
     </>
   );
