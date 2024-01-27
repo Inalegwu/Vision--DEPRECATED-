@@ -18,7 +18,7 @@ Collections
 - Sleek and Modern Reader : A reader experience redesigned and focused on immersing the reader into their content by reducing clutter and only providing necessary information , opting for a trackbar instead of a thumbnail view and focusing on Keyboard Shortcut based navigation
 <br>
 <br>
-[Reader](/screenshots/reader.png)
+[Reader](https://github.com/Inalegwu/Vision/screenshots/reader.png)
 Reader
 
 ### Tech Stack
